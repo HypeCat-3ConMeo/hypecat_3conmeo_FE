@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 // type
-import { UploadProps } from "./type";
+import { type UploadProps } from "./type";
 //
 import Image from "../Image";
 import RejectionFiles from "./RejectionFiles";

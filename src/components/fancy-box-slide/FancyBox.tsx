@@ -1,9 +1,9 @@
-import { useRef, useEffect, PropsWithChildren } from "react";
+import { useRef, useEffect, type PropsWithChildren } from "react";
 
 import { Fancybox as NativeFancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
-import { OptionsType } from "@fancyapps/ui/types/Fancybox/options";
+import { type OptionsType } from "@fancyapps/ui/types/Fancybox/options";
 
 //fancybox props
 interface PancyBoxProps {

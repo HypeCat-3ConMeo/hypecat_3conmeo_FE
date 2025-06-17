@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { styled } from "@mui/material/styles";
 import { Box, Stack, Button } from "@mui/material";
 // type
-import { UploadMultiFileProps } from "./type";
+import { type UploadMultiFileProps } from "./type";
 //
 import BlockContent from "./BlockContent";
 import RejectionFiles from "./RejectionFiles";

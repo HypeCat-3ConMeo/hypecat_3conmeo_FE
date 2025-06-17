@@ -6,8 +6,8 @@ import { Box, FormHelperText, Typography } from "@mui/material";
 import {
   UploadAvatar,
   UploadSingleFile,
-  UploadProps,
-  UploadMultiFileProps,
+  type UploadProps,
+  type UploadMultiFileProps,
   UploadMultiFile,
 } from "../upload";
 

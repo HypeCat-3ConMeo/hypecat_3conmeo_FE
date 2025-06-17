@@ -1,6 +1,6 @@
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 // @mui
-import { Stack, StackProps, SxProps } from "@mui/material";
+import { Stack, type StackProps, type SxProps } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
