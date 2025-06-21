@@ -12,7 +12,6 @@ import CreateOrder from "./popup/CreateOrder";
 import { font_size } from "@/styles/config-file";
 import IntroTour from "@/components/intro/IntroTour";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import withAuth from "@/hook/checkRoute";
 
 interface SearchToolProps {
   filter: any;
@@ -252,4 +251,4 @@ const ManageOrderTable = () => {
   );
 };
 
-export default withAuth(ManageOrderTable);
+export default ManageOrderTable;
