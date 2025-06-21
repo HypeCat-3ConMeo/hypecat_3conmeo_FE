@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: `https://hpty.nexminial.cloud/api`,
+  baseURL: `https://hypecat.nexminial.cloud/api/`,
   // baseURL: `https://localhost:7163/api`,
   headers: {
     "Content-Type": "application/json",
