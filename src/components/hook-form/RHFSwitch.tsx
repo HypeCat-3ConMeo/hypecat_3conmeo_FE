@@ -1,11 +1,15 @@
 // form
-import { useFormContext, Controller } from 'react-hook-form';
+import { useFormContext, Controller } from "react-hook-form";
 // @mui
-import { Switch, FormControlLabel, FormControlLabelProps } from '@mui/material';
+import {
+  Switch,
+  FormControlLabel,
+  type FormControlLabelProps,
+} from "@mui/material";
 
 // ----------------------------------------------------------------------
 
-type IProps = Omit<FormControlLabelProps, 'control'>;
+type IProps = Omit<FormControlLabelProps, "control">;
 
 interface Props extends IProps {
   name: string;

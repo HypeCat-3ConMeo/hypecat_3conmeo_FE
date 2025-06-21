@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 // type
-import { UploadProps } from "./type";
+import { type UploadProps } from "./type";
 //
 import Image from "../Image";
 import Iconify from "../Iconify";

@@ -5,7 +5,7 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-  FormControlLabelProps,
+  type FormControlLabelProps,
   FormHelperText,
 } from "@mui/material";
 

@@ -3,7 +3,7 @@ export const managerRoutes = {
 };
 
 export const authRoutes = {
-  authenticate: "/auth",
+  authenticate: "/",
 };
 
 export const adminRoutes = {

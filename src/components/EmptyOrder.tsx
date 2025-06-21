@@ -1,6 +1,6 @@
 // @mui
 import { styled } from "@mui/material/styles";
-import { Typography, Box, BoxProps } from "@mui/material";
+import { Typography, Box, type BoxProps } from "@mui/material";
 //
 import Image from "./Image";
 import images from "../constants/images";

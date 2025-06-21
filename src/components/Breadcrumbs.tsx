@@ -1,13 +1,13 @@
-import { ReactElement } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { type ReactElement } from "react";
+import { Link as RouterLink } from "react-router-dom";
 // @mui
 import {
   Box,
   Link,
   Typography,
-  BreadcrumbsProps,
+  type BreadcrumbsProps,
   Breadcrumbs as MUIBreadcrumbs,
-} from '@mui/material';
+} from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -22,10 +22,16 @@ export interface Props extends BreadcrumbsProps {
   activeLast?: boolean;
 }
 
-export default function Breadcrumbs({ links, activeLast = false, ...other }: Props) {
+export default function Breadcrumbs({
+  links,
+  activeLast = false,
+  ...other
+}: Props) {
   const currentLink = links[links.length - 1].name;
 
-  const listDefault = links.map((link) => <LinkItem key={link.name} link={link} />);
+  const listDefault = links.map((link) => (
+    <LinkItem key={link.name} link={link} />
+  ));
 
   const listActiveLast = links.map((link) => (
     <div key={link.name}>
@@ -36,10 +42,10 @@ export default function Breadcrumbs({ links, activeLast = false, ...other }: Pro
           variant="body2"
           sx={{
             maxWidth: 260,
-            overflow: 'hidden',
-            whiteSpace: 'nowrap',
-            color: 'text.disabled',
-            textOverflow: 'ellipsis',
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            color: "text.disabled",
+            textOverflow: "ellipsis",
           }}
         >
           {currentLink}
@@ -53,7 +59,12 @@ export default function Breadcrumbs({ links, activeLast = false, ...other }: Pro
       separator={
         <Box
           component="span"
-          sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: 'text.disabled' }}
+          sx={{
+            width: 4,
+            height: 4,
+            borderRadius: "50%",
+            bgcolor: "text.disabled",
+          }}
         />
       }
       {...other}
@@ -76,16 +87,18 @@ function LinkItem({ link }: LinkItemProps) {
       key={name}
       variant="body2"
       component={RouterLink}
-      to={href || '#'}
+      to={href || "#"}
       sx={{
         lineHeight: 2,
-        display: 'flex',
-        alignItems: 'center',
-        color: 'text.primary',
-        '& > div': { display: 'inherit' },
+        display: "flex",
+        alignItems: "center",
+        color: "text.primary",
+        "& > div": { display: "inherit" },
       }}
     >
-      {icon && <Box sx={{ mr: 1, '& svg': { width: 20, height: 20 } }}>{icon}</Box>}
+      {icon && (
+        <Box sx={{ mr: 1, "& svg": { width: 20, height: 20 } }}>{icon}</Box>
+      )}
       {name}
     </Link>
   );

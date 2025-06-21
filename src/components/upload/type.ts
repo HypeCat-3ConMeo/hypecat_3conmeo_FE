@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
-import { DropzoneOptions } from 'react-dropzone';
+import { type ReactNode } from "react";
+import { type DropzoneOptions } from "react-dropzone";
 // @mui
-import { SxProps } from '@mui/material';
-import { Theme } from '@mui/material/styles';
+import { type SxProps } from "@mui/material";
+import { type Theme } from "@mui/material/styles";
 
 // ----------------------------------------------------------------------
 

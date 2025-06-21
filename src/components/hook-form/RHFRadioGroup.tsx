@@ -6,7 +6,7 @@ import {
   Radio,
   RadioGroup,
   FormHelperText,
-  RadioGroupProps,
+  type RadioGroupProps,
   FormControlLabel,
 } from "@mui/material";
 

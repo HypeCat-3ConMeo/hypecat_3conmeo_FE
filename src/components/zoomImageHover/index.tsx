@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useState, CSSProperties, MouseEvent } from "react";
+import React, { useState, type CSSProperties, type MouseEvent } from "react";
 
 interface Props {
   src: string;

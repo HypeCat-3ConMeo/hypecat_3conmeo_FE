@@ -4,7 +4,7 @@ import {
   Controller,
 } from "react-hook-form";
 // @mui
-import { TextField, TextFieldProps } from "@mui/material";
+import { TextField, type TextFieldProps } from "@mui/material";
 import React from "react";
 
 // ----------------------------------------------------------------------

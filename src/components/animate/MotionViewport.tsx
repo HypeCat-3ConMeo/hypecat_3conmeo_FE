@@ -1,7 +1,7 @@
-import { m, MotionProps } from "framer-motion";
-import { ReactNode } from "react";
+import { m, type MotionProps } from "framer-motion";
+import { type ReactNode } from "react";
 // @mui
-import { Box, BoxProps } from "@mui/material";
+import { Box, type BoxProps } from "@mui/material";
 // hooks
 // import useResponsive from '../../hooks/useResponsive';
 //

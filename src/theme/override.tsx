@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import React, { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 
 // interface
 declare module "@mui/material/styles" {

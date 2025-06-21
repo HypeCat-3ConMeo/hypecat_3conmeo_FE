@@ -18,7 +18,7 @@ import {
   TablePagination,
 } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
-import React, { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import moment from "moment"; // Import moment.js for date formatting
 import { colors } from "../../styles/Color/color";
 
