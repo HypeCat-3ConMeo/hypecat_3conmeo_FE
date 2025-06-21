@@ -1,42 +1,39 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
-import { Product } from "@/types/ProductType";
 import {
   Box,
   Button,
   Chip,
-  Grid2,
   Typography,
   Card,
+  Grid,
   CardContent,
   Stack,
   Avatar,
   IconButton,
   Tooltip,
-  Badge,
 } from "@mui/material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import RestoreFromTrashOutlinedIcon from "@mui/icons-material/RestoreFromTrashOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
-import productApi from "@/axios-clients/product_api/productAPI";
 import ProductImageGallery from "./ProductImages";
 import LogTable from "./LogTable";
 import { toast } from "react-toastify";
 import DeleteProduct from "./popup/DeleteProduct";
 import EditProduct from "./popup/EditProduct";
-import withAuth from "@/hook/checkRoute";
 import BatchProductTable from "./BatchProductTable";
 
-const DetailProduct = ({ id }: { id: string }) => {
-  const [product, setProduct] = React.useState<Product | null>(null);
-  const router = useRouter();
+type DetailProductProps = {
+  id: string;
+};
+
+const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
+  const [product, setProduct] = React.useState(null);
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
@@ -58,11 +55,11 @@ const DetailProduct = ({ id }: { id: string }) => {
 
   const fetchProduct = async () => {
     try {
-      const data: Product = await productApi.getProductById(id);
-      console.log(data)
-      if (data) {
-        setProduct(data);
-      }
+      // const data: Product = await productApi.getProductById(id);
+      // console.log(data)
+      // if (data) {
+      //   setProduct(data);
+      // }
     } catch (error) {
       toast.error("Lấy thông tin sản phẩm thất bại");
       console.error("Lỗi khi lấy sản phẩm:", error);
@@ -114,7 +111,7 @@ const DetailProduct = ({ id }: { id: string }) => {
       >
         <Stack direction="row" alignItems="center" spacing={2}>
           <IconButton
-            onClick={() => router.push("/admin/manage_product")}
+            // onClick={() => router.push("/admin/manage_product")}
             sx={{
               backgroundColor: "#f1f5f9",
               "&:hover": { backgroundColor: "#e2e8f0" },
@@ -369,4 +366,4 @@ const DetailProduct = ({ id }: { id: string }) => {
     </Box>
   );
 }
-export default withAuth(DetailProduct);
+export default DetailProduct;

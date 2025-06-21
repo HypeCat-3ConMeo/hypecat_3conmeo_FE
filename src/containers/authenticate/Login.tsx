@@ -24,7 +24,8 @@ import {
   alpha,
   // useTheme,
 } from "@mui/material";
-// import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+import authApi from "../../api/services/AuthApi/AuthApi";
 
 const Login = () => {
   // const theme = useTheme();
@@ -67,11 +68,11 @@ const Login = () => {
 
     try {
       setIsLoading(true);
-      //   const res: any = await authApi.login(loginForm);
-      //   localStorage.setItem("userInfor", JSON.stringify(res));
-      //   const decoded: any = jwtDecode(res?.accessToken);
-      //   console.log("first", decoded);
-      //   setAuth({
+      const res: any = await authApi.login(loginForm);
+      localStorage.setItem("userInfor", JSON.stringify(res));
+      const decoded: any = jwtDecode(res?.accessToken);
+      console.log("first", decoded);
+      // setAuth({
       //     user: decoded,
       //     accessToken: res?.accessToken,
       //   });

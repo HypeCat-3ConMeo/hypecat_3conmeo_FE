@@ -22,7 +22,6 @@ import productApi from "@/axios-clients/product_api/productAPI";
 
 // Types
 import { Product } from "@/types/ProductType";
-import withAuth from "@/hook/checkRoute";
 
 interface SearchToolProps {
   filter: any;
@@ -265,4 +264,4 @@ const ProductTable = () => {
     </div>
   );
 };
-export default withAuth(ProductTable);
+export default ProductTable;

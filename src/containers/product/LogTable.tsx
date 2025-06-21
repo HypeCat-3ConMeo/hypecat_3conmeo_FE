@@ -4,7 +4,6 @@ import React from "react";
 import CustomizeTable from "@/components/table/customize-table";
 import { ProductLog } from "@/types/ProductType";
 import { Tabs, Tab, Box } from "@mui/material";
-import withAuth from "@/hook/checkRoute";
 
 const LogTableTabs = ({ logs }: { logs: ProductLog[] }) => {
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -95,4 +94,4 @@ const LogTableTabs = ({ logs }: { logs: ProductLog[] }) => {
         </Box>
     );
 }
-export default withAuth(LogTableTabs);
+export default LogTableTabs;
