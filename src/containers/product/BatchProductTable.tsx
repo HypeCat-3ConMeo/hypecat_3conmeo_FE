@@ -4,7 +4,6 @@
 import { useEffect, useState } from "react";
 
 import CustomizeTable from "@/components/table/customize-table";
-import withAuth from "@/hook/checkRoute";
 import { BatchDetail } from "@/types/BatchType";
 import { Box, Chip, Typography } from "@mui/material";
 import { Warning as WarningIcon, } from "@mui/icons-material";
@@ -241,4 +240,4 @@ const BatchProductTable = ({ batchDetails }: { batchDetails: BatchDetail[] }) =>
     );
 };
 
-export default withAuth(BatchProductTable);
+export default BatchProductTable;
