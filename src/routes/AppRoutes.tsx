@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import config from "../configs";
-import Login from "../containers/authenticate/Login";
+import AuthenticatePage from "../pages/Auth/AuthenticatePage";
 // import Home from "../pages/Home/HomePage";
 
 const AppRoute: React.FC = () => {
@@ -10,7 +10,7 @@ const AppRoute: React.FC = () => {
       <Route
         key={"Login"}
         path={config.managerRoutes.home}
-        element={<Login />}
+        element={<AuthenticatePage />}
       />
     </Routes>
   );
