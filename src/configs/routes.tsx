@@ -11,3 +11,5 @@ export const adminRoutes = {
 };
 
 export const staffRoutes = {};
+
+export const customerRoutes = {};
