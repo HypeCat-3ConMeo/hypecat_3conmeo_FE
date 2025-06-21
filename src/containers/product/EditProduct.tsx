@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams, useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -27,7 +26,6 @@ import {
 import { toast } from "react-toastify";
 import { RHFUploadMultiFile } from "@/components/text_field";
 import uploadImageToFirebase from "@/firebase/uploadImageToFirebase";
-import withAuth from "@/hook/checkRoute";
 import { set } from "date-fns";
 
 const productStatusOptions = [
@@ -244,4 +242,4 @@ const EditProduct = ({ id }: { id: string }) => {
         </Container>
     );
 }
-export default withAuth(EditProduct);
+export default EditProduct;

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Box, Grid2, Card, CardMedia } from '@mui/material';
 import { ProductImage } from '@/types/ProductType';
-import withAuth from '@/hook/checkRoute';
 
 
 const ProductImageGallery = ({ images }: { images: ProductImage[] }) => {
@@ -49,4 +48,4 @@ const ProductImageGallery = ({ images }: { images: ProductImage[] }) => {
         </Box>
     );
 }
-export default withAuth(ProductImageGallery);
+export default ProductImageGallery;
