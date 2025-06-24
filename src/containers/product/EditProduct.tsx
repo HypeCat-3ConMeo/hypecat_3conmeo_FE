@@ -1,8 +1,6 @@
-"use client";
-
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+//import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import {
     Container,
@@ -11,22 +9,11 @@ import {
     Grid2,
     Box,
     Button,
-    MenuItem,
 } from "@mui/material";
-
-
-import productApi from "@/axios-clients/product_api/productAPI";
-import { EditProductFormInput, Product, ProductImage } from "@/types/ProductType";
-import {
-    FormProvider,
-    RHFSelect,
-    RHFTextField,
-    RHFTextFieldNumber,
-} from "@/components/hook_form";
 import { toast } from "react-toastify";
-import { RHFUploadMultiFile } from "@/components/text_field";
-import uploadImageToFirebase from "@/firebase/uploadImageToFirebase";
-import { set } from "date-fns";
+import type { EditProductFormInput } from "../../types/ProductType";
+import { uploadImageToFirebase } from "../../firebase/uploadImageToFirebase";
+import productApi from "../../api/services/product_api/productAPI";
 
 const productStatusOptions = [
     { value: "", label: "Chọn trạng thái" },

@@ -1,11 +1,7 @@
-"use client";
-
-import { CreateProductFormInput } from "@/types/ProductType";
 import React, { useCallback } from "react";
 import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+//import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -14,21 +10,12 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import {
-  FormProvider,
-  RHFSelect,
-  RHFTextField,
-  RHFTextFieldNumber,
-} from "@/components/hook_form";
-import productApi from "@/axios-clients/product_api/productAPI";
 import { toast } from "react-toastify";
-import {
-  RHFUploadMultiFile,
-  RHFUploadSingleFile,
-} from "@/components/text_field";
-import uploadImageToFirebase from "@/firebase/uploadImageToFirebase";
-import { Category } from "@/types/CategoryType";
-import categoryApi from "@/axios-clients/category_api/categoryAPI";
+import type { Category } from "../../types/CategoryType";
+import type { CreateProductFormInput } from "../../types/ProductType";
+import { uploadImageToFirebase } from "../../firebase/uploadImageToFirebase";
+import categoryApi from "../../api/services/category_api/categoryAPI";
+import productApi from "../../api/services/product_api/productAPI";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Tên sản phẩm là bắt buộc"),

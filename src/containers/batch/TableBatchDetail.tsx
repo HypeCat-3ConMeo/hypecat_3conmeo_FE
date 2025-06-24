@@ -1,4 +1,3 @@
-"use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import {
@@ -24,10 +23,8 @@ import {
     Warning as WarningIcon,
     Info as InfoIcon,
 } from "@mui/icons-material";
-import { useParams } from "next/navigation";
-import BatchAPI from "@/axios-clients/batch_api/batchAPI";
-import CustomizeTable from "@/components/table/customize-table";
-import { Batch, BatchDetail } from "@/types/BatchType";
+import type { Batch, BatchDetail } from "../../types/BatchType";
+import BatchAPI from "../../api/services/batch_api/batchAPI";
 
 interface DetailBatchProps {
     id: string;

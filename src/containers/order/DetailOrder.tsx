@@ -1,8 +1,4 @@
-"use client";
-import orderApi from "@/axios-clients/order_api/orderAPI";
-import { OrderStatus } from "@/enum/OrderStatus";
-import { colors, font_weight } from "@/styles/config-file";
-import { OrderDetailType } from "@/types/OrderDetailType";
+import { OrderStatus } from "../../enum/OrderStatus";
 import {
   Box,
   Chip,
@@ -21,6 +17,9 @@ import {
 import moment from "moment";
 import React, { useRef } from "react";
 import { toast } from "react-toastify";
+import orderApi from "../../api/services/order_api/orderAPI";
+import type { OrderDetailType } from "../../types/OrderDetailType";
+import { colors, font_weight } from "../../styles/config-file";
 
 interface DetailOrderProps {
   orderId: string;
