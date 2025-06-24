@@ -297,22 +297,19 @@ const Login = () => {
                       borderRadius: 3,
                       transition: "all 0.3s ease",
                       backgroundColor: "rgba(102, 126, 234, 0.03)",
-                      border: "2px solid transparent",
                       "&:hover": {
                         backgroundColor: "rgba(102, 126, 234, 0.05)",
-                        borderColor: "rgba(102, 126, 234, 0.2)",
-                        transform: "translateY(-1px)",
                         boxShadow: "0 4px 15px rgba(102, 126, 234, 0.1)",
+                        transform: "translateY(-1px)",
                       },
                       "&.Mui-focused": {
                         backgroundColor: "rgba(102, 126, 234, 0.06)",
-                        borderColor: "#667eea",
                         boxShadow: "0 0 0 3px rgba(102, 126, 234, 0.15)",
                         transform: "translateY(-1px)",
                       },
-                      "& fieldset": {
-                        border: "none",
-                      },
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#667eea",
                     },
                     "& .MuiInputLabel-root.Mui-focused": {
                       color: "#667eea",
@@ -378,22 +375,19 @@ const Login = () => {
                       borderRadius: 3,
                       transition: "all 0.3s ease",
                       backgroundColor: "rgba(102, 126, 234, 0.03)",
-                      border: "2px solid transparent",
                       "&:hover": {
                         backgroundColor: "rgba(102, 126, 234, 0.05)",
-                        borderColor: "rgba(102, 126, 234, 0.2)",
-                        transform: "translateY(-1px)",
                         boxShadow: "0 4px 15px rgba(102, 126, 234, 0.1)",
+                        transform: "translateY(-1px)",
                       },
                       "&.Mui-focused": {
                         backgroundColor: "rgba(102, 126, 234, 0.06)",
-                        borderColor: "#667eea",
                         boxShadow: "0 0 0 3px rgba(102, 126, 234, 0.15)",
                         transform: "translateY(-1px)",
                       },
-                      "& fieldset": {
-                        border: "none",
-                      },
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#667eea",
                     },
                     "& .MuiInputLabel-root.Mui-focused": {
                       color: "#667eea",
