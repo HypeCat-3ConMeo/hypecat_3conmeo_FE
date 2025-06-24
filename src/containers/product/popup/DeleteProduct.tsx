@@ -2,7 +2,7 @@ import { Backdrop, Box, Button, Dialog, DialogActions, DialogContent, DialogTitl
 import RestoreFromTrashOutlinedIcon from "@mui/icons-material/RestoreFromTrashOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { toast } from "react-toastify";
-import productApi from "@/axios-clients/product_api/productAPI";
+import productApi from "../../../api/services/product_api/productAPI";
 
 interface DeleteProductProps {
     product: any,

@@ -4,7 +4,7 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import { toast } from "react-toastify";
-import productApi from "@/axios-clients/product_api/productAPI";
+import productApi from "../../../api/services/product_api/productAPI";
 
 interface EditProductProps {
     product: any,

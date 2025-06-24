@@ -1,9 +1,6 @@
-'use client'
-
 import React from "react";
-import CustomizeTable from "@/components/table/customize-table";
-import { ProductLog } from "@/types/ProductType";
 import { Tabs, Tab, Box } from "@mui/material";
+import type { ProductLog } from "../../types/ProductType";
 
 const LogTableTabs = ({ logs }: { logs: ProductLog[] }) => {
     const [tabIndex, setTabIndex] = React.useState(0);

@@ -1,12 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-"use client";
 import { useEffect, useState } from "react";
-
-import CustomizeTable from "@/components/table/customize-table";
-import { BatchDetail } from "@/types/BatchType";
 import { Box, Chip, Typography } from "@mui/material";
 import { Warning as WarningIcon, } from "@mui/icons-material";
+import type { BatchDetail } from "../../types/BatchType";
 
 const BatchProductTable = ({ batchDetails }: { batchDetails: BatchDetail[] }) => {
     // State declarations with proper typing

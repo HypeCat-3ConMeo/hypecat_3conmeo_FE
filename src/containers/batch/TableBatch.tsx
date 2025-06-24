@@ -1,11 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-"use client";
 import { useEffect, useState } from "react";
-
-import CustomizeTable from "@/components/table/customize-table";
-import BatchAPI from "@/axios-clients/batch_api/batchAPI";
 import MenuActionTableBatch from "../menu_action/Batch/MenuActionTableBatch";
+import BatchAPI from "../../api/services/batch_api/batchAPI";
 
 // Define the Batch model interface
 interface BatchModel {

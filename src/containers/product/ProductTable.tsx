@@ -1,7 +1,4 @@
-"use client";
-
 import React from "react";
-import { useRouter } from "next/navigation";
 
 // MUI
 import { Box, Button, TextField } from "@mui/material";
@@ -12,16 +9,16 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { toast } from "react-toastify";
 
 // Components
-import CustomizeTable from "@/components/table/customize-table";
-import IntroTour from "@/components/intro/IntroTour";
+//import IntroTour from "@/components/intro/IntroTour";
 import MenuActionTableProduct from "../menu_action/Product/MenuActionProduct";
 
 // Hooks & API
-import useDebounce from "@/hook/useDebounce";
-import productApi from "@/axios-clients/product_api/productAPI";
+import useDebounce from "../../hooks/useDebounce";
+import productApi from "../../api/services/product_api/productAPI";
+import type { Product } from "../../types/ProductType";
 
 // Types
-import { Product } from "@/types/ProductType";
+
 
 interface SearchToolProps {
   filter: any;
@@ -42,80 +39,80 @@ const SearchTool: React.FC<SearchToolProps> = ({ filter, setFilter }) => {
   );
 };
 
-const productTableIntroSteps = [
-  {
-    element: "#intro-product-table",
-    title: "Bảng sản phẩm",
-    intro: "Đây là danh sách các sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#image-header",
-    title: "Cột Hình ảnh",
-    intro: "Hình ảnh sản phẩm.",
-    position: "right",
-  },
-  {
-    element: "#name-header",
-    title: "Cột tên sản phẩm",
-    intro: "Tên sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#selling-price-header",
-    title: "Cột Giá bán",
-    intro: "Giá bán của sản phẩm.",
-    position: "left",
-  },
-  // {
-  //   element: "#import-costs-header",
-  //   title: "Cột Giá nhập",
-  //   intro: "Giá nhập của sản phẩm.",
-  //   position: "left"
-  // },
-  {
-    element: "#stock-quantity-header",
-    title: "Cột Số lượng tồn",
-    intro: "Số lượng tồn của sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#unit-header",
-    title: "Cột Đơn vị",
-    intro: "Đơn vị của sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#date-header",
-    title: "Cột Ngày tạo",
-    intro: "Ngày tạo của sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#deleted-header",
-    title: "Cột Trạng thái",
-    intro: "Trạng thái của sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#menu-action",
-    title: "Nút hành động",
-    intro: "Nhấn vào đây để thực hiện các hành động trên sản phẩm đã chọn.",
-    position: "left",
-  },
-  {
-    element: "#search-order",
-    title: "Thanh tìm kiếm",
-    intro: "Nhập vào đây để tìm kiếm sản phẩm",
-    position: "right",
-  },
-  {
-    element: "#create-order-btn",
-    title: "Tạo sản phẩm",
-    intro: "Nhấn vào đây để thêm sản phẩm mới.",
-    position: "left",
-  },
-];
+// const productTableIntroSteps = [
+//   {
+//     element: "#intro-product-table",
+//     title: "Bảng sản phẩm",
+//     intro: "Đây là danh sách các sản phẩm.",
+//     position: "left",
+//   },
+//   {
+//     element: "#image-header",
+//     title: "Cột Hình ảnh",
+//     intro: "Hình ảnh sản phẩm.",
+//     position: "right",
+//   },
+//   {
+//     element: "#name-header",
+//     title: "Cột tên sản phẩm",
+//     intro: "Tên sản phẩm.",
+//     position: "left",
+//   },
+//   {
+//     element: "#selling-price-header",
+//     title: "Cột Giá bán",
+//     intro: "Giá bán của sản phẩm.",
+//     position: "left",
+//   },
+//   // {
+//   //   element: "#import-costs-header",
+//   //   title: "Cột Giá nhập",
+//   //   intro: "Giá nhập của sản phẩm.",
+//   //   position: "left"
+//   // },
+//   {
+//     element: "#stock-quantity-header",
+//     title: "Cột Số lượng tồn",
+//     intro: "Số lượng tồn của sản phẩm.",
+//     position: "left",
+//   },
+//   {
+//     element: "#unit-header",
+//     title: "Cột Đơn vị",
+//     intro: "Đơn vị của sản phẩm.",
+//     position: "left",
+//   },
+//   {
+//     element: "#date-header",
+//     title: "Cột Ngày tạo",
+//     intro: "Ngày tạo của sản phẩm.",
+//     position: "left",
+//   },
+//   {
+//     element: "#deleted-header",
+//     title: "Cột Trạng thái",
+//     intro: "Trạng thái của sản phẩm.",
+//     position: "left",
+//   },
+//   {
+//     element: "#menu-action",
+//     title: "Nút hành động",
+//     intro: "Nhấn vào đây để thực hiện các hành động trên sản phẩm đã chọn.",
+//     position: "left",
+//   },
+//   {
+//     element: "#search-order",
+//     title: "Thanh tìm kiếm",
+//     intro: "Nhập vào đây để tìm kiếm sản phẩm",
+//     position: "right",
+//   },
+//   {
+//     element: "#create-order-btn",
+//     title: "Tạo sản phẩm",
+//     intro: "Nhấn vào đây để thêm sản phẩm mới.",
+//     position: "left",
+//   },
+// ];
 
 const ProductTable = () => {
   //Define the state for products
@@ -228,10 +225,10 @@ const ProductTable = () => {
         >
           Tạo sản phẩm
         </Button>
-        <IntroTour
+        {/* <IntroTour
           steps={productTableIntroSteps}
           buttonContent={<InfoOutlinedIcon sx={{ cursor: "pointer" }} />}
-        />
+        /> */}
       </Box>
     );
   };

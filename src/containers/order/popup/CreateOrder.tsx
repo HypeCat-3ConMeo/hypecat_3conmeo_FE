@@ -1,19 +1,7 @@
-"use client";
-import productApi from "@/axios-clients/product_api/productAPI";
-import orderApi from "@/axios-clients/order_api/orderAPI";
-import {
-  FormProvider,
-  RHFAutoComplete,
-  RHFSelect,
-  RHFTextField,
-} from "@/components/hook_form";
-import { colors, font_weight } from "@/styles/config-file";
-import { Product } from "@/types/ProductType";
-import { yupResolver } from "@hookform/resolvers/yup";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import PersonIcon from "@mui/icons-material/Person";
-import PhoneIcon from "@mui/icons-material/Phone";
+//import PhoneIcon from "@mui/icons-material/Phone";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
@@ -38,8 +26,13 @@ import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import userApi from "@/axios-clients/user_api/userAPI";
-import { User } from "@/types/Usertype";
+import type { Product } from "../../../types/ProductType";
+import type { User } from "../../../types/Usertype";
+import productApi from "../../../api/services/product_api/productAPI";
+import userApi from "../../../api/services/user_api/userAPI";
+import orderApi from "../../../api/services/order_api/orderAPI";
+import { FormProvider } from "../../../components/hook-form";
+import { colors, font_weight } from "../../../styles/config-file";
 
 interface CreateOrderProps {
   open: boolean;

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,12 +13,11 @@ import {
     IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import productApi from "@/axios-clients/product_api/productAPI";
-import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook_form";
-import { colors, font_weight } from "@/styles/config-file";
-import { Product } from "@/types/ProductType";
 import { toast } from "react-toastify";
-import orderApi from "@/axios-clients/order_api/orderAPI";
+import type { Product } from "../../../types/ProductType";
+import productApi from "../../../api/services/product_api/productAPI";
+import orderApi from "../../../api/services/order_api/orderAPI";
+import { colors, font_weight } from "../../../styles/config-file";
 
 interface UpdateOrderProps {
     orderData: any;
