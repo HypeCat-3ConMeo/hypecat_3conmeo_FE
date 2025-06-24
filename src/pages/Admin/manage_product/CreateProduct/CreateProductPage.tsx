@@ -1,6 +1,6 @@
 import CreateProduct from '../../../../containers/product/CreateProduct';
 
-const EditProductPage = () => {
+const CreateProductPage = () => {
 
     return (
         <>
@@ -9,4 +9,4 @@ const EditProductPage = () => {
     );
 };
 
-export default EditProductPage;
+export default CreateProductPage;
