@@ -8,6 +8,12 @@ export const authRoutes = {
 
 export const adminRoutes = {
   dashboard: "/dashboard",
+  manageProduct: "/manage-product",
+  manageBatch: "/manage-batch",
+  manageOrder: "/manage-order",
+  manageUser: "/manage-user",
+  manageCategory: "/manage-category",
+  manageNews: "/manage-news",
 };
 
 export const staffRoutes = {};
