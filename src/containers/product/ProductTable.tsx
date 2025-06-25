@@ -146,10 +146,6 @@ const ProductTable = () => {
   }, [pageIndex, pageSize, debounce]);
 
   //select data
-  const selectedData = (row: any) => {
-    setSelectedRow(row);
-  };
-
   const handleChangePage = (
     _event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -224,10 +220,6 @@ const ProductTable = () => {
         >
           Tạo sản phẩm
         </Button>
-        {/* <IntroTour
-          steps={productTableIntroSteps}
-          buttonContent={<InfoOutlinedIcon sx={{ cursor: "pointer" }} />}
-        /> */}
       </Box>
     );
   };
