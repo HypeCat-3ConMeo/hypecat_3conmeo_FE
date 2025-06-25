@@ -1,17 +1,29 @@
-import CustomerHeader from "./Header/CustomerHeader";
-import CustomerSidebar from "./Sidebar/CustomerSidebar";
-import { Box } from "@mui/material";
+import React from "react";
+import { Outlet } from "react-router-dom";
+import TopBar from "./Header/TopBar/TopBar";
+import "./Layout.scss";
+// import "../../styles/main.scss";
+import Footer from "./Footer/Footer";
 
-export default function CustomerLayout({ children }: { children?: React.ReactNode }) {
-    return (
-        <Box display="flex" height="100vh">
-            <CustomerSidebar />
-            <Box flex={1} display="flex" flexDirection="column">
-                <CustomerHeader />
-                <Box component="main" p={2} flex={1} overflow="auto">
-                    {children}
-                </Box>
-            </Box>
-        </Box>
-    );
-}
+const CustomerLayout: React.FC = () => {
+  return (
+    <div
+      style={{
+        margin: "0px",
+        position: "relative",
+        overflow: "auto",
+        height: "100vh",
+      }}
+    >
+      <div className="header-content">
+        <TopBar />
+      </div>
+      <div className="main-content">
+        <Outlet />
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default CustomerLayout;

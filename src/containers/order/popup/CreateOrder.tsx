@@ -28,9 +28,9 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 import type { Product } from "../../../types/ProductType";
 import type { User } from "../../../types/Usertype";
-import productApi from "../../../api/services/product_api/productAPI";
+import productApi from "../../../api/services/ProductApi/productAPI";
 import userApi from "../../../api/services/user_api/userAPI";
-import orderApi from "../../../api/services/order_api/orderAPI";
+import orderApi from "../../../api/services/OrderApi/orderAPI";
 import { FormProvider } from "../../../components/hook-form";
 import { colors, font_weight } from "../../../styles/config-file";
 

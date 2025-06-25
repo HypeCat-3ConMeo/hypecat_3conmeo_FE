@@ -1,4 +1,4 @@
-import axiosFileClient from "@/axios-clients/axiosFileClient";
+import axiosFileClient from "../../axiosFileClient";
 
 const exportApi = {
   exportExcelDateExport: (params: { fromDate: string; toDate: string }) => {

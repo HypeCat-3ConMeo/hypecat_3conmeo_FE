@@ -3,7 +3,7 @@ export const managerRoutes = {
 };
 
 export const authRoutes = {
-  authenticate: "/",
+  authenticate: "/authenticate",
 };
 
 export const adminRoutes = {
@@ -12,4 +12,13 @@ export const adminRoutes = {
 
 export const staffRoutes = {};
 
-export const customerRoutes = {};
+export const customerRoutes = {
+  cart: "/cart",
+  userProfile: "/user-profile",
+  aboutUs: "/about-us",
+  privacyPolicy: "/privacy-policy",
+  termsOfService: "/terms-of-service",
+  home: "/",
+  news: "/news",
+  productList: "/product-list",
+};
