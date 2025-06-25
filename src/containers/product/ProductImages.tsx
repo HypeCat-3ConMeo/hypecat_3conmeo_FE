@@ -1,8 +1,6 @@
-'use client';
-
 import { useState } from 'react';
 import { Box, Grid2, Card, CardMedia } from '@mui/material';
-import { ProductImage } from '@/types/ProductType';
+import type { ProductImage } from '../../types/ProductType';
 
 
 const ProductImageGallery = ({ images }: { images: ProductImage[] }) => {

@@ -1,10 +1,8 @@
-'use client';
-
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { useState } from "react";
-import { OrderStatusType } from "@/enum/OrderStatus";
-import orderApi from "@/axios-clients/order_api/orderAPI";
 import { toast } from "react-toastify";
+import type { OrderStatusType } from "../../../enum/OrderStatus";
+import orderApi from "../../../api/services/order_api/orderAPI";
 
 interface ConfirmOrderProps {
     data: any;
