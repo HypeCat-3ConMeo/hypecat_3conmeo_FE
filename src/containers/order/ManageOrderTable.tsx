@@ -6,7 +6,7 @@ import MenuActionOrder from "../menu_action/Order/MenuActionOrder";
 import CreateOrder from "./popup/CreateOrder";
 //import IntroTour from "@/components/intro/IntroTour";
 //import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import orderApi from "../../api/services/order_api/orderAPI";
+import orderApi from "../../api/services/OrderApi/orderAPI";
 import useDebounce from "../../hooks/useDebounce";
 import type { Order } from "../../types/OrderType";
 
