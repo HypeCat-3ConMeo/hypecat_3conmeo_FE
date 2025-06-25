@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 
 // MUI
 import { Box, Button, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 // library
 import { toast } from "react-toastify";
@@ -14,11 +14,11 @@ import MenuActionTableProduct from "../menu_action/Product/MenuActionProduct";
 
 // Hooks & API
 import useDebounce from "../../hooks/useDebounce";
-import productApi from "../../api/services/product_api/productAPI";
+import productApi from "../../api/services/ProductApi/productAPI";
 import type { Product } from "../../types/ProductType";
+import CTable from "../../components/table/CTable";
 
 // Types
-
 
 interface SearchToolProps {
   filter: any;
@@ -121,7 +121,6 @@ const ProductTable = () => {
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [totalItemsCount, setTotalItemsCount] = React.useState<number>(0);
   const [selectedRow, setSelectedRow] = React.useState<any>(null);
-  const router = useRouter();
   const [filter, setFilter] = React.useState<any>({ SearchTerm: "" });
   const debounce = useDebounce(filter, 0);
 
@@ -221,7 +220,7 @@ const ProductTable = () => {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={() => router.push("/admin/manage_product/create")}
+          onClick={() => {}}
         >
           Tạo sản phẩm
         </Button>
@@ -243,7 +242,7 @@ const ProductTable = () => {
   );
   return (
     <div>
-      <CustomizeTable
+      <CTable
         tableHeaderTitle={tableHeaderTitle}
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
@@ -256,7 +255,6 @@ const ProductTable = () => {
         selectedData={(row: Product) => setSelectedRow(row)}
         data={products}
         title="Danh sách sản phẩm"
-        tableContainerId="intro-product-table"
       />
     </div>
   );

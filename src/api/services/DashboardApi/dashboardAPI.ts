@@ -1,4 +1,5 @@
-import axiosClient from "../axiosClient";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axiosClient from "../../axiosInstance";
 
 const dashboardApi = {
   dashboard: (params?: any) => {

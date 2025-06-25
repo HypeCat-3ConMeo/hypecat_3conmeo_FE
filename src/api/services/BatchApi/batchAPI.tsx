@@ -1,6 +1,5 @@
-import { get } from "http";
-import axiosClient from "../axiosClient";
-import { AxiosResponse } from "axios";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axiosClient from "../../axiosInstance";
 
 const BatchAPI = {
   //GET api

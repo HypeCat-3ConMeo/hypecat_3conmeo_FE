@@ -17,7 +17,7 @@ import {
 import moment from "moment";
 import React, { useRef } from "react";
 import { toast } from "react-toastify";
-import orderApi from "../../api/services/order_api/orderAPI";
+import orderApi from "../../api/services/OrderApi/orderAPI";
 import type { OrderDetailType } from "../../types/OrderDetailType";
 import { colors, font_weight } from "../../styles/config-file";
 

@@ -1,4 +1,5 @@
-import axiosClient from "../axiosClient";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axiosClient from "../../axiosInstance";
 
 const orderApi = {
   //GET api
@@ -42,7 +43,6 @@ const orderApi = {
       },
     });
   },
-
 
   //DELETE api
   deleteSomeThing: (id: string) => {

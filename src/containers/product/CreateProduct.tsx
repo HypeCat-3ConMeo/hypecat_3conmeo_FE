@@ -14,8 +14,8 @@ import { toast } from "react-toastify";
 import type { Category } from "../../types/CategoryType";
 import type { CreateProductFormInput } from "../../types/ProductType";
 import { uploadImageToFirebase } from "../../firebase/uploadImageToFirebase";
-import categoryApi from "../../api/services/category_api/categoryAPI";
-import productApi from "../../api/services/product_api/productAPI";
+import categoryApi from "../../api/services/CategoryApi/categoryAPI";
+import productApi from "../../api/services/ProductApi/productAPI";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Tên sản phẩm là bắt buộc"),
