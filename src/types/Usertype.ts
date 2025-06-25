@@ -4,8 +4,8 @@ interface Role {
 }
 
 interface Image {
-  id: number;
-  urlPath: string;
+  id?: number;
+  urlPath: unknown;
 }
 
 export interface User {

@@ -1,8 +1,11 @@
-import axiosClient from "../axiosClient";
+import type { AxiosResponse } from "axios";
+import type { User } from "../../../types/Usertype";
+import axiosClient from "../../axiosInstance";
+import { PROFILE } from "../../PathnameApi";
 
 const userApi = {
   //GET api
-  getListUsers: (params?: any) => {
+  getListUsers: (params?: string[]) => {
     const url = "/Users/GetUserPagination";
     return axiosClient.get(url, {
       params,
@@ -12,7 +15,7 @@ const userApi = {
     });
   },
 
-  getUserByPhone: (params?: any) => {
+  getUserByPhone: (params?: string) => {
     const url = "/Users/GetCustomerInfoByPhone";
     return axiosClient.get(url, {
       params,
@@ -22,20 +25,30 @@ const userApi = {
     });
   },
 
+  //Get profile
+  getProfile: (params?: string): Promise<User> => {
+    return axiosClient.get(PROFILE, {
+      params,
+      paramsSerializer: {
+        indexes: null,
+      },
+    });
+  },
+
   //POST api (multipart/form-data)
-  createNewUser: (body: any) => {
+  createNewUser: (body: string) => {
     const url = "/Users/CreateUser";
     return axiosClient.post(url, body);
   },
 
   //POST api
-  postSomeThingNor: (body: any) => {
+  postSomeThingNor: (body: string) => {
     const url = "/api/v1/someThing";
     return axiosClient.post(url, body);
   },
 
   //PUT api
-  putSomeThing: (body: any) => {
+  putSomeThing: (body: string) => {
     const url = "/api/v1/someThing";
     return axiosClient.put(url, body);
   },
@@ -47,7 +60,7 @@ const userApi = {
   },
 
   //PATCH api
-  patchSomeThing: (id: string, body: any) => {
+  patchSomeThing: (id: string, body: string) => {
     const url = `/api/v1/someThing/${id}`;
     return axiosClient.patch(url, body);
   },

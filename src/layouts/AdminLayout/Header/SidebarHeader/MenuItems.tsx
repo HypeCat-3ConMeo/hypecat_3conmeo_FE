@@ -10,7 +10,7 @@ export const menuItems: MenuItemLayout[] = [
       {
         icon: <DashboardIcon />,
         label: "Dashboard",
-        path: config.adminRoutes.dashboard,
+        path: config.customerRoutes.test,
       },
     ],
   },
