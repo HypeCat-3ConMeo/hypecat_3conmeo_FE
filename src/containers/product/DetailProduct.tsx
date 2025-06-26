@@ -25,13 +25,14 @@ import { toast } from "react-toastify";
 import DeleteProduct from "./popup/DeleteProduct";
 import EditProduct from "./popup/EditProduct";
 import BatchProductTable from "./BatchProductTable";
+import type { Product } from "../../types/ProductType";
 
 type DetailProductProps = {
   id: string;
 };
 
 const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
-  const [product, setProduct] = React.useState(null);
+  const [product, setProduct] = React.useState<Product | null>(null);
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
@@ -131,9 +132,7 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
                 <Button
                   variant="outlined"
                   startIcon={<EditOutlinedIcon />}
-                  onClick={() =>
-                    router.push(`/admin/manage_product/${id}/edit`)
-                  }
+                  onClick={() => {}}
                   sx={{ borderRadius: 3 }}
                 >
                   Chỉnh sửa
@@ -146,9 +145,9 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
 
       {/* Content */}
       <Box sx={{ p: 3 }}>
-        <Grid2 container spacing={3}>
+        <Grid container spacing={3}>
           {/* Images */}
-          <Grid2 size={{ xs: 12, md: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Card
               elevation={0}
               sx={{ border: "1px solid #e2e8f0", borderRadius: 3 }}
@@ -174,10 +173,10 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
                 )}
               </CardContent>
             </Card>
-          </Grid2>
+          </Grid>
 
           {/* Product Info */}
-          <Grid2 size={{ xs: 12, md: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Stack spacing={3}>
               {/* Status & Category */}
               <Card
@@ -236,8 +235,8 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
                   <Typography variant="h6" fontWeight={600} mb={3}>
                     Thông tin giá
                   </Typography>
-                  <Grid2 container spacing={2}>
-                    <Grid2 size={12}>
+                  <Grid container spacing={2}>
+                    <Grid size={12}>
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Avatar sx={{ bgcolor: "#fff3e0" }}>
                           <TrendingUpOutlinedIcon />
@@ -254,8 +253,8 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
                           </Typography>
                         </Box>
                       </Stack>
-                    </Grid2>
-                    <Grid2 size={12}>
+                    </Grid>
+                    <Grid size={12}>
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Avatar sx={{ bgcolor: "#f3e5f5" }}>
                           <LocalOfferOutlinedIcon />
@@ -276,8 +275,8 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
                           </Typography>
                         </Box>
                       </Stack>
-                    </Grid2>
-                  </Grid2>
+                    </Grid>
+                  </Grid>
                 </CardContent>
               </Card>
 
@@ -309,8 +308,8 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
                 </CardContent>
               </Card>
             </Stack>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
 
         {/* Batch Section */}
         {product.batchDetails && product.batchDetails.length > 0 && (
@@ -325,7 +324,6 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
             </Card>
           </Box>
         )}
-
 
         {/* History Section */}
         {product.logs && product.logs.length > 0 && (
@@ -363,5 +361,5 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
       )}
     </Box>
   );
-}
+};
 export default DetailProduct;

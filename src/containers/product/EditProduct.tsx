@@ -1,19 +1,18 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-//import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import {
-  Container,
-  Paper,
-  Typography,
-  Grid2,
-  Box,
-  Button,
-} from "@mui/material";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Container, Paper, Typography, Grid, Box, Button } from "@mui/material";
 import { toast } from "react-toastify";
 import type { EditProductFormInput } from "../../types/ProductType";
 import { uploadImageToFirebase } from "../../firebase/uploadImageToFirebase";
 import productApi from "../../api/services/ProductApi/productAPI";
+import {
+  FormProvider,
+  RHFSelect,
+  RHFTextField,
+  RHFUploadSingleFile,
+} from "../../components/hook-form";
 
 const productStatusOptions = [
   { value: "", label: "Chọn trạng thái" },
@@ -60,7 +59,6 @@ const validationSchema = Yup.object().shape({
 });
 
 const EditProduct = ({ id }: { id: string }) => {
-  const router = useRouter();
   const methods = useForm<EditProductFormInput>({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
@@ -78,7 +76,6 @@ const EditProduct = ({ id }: { id: string }) => {
   const {
     handleSubmit,
     reset,
-    watch,
     setValue,
     formState: { isSubmitting },
   } = methods;
@@ -106,41 +103,24 @@ const EditProduct = ({ id }: { id: string }) => {
       //console.log(data)
       await productApi.UpdateProduct(id, data);
       toast.success("Cập nhật sản phẩm thành công");
-      router.push(`/admin/manage_product/${id}/detail`);
     } catch (error) {
       toast.error("Cập nhật sản phẩm thất bại");
       console.error("Cập nhật sản phẩm thất bại:", error);
     }
   };
-  const values = watch();
-  const handleDropImage = React.useCallback(
+
+  const handleDrop = React.useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async (acceptedFiles: any) => {
-      const images = values.productImages || [];
+    async (acceptedFiles: any[]) => {
+      const file = acceptedFiles[0];
 
-      const uploadedImages = await Promise.all(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        acceptedFiles.map(async (file: any) => {
-          const downloadURL = await uploadImageToFirebase(file);
-          return downloadURL;
-        })
-      );
-
-      setValue("productImages", [...images, ...uploadedImages]);
+      const coverImage = await uploadImageToFirebase(file);
+      if (typeof coverImage === "string") {
+        setValue("productImages", [coverImage]);
+      }
     },
-    [setValue, values.productImages]
+    [setValue]
   );
-
-  const handleRemoveAll = () => {
-    setValue("productImages", []);
-  };
-
-  const handleRemove = (file: File | string) => {
-    const filteredItems = values.productImages?.filter(
-      (_file) => _file !== file
-    );
-    setValue("productImages", filteredItems);
-  };
 
   return (
     <Container maxWidth="md" sx={{ my: 2 }}>
@@ -149,17 +129,17 @@ const EditProduct = ({ id }: { id: string }) => {
           Chỉnh sửa sản phẩm
         </Typography>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid2 container spacing={2}>
-            <Grid2 size={{ xs: 12, sm: 6 }}>
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <RHFTextField name="name" label="Tên sản phẩm" />
-            </Grid2>
-            <Grid2 size={{ xs: 12, sm: 6 }}>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <RHFTextField name="importCosts" label="Giá nhập" />
-            </Grid2>
-            <Grid2 size={{ xs: 12, sm: 6 }}>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <RHFTextField name="sellingPrice" label="Giá bán" />
-            </Grid2>
-            <Grid2 size={{ xs: 12, sm: 6 }}>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <RHFSelect name="status" label="Trạng thái">
                 {productStatusOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -167,24 +147,15 @@ const EditProduct = ({ id }: { id: string }) => {
                   </option>
                 ))}
               </RHFSelect>
-            </Grid2>
-            <Grid2 size={{ xs: 12 }}>
-              <RHFUploadMultiFile
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <RHFUploadSingleFile
                 name="productImages"
-                showPreview
                 label="Ảnh sản phẩm"
-                onDrop={handleDropImage}
-                onRemove={handleRemove}
-                onRemoveAll={handleRemoveAll}
+                onDrop={handleDrop}
               />
-
-              {/* <RHFUploadSingleFile
-                                        name="productImages"
-                                        label="Ảnh sản phẩm"
-                                        onDrop={handleDrop}
-                                      /> */}
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
 
           <Box
             mt={4}
@@ -208,7 +179,6 @@ const EditProduct = ({ id }: { id: string }) => {
             <Button
               variant="outlined"
               color="secondary"
-              onClick={() => router.push(`/admin/manage_product/${id}/detail`)}
               sx={{
                 borderColor: "secondary.main",
                 color: "secondary.main",

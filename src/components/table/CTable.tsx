@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Chip,
   Table,
   TableBody,
   TableCell,
@@ -13,13 +12,13 @@ import {
   TableRow,
   Typography,
   useTheme,
-  CircularProgress,
   Alert,
   TablePagination,
+  Skeleton,
 } from "@mui/material";
-import { alpha, styled } from "@mui/material/styles";
+import { alpha, keyframes, styled } from "@mui/material/styles";
 import React, { type ReactNode } from "react";
-import moment from "moment"; // Import moment.js for date formatting
+import moment from "moment";
 import { colors } from "../../styles/Color/color";
 
 interface CTableProps {
@@ -142,42 +141,29 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
       },
     },
   },
-  // "& .MuiTableHead-root": {
-  //   "& .MuiTableCell-head": {
-  //     fontWeight: "bold",
-  //     fontSize: "0.875rem",
-  //   },
-  // },
 }));
 
-// const StyledTablePagination = styled(TablePagination)(({ theme }) => ({
-//   borderTop: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
-//   backgroundColor: alpha(theme.palette.background.default, 0.5),
+// Animations
+const shimmer = keyframes`
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+`;
 
-//   "& .MuiTablePagination-toolbar": {
-//     paddingLeft: theme.spacing(2),
-//     paddingRight: theme.spacing(2),
-//   },
-
-//   "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows": {
-//     fontSize: "0.875rem",
-//     color: theme.palette.text.secondary,
-//   },
-// }));
-
-const LoadingOverlay = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: alpha(theme.palette.background.paper, 0.8),
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  zIndex: 2,
-  backdropFilter: "blur(2px)",
-  borderRadius: "inherit",
+const LoadingSkeleton = styled(Skeleton)(({ theme }) => ({
+  background: `linear-gradient(90deg, ${alpha(
+    theme.palette.grey[300],
+    0.1
+  )} 25%, ${alpha(theme.palette.grey[300], 0.2)} 50%, ${alpha(
+    theme.palette.grey[300],
+    0.1
+  )} 75%)`,
+  backgroundSize: "200px 100%",
+  animation: `${shimmer} 2s infinite linear`,
+  borderRadius: 8,
 }));
 
 const CTable: React.FC<CTableProps> = ({
@@ -213,18 +199,6 @@ const CTable: React.FC<CTableProps> = ({
       return column.render(value, row);
     }
 
-    // Handle null/undefined values early
-    if (value === null || value === undefined) {
-      // Special cases for date formats
-      if (
-        column.format === "datetime" ||
-        column.format === "dateTimeDiscount"
-      ) {
-        return "không có thời hạn";
-      }
-      return "-";
-    }
-
     // Date formatting
     if (column.format === "date") {
       return value ? moment(value).format("DD/MM/YYYY") : "-";
@@ -235,14 +209,6 @@ const CTable: React.FC<CTableProps> = ({
       return value
         ? moment(value).format("DD/MM/YYYY HH:mm")
         : "không có thời hạn";
-    }
-
-    // DateTime discount formatting
-    if (column.format === "dateTimeDiscount") {
-      if (!value || value === "") {
-        return "không có thời hạn";
-      }
-      return moment(value).format("DD/MM/YYYY");
     }
 
     // Number formatting
@@ -274,90 +240,6 @@ const CTable: React.FC<CTableProps> = ({
       return roleMap[value] || "-";
     }
 
-    // Status formatting
-    if (column.format === "status") {
-      const statusMap: { [key: string]: string } = {
-        Pending: "Đang chờ",
-        Complete: "Hoàn thành",
-      };
-      return statusMap[value] || "-";
-    }
-
-    // Status discount formatting
-    if (column.format === "statusDiscount") {
-      if (value === true) {
-        return (
-          <Chip
-            label="Hoạt động"
-            color="success"
-            variant="outlined"
-            size="small"
-            sx={{ minWidth: "90px" }}
-          />
-        );
-      } else if (value === false) {
-        return (
-          <Chip
-            label="Kết thúc"
-            color="warning"
-            variant="outlined"
-            size="small"
-            sx={{ minWidth: "90px" }}
-          />
-        );
-      }
-      return (
-        <Chip
-          label="-"
-          color="default"
-          variant="outlined"
-          size="small"
-          sx={{ minWidth: "90px" }}
-        />
-      );
-    }
-
-    // Status hotpot formatting
-    if (column.format === "statusHotpot") {
-      const statusConfig: { [key: string]: { label: string; color: any } } = {
-        Pending: { label: "Đang chờ", color: "warning" },
-        Completed: { label: "Hoàn thành", color: "success" },
-        "In Progress": { label: "Đang tiến hành", color: "info" },
-        Cancelled: { label: "Huỷ", color: "error" },
-      };
-
-      const config = statusConfig[value] || { label: "-", color: "default" };
-      return (
-        <Chip
-          label={config.label}
-          color={config.color}
-          variant="outlined"
-          size="small"
-          sx={{ minWidth: "90px" }}
-        />
-      );
-    }
-
-    // Status detail hotpot formatting
-    if (column.format === "statusDetailHopot") {
-      const statusConfig: { [key: string]: { label: string; color: any } } = {
-        Available: { label: "Khả dụng", color: "success" },
-        Damaged: { label: "Bị hư", color: "error" },
-        Rented: { label: "Đang Cho thuê", color: "primary" },
-      };
-
-      const config = statusConfig[value] || { label: "-", color: "default" };
-      return (
-        <Chip
-          label={config.label}
-          color={config.color}
-          variant="outlined"
-          size="small"
-          sx={{ minWidth: "90px" }}
-        />
-      );
-    }
-
     // Price formatting
     if (column.format === "price") {
       if (typeof value === "number") {
@@ -366,9 +248,96 @@ const CTable: React.FC<CTableProps> = ({
       return "N/A";
     }
 
+    //IMAGES formatting
+    if (column.format && column.format === "images") {
+      if (Array.isArray(value) && value.length > 0) {
+        return (
+          <Box
+            sx={{
+              position: "relative",
+              display: "inline-block",
+              "&:hover": {
+                transform: "scale(1.1)",
+                transition: "transform 0.2s ease-in-out",
+              },
+            }}
+          >
+            <img
+              src={value[0]?.urlPath}
+              alt="product"
+              style={{
+                width: "56px",
+                height: "56px",
+                borderRadius: "12px",
+                objectFit: "cover",
+                border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                boxShadow: `0 4px 12px ${alpha(
+                  theme.palette.common.black,
+                  0.1
+                )}`,
+              }}
+            />
+          </Box>
+        );
+      }
+    }
+    if (column.format && column.format === "images") {
+      if (Array.isArray(value) && value.length > 0) {
+        return (
+          <Box
+            sx={{
+              position: "relative",
+              display: "inline-block",
+              "&:hover": {
+                transform: "scale(1.1)",
+                transition: "transform 0.2s ease-in-out",
+              },
+            }}
+          >
+            <img
+              src={value[0]?.urlPath}
+              alt="product"
+              style={{
+                width: "56px",
+                height: "56px",
+                borderRadius: "12px",
+                objectFit: "cover",
+                border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                boxShadow: `0 4px 12px ${alpha(
+                  theme.palette.common.black,
+                  0.1
+                )}`,
+              }}
+            />
+          </Box>
+        );
+      }
+    }
+
     return value;
   }
 
+  const renderSkeletonRows = () => {
+    return Array.from({ length: size }).map((_, index) => (
+      <TableRow key={`skeleton-${index}`}>
+        <TableCell>
+          <LoadingSkeleton variant="text" width={30} height={20} />
+        </TableCell>
+        {tableHeaderTitle?.map((column: any) => (
+          <TableCell key={`skeleton-${column.id}-${index}`}>
+            <LoadingSkeleton
+              variant="rectangular"
+              width={Math.random() * 100 + 80}
+              height={20}
+            />
+          </TableCell>
+        ))}
+        <TableCell>
+          <LoadingSkeleton variant="circular" width={32} height={32} />
+        </TableCell>
+      </TableRow>
+    ));
+  };
   const isClickableRow = Boolean(onRowClick || selectedData);
   const hasData = data && data.length > 0;
 
@@ -415,11 +384,7 @@ const CTable: React.FC<CTableProps> = ({
         <CardContent sx={{ pt: 1 }}>
           <Box sx={{ position: "relative" }}>
             {/* Loading Overlay */}
-            {loading && (
-              <LoadingOverlay>
-                <CircularProgress size={40} />
-              </LoadingOverlay>
-            )}
+            {loading && renderSkeletonRows()}
 
             <StyledTableContainer>
               <Table stickyHeader>

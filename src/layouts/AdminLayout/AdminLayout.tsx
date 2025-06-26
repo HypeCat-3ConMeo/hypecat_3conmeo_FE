@@ -7,7 +7,7 @@ import SidebarHeader, {
 } from "./Header/SidebarHeader/SidebarHeader";
 import "./Layout.scss";
 
-const ManagerLayout: React.FC = () => {
+const AdminLayout: React.FC = () => {
   const [open, setOpen] = useState(true); //track drawer
   return (
     <div className="staff-layout">
@@ -31,4 +31,4 @@ const ManagerLayout: React.FC = () => {
   );
 };
 
-export default ManagerLayout;
+export default AdminLayout;
