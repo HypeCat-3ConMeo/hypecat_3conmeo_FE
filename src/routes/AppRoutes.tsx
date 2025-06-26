@@ -4,7 +4,8 @@ import config from "../configs";
 import AuthenticatePage from "../pages/Auth/AuthenticatePage";
 import Home from "../pages/Customer/Home/home";
 import CustomerLayout from "../layouts/CustomerLayout/CustomerLayout";
-// import Home from "../pages/Home/HomePage";
+import AdminLayout from "../layouts/AdminLayout/AdminLayout";
+import ProductPage from "../pages/Admin/manage_product/ManageProductPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -20,6 +21,14 @@ const AppRoute: React.FC = () => {
           key={"news"}
           path={config.customerRoutes.home}
           element={<Home />}
+        />
+      </Route>
+
+      <Route key={"dashboard"} element={<AdminLayout />}>
+        <Route
+          key={"news"}
+          path={config.adminRoutes.manageProduct}
+          element={<ProductPage />}
         />
       </Route>
     </Routes>

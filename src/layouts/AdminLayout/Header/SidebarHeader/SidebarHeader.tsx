@@ -61,7 +61,8 @@ const SidebarDrawer: React.FC<SidebarDrawerProps> = ({ open, setOpen }) => {
   const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { auth } = useAuth();
-  const role = auth?.user?.role;
+
+  const role = auth?.user?.role || "Admin"; // Default to Staff if no role
 
   // State for expanding/collapsing menu categories
   const [openCategories, setOpenCategories] = useState<{
@@ -91,6 +92,10 @@ const SidebarDrawer: React.FC<SidebarDrawerProps> = ({ open, setOpen }) => {
 
     setOpenCategories((prev) => ({ ...prev, ...newOpenCategories }));
   }, [location.pathname, role]);
+
+  useEffect(() => {
+    if (isMobile) setOpen(false);
+  }, [isMobile, setOpen]);
 
   // Helper function to check if a path is active
   const isActivePath = (path: string): boolean => {
@@ -194,15 +199,16 @@ const SidebarDrawer: React.FC<SidebarDrawerProps> = ({ open, setOpen }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              "& > *": { transform: "scale(1.2)" },
-            }}
-          >
-            <LogoContainer />
-          </Box>
+          {!isMobile && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <LogoContainer />
+            </Box>
+          )}
           <Box sx={{ flexGrow: 1 }} />
           {/* User profile section */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -264,6 +270,12 @@ const SidebarDrawer: React.FC<SidebarDrawerProps> = ({ open, setOpen }) => {
           },
         }}
       >
+        {/* Drawer header */}
+        {isMobile && (
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+            <LogoContainer />
+          </Box>
+        )}
         {/* User welcome section */}
         <Box sx={{ p: 2, textAlign: "center" }}>
           <Avatar
