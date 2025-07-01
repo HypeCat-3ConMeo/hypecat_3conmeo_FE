@@ -17,6 +17,8 @@ import useDebounce from "../../hooks/useDebounce";
 import productApi from "../../api/services/ProductApi/productAPI";
 import type { Product } from "../../types/ProductType";
 import CTable from "../../components/table/CTable";
+import { useNavigate } from "react-router-dom";
+import config from "../../configs";
 
 // Types
 
@@ -48,6 +50,7 @@ const ProductTable = () => {
   const [selectedRow, setSelectedRow] = React.useState<any>(null);
   const [filter, setFilter] = React.useState<any>({ SearchTerm: "" });
   const debounce = useDebounce(filter, 0);
+  const navigate = useNavigate();
 
   //Call the API to get the products
   const getProducts = async () => {
@@ -103,7 +106,6 @@ const ProductTable = () => {
       align: "center",
       format: "price",
     },
-    { id: "unit", label: "Đơn vị", align: "center", introId: "unit-header" },
     {
       id: "createDate",
       label: "Ngày tạo",
@@ -133,7 +135,9 @@ const ProductTable = () => {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={() => {}}
+          onClick={() => {
+            navigate(config.adminRoutes.CreateProduct);
+          }}
         >
           Tạo sản phẩm
         </Button>
@@ -164,6 +168,10 @@ const ProductTable = () => {
         selectedData={(row: Product) => setSelectedRow(row)}
         data={products}
         title="Danh sách sản phẩm"
+        responsiveConfig={{
+          hideFormatsOnMobile: ["datetime", "price", "boolean", "date"], // Hide these formats on mobile
+          hideFormatsOnTablet: ["datetime"], // Hide these formats on tablet
+        }}
       />
     </div>
   );

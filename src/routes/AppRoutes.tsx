@@ -6,6 +6,8 @@ import Home from "../pages/Customer/Home/home";
 import CustomerLayout from "../layouts/CustomerLayout/CustomerLayout";
 import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 import ProductPage from "../pages/Admin/manage_product/ManageProductPage";
+import CreateProductPage from "../pages/Admin/manage_product/CreateProduct/CreateProductPage";
+import ManageCategoryPage from "../pages/Admin/manage_category/ManageCategory";
 
 const AppRoute: React.FC = () => {
   return (
@@ -26,9 +28,19 @@ const AppRoute: React.FC = () => {
 
       <Route key={"dashboard"} element={<AdminLayout />}>
         <Route
-          key={"news"}
+          key={"products"}
           path={config.adminRoutes.manageProduct}
           element={<ProductPage />}
+        />
+        <Route
+          key={"createProduct"}
+          path={config.adminRoutes.CreateProduct}
+          element={<CreateProductPage />}
+        />
+        <Route
+          key={"categories"}
+          path={config.adminRoutes.manageCategory}
+          element={<ManageCategoryPage />}
         />
       </Route>
     </Routes>
