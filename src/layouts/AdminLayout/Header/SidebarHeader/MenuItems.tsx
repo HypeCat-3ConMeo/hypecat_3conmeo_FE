@@ -2,6 +2,7 @@ import { Dashboard as DashboardIcon } from "@mui/icons-material";
 
 import config from "../../../../configs";
 import { type MenuItemLayout } from "../../../../types/menu";
+import Iconify from "../../../../components/Iconify";
 
 export const menuItems: MenuItemLayout[] = [
   {
@@ -9,8 +10,20 @@ export const menuItems: MenuItemLayout[] = [
     menu: [
       {
         icon: <DashboardIcon />,
-        label: "Dashboard",
+        label: "Bảng Thống Kê",
         path: config.adminRoutes.dashboard,
+      },
+      {
+        icon: (
+          <Iconify icon="mdi:package-variant-closed" width={24} height={24} />
+        ),
+        label: "Sản Phẩm",
+        path: config.adminRoutes.manageProduct,
+      },
+      {
+        icon: <Iconify icon="mdi:shape-outline" width={24} height={24} />,
+        label: "Loại Sản Phẩm",
+        path: config.adminRoutes.manageCategory,
       },
     ],
   },

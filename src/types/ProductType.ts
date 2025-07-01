@@ -2,7 +2,6 @@ import type { BatchDetail } from "./BatchType";
 import type { Category } from "./CategoryType";
 import type { SourceOfProduct } from "./SourceOfProduct";
 
-
 export interface ProductImage {
   id?: string;
   urlPath: string;
@@ -22,16 +21,11 @@ export interface ProductLog {
 export interface CreateProductFormInput {
   name: string;
   categoryId: number;
-  //originalPrice: number;
-  sellingPrice: number;
-  userName: string;
-  //phone: string;
-  //address: string;
-  importCosts: number;
-  stockQuantity: number;
-  unit: string;
+  packsPerUnit: number;
+  language: string;
+  description: string;
   status: string;
-  productImages: (File | string)[];
+  productImages: string;
 }
 
 export interface EditProductFormInput {
