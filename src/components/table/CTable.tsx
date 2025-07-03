@@ -16,6 +16,7 @@ import {
   TablePagination,
   Skeleton,
   useMediaQuery,
+  Chip,
 } from "@mui/material";
 import { alpha, keyframes, styled } from "@mui/material/styles";
 import React, { type ReactNode, useMemo } from "react";
@@ -64,6 +65,20 @@ const StyledCard = styled(Card)(({ theme }) => ({
   borderRadius: 16,
   boxShadow: `0 8px 32px 0 ${alpha(theme.palette.common.black, 0.08)}`,
   border: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
+}));
+
+const StyledChip = styled(Chip)(({ theme }) => ({
+  fontWeight: 600,
+  borderRadius: 12,
+  fontSize: "0.75rem",
+  height: 28,
+  border: "1px solid",
+  backdropFilter: "blur(8px)",
+  transition: "all 0.2s ease-in-out",
+  "&:hover": {
+    transform: "scale(1.05)",
+    boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, 0.15)}`,
+  },
 }));
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
@@ -356,6 +371,66 @@ const CTable: React.FC<CTableProps> = ({
             />
           </Box>
         );
+      }
+    }
+
+    // Deleted status
+    if (column.format && column.format === "deleted") {
+      switch (value) {
+        case true:
+          return (
+            <StyledChip
+              label="Không khả dụng"
+              sx={{
+                bgcolor: alpha(colors.red_200, 0.9),
+                color: colors.red_800,
+                borderColor: colors.red_400,
+              }}
+            />
+          );
+        case false:
+          return (
+            <StyledChip
+              label="Đang khả dụng"
+              sx={{
+                bgcolor: alpha(colors.green_200, 0.9),
+                color: colors.green_800,
+                borderColor: colors.green_400,
+              }}
+            />
+          );
+        default:
+          return "-";
+      }
+    }
+
+    ///// Status formatting
+    if (column.format && column.format === "status") {
+      switch (value) {
+        case "Active":
+          return (
+            <StyledChip
+              label="Hoạt động"
+              sx={{
+                bgcolor: alpha(colors.green_200, 0.9),
+                color: colors.green_800,
+                borderColor: colors.green_400,
+              }}
+            />
+          );
+        case "UnActive":
+          return (
+            <StyledChip
+              label="Không hoạt động"
+              sx={{
+                bgcolor: alpha(colors.red_200, 0.9),
+                color: colors.red_600,
+                borderColor: colors.red_400,
+              }}
+            />
+          );
+        default:
+          return "-";
       }
     }
 

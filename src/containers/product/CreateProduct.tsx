@@ -28,13 +28,13 @@ import {
   RHFSelect,
   RHFTextField,
   RHFTextFieldNumber,
+  RHFUploadMultiFile,
   RHFUploadSingleFile,
 } from "../../components/hook-form";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Tên sản phẩm là bắt buộc"),
   categoryId: Yup.number().required("Loại sản phẩm là bắt buộc"),
-
   packsPerUnit: Yup.number()
     .transform((value, originalValue) => {
       if (typeof originalValue === "string") {
@@ -48,7 +48,10 @@ const validationSchema = Yup.object().shape({
   language: Yup.string().required("Ngôn ngữ là bắt buộc"),
   description: Yup.string().required("Mô tả sản phẩm là bắt buộc"),
   status: Yup.string().required("Trạng thái là bắt buộc"),
-  productImages: Yup.string().required("Ảnh sản phẩm là bắt buộc"),
+  cover: Yup.string().required("Ảnh sản phẩm là bắt buộc"),
+  productImages: Yup.array()
+    .min(1, "Ảnh sản phẩm là bắt buộc")
+    .required("Ảnh sản phẩm là bắt buộc"),
 });
 
 const CreateProduct = () => {
@@ -63,10 +66,11 @@ const CreateProduct = () => {
       name: "",
       categoryId: 0,
       packsPerUnit: 0,
-      language: "vi",
+      language: "Tiếng Nhật",
       description: "",
       status: "Available",
-      productImages: "",
+      productImages: [],
+      cover: "",
     },
   });
 
@@ -74,8 +78,10 @@ const CreateProduct = () => {
     handleSubmit,
     formState: { isSubmitting },
     setValue,
+    watch,
   } = methods;
 
+  const values = watch();
   // Get categories
   React.useEffect(() => {
     const getCategories = async () => {
@@ -108,7 +114,6 @@ const CreateProduct = () => {
     try {
       const productData = {
         ...data,
-        productImages: [data.productImages],
         boxId: selectedBoxID,
       };
       await productApi.CreateProduct(productData);
@@ -128,7 +133,7 @@ const CreateProduct = () => {
       try {
         const coverImage = await uploadImageToFirebase(file);
         if (typeof coverImage === "string") {
-          setValue("productImages", coverImage, { shouldValidate: true });
+          setValue("cover", coverImage, { shouldValidate: true });
           toast.success("Tải ảnh lên thành công!");
         }
       } catch (error) {
@@ -142,6 +147,35 @@ const CreateProduct = () => {
   const handleGoBack = () => {
     // Add your navigation logic here
     window.history.back();
+  };
+
+  const handleDropImage = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async (acceptedFiles: any) => {
+      const images = values.productImages || [];
+
+      const uploadedImages = await Promise.all(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        acceptedFiles.map(async (file: any) => {
+          const downloadURL = await uploadImageToFirebase(file);
+          return downloadURL;
+        })
+      );
+
+      setValue("productImages", [...images, ...uploadedImages]);
+    },
+    [setValue, values.productImages]
+  );
+
+  const handleRemoveAll = () => {
+    setValue("productImages", []);
+  };
+
+  const handleRemove = (file: File | string) => {
+    const filteredItems = values.productImages?.filter(
+      (_file) => _file !== file
+    );
+    setValue("productImages", filteredItems);
   };
 
   return (
@@ -258,22 +292,15 @@ const CreateProduct = () => {
                   <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
                     ⚙️ Cài đặt
                   </Typography>
-                  <Divider />
+                  <Divider />D
                 </Box>
               </Grid>
 
               <Grid size={{ mobile: 12, laptop: 6 }}>
                 <RHFSelect name="language" label="Ngôn ngữ" fullWidth>
-                  <option value="JP">Tiếng Nhật</option>
-                  <option value="EN">Tiếng Anh</option>
-                </RHFSelect>
-              </Grid>
-
-              <Grid size={{ mobile: 12, laptop: 6 }}>
-                <RHFSelect name="status" label="Trạng thái" fullWidth>
-                  <option value="Available">Có sẵn</option>
-                  <option value="Out of Stock">Hết hàng</option>
-                  <option value="Discontinued">Ngừng kinh doanh</option>
+                  <option value="Tiếng Nhật">Tiếng Nhật</option>
+                  <option value="Tiếng Anh">Tiếng Anh</option>
+                  <option value="Tiếng Trung">Tiếng Trung</option>
                 </RHFSelect>
               </Grid>
 
@@ -281,7 +308,7 @@ const CreateProduct = () => {
               <Grid size={{ mobile: 12 }}>
                 <Box sx={{ my: 3 }}>
                   <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
-                    🖼️ Hình ảnh sản phẩm
+                    🖼️ Hình ảnh đại diện
                   </Typography>
                   <Divider />
                 </Box>
@@ -289,9 +316,29 @@ const CreateProduct = () => {
 
               <Grid size={{ mobile: 12 }}>
                 <RHFUploadSingleFile
-                  name="productImages"
+                  name="cover"
                   label="Ảnh sản phẩm"
                   onDrop={handleDrop}
+                />
+              </Grid>
+
+              <Grid size={{ mobile: 12 }}>
+                <Box sx={{ my: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                    🖼️ Các hình ảnh khác của sản phẩm
+                  </Typography>
+                  <Divider />
+                </Box>
+              </Grid>
+
+              <Grid size={{ mobile: 12 }}>
+                <RHFUploadMultiFile
+                  name="productImages"
+                  showPreview
+                  label="Ảnh sản phẩm"
+                  onDrop={handleDropImage}
+                  onRemove={handleRemove}
+                  onRemoveAll={handleRemoveAll}
                 />
               </Grid>
             </Grid>

@@ -8,6 +8,8 @@ import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 import ProductPage from "../pages/Admin/manage_product/ManageProductPage";
 import CreateProductPage from "../pages/Admin/manage_product/CreateProduct/CreateProductPage";
 import ManageCategoryPage from "../pages/Admin/manage_category/ManageCategory";
+import DetailProductPage from "../pages/Admin/manage_product/DetailProduct/DetailProductPage";
+import EditProductPage from "../pages/Admin/manage_product/EditProduct/EditProductPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -36,6 +38,16 @@ const AppRoute: React.FC = () => {
           key={"createProduct"}
           path={config.adminRoutes.CreateProduct}
           element={<CreateProductPage />}
+        />
+        <Route
+          key={"ProductDetail"}
+          path={config.adminRoutes.ManageProductDetail}
+          element={<DetailProductPage />}
+        />
+        <Route
+          key={"ProductEdit"}
+          path={config.adminRoutes.EditProductDetail}
+          element={<EditProductPage />}
         />
         <Route
           key={"categories"}

@@ -10,6 +10,8 @@ export const adminRoutes = {
   dashboard: "/dashboard",
   manageProduct: "/manage-product",
   CreateProduct: "/create-product",
+  ManageProductDetail: "/manage-product/:id/detail",
+  EditProductDetail: "/manage-product/:id/edit",
   manageBatch: "/manage-batch",
   manageOrder: "/manage-order",
   manageUser: "/manage-user",
