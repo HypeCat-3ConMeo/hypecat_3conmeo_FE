@@ -17,6 +17,8 @@ import useDebounce from "../../hooks/useDebounce";
 import productApi from "../../api/services/ProductApi/productAPI";
 import type { Product } from "../../types/ProductType";
 import CTable from "../../components/table/CTable";
+import { useNavigate } from "react-router-dom";
+import config from "../../configs";
 
 // Types
 interface SearchToolProps {
@@ -38,81 +40,6 @@ const SearchTool: React.FC<SearchToolProps> = ({ filter, setFilter }) => {
   );
 };
 
-// const productTableIntroSteps = [
-//   {
-//     element: "#intro-product-table",
-//     title: "Bảng sản phẩm",
-//     intro: "Đây là danh sách các sản phẩm.",
-//     position: "left",
-//   },
-//   {
-//     element: "#image-header",
-//     title: "Cột Hình ảnh",
-//     intro: "Hình ảnh sản phẩm.",
-//     position: "right",
-//   },
-//   {
-//     element: "#name-header",
-//     title: "Cột tên sản phẩm",
-//     intro: "Tên sản phẩm.",
-//     position: "left",
-//   },
-//   {
-//     element: "#selling-price-header",
-//     title: "Cột Giá bán",
-//     intro: "Giá bán của sản phẩm.",
-//     position: "left",
-//   },
-//   // {
-//   //   element: "#import-costs-header",
-//   //   title: "Cột Giá nhập",
-//   //   intro: "Giá nhập của sản phẩm.",
-//   //   position: "left"
-//   // },
-//   {
-//     element: "#stock-quantity-header",
-//     title: "Cột Số lượng tồn",
-//     intro: "Số lượng tồn của sản phẩm.",
-//     position: "left",
-//   },
-//   {
-//     element: "#unit-header",
-//     title: "Cột Đơn vị",
-//     intro: "Đơn vị của sản phẩm.",
-//     position: "left",
-//   },
-//   {
-//     element: "#date-header",
-//     title: "Cột Ngày tạo",
-//     intro: "Ngày tạo của sản phẩm.",
-//     position: "left",
-//   },
-//   {
-//     element: "#deleted-header",
-//     title: "Cột Trạng thái",
-//     intro: "Trạng thái của sản phẩm.",
-//     position: "left",
-//   },
-//   {
-//     element: "#menu-action",
-//     title: "Nút hành động",
-//     intro: "Nhấn vào đây để thực hiện các hành động trên sản phẩm đã chọn.",
-//     position: "left",
-//   },
-//   {
-//     element: "#search-order",
-//     title: "Thanh tìm kiếm",
-//     intro: "Nhập vào đây để tìm kiếm sản phẩm",
-//     position: "right",
-//   },
-//   {
-//     element: "#create-order-btn",
-//     title: "Tạo sản phẩm",
-//     intro: "Nhấn vào đây để thêm sản phẩm mới.",
-//     position: "left",
-//   },
-// ];
-
 const ProductTable = () => {
   //Define the state for products
   const [products, setProducts] = React.useState<Product[]>([]);
@@ -122,6 +49,7 @@ const ProductTable = () => {
   const [selectedRow, setSelectedRow] = React.useState<any>(null);
   const [filter, setFilter] = React.useState<any>({ SearchTerm: "" });
   const debounce = useDebounce(filter, 0);
+  const navigate = useNavigate();
 
   //Call the API to get the products
   const getProducts = async () => {
@@ -165,38 +93,29 @@ const ProductTable = () => {
       label: "Hình ảnh",
       align: "center",
       format: "images",
-      introId: "image-header",
     },
     {
       id: "name",
       label: "Tên sản phẩm",
       align: "center",
-      introId: "name-header",
     },
-    //{ id: "category", label: "Loại", align: "center" },
-    //{ id: "sourceOfProducts", label: "Nguồn nhập", align: "center" },
     {
       id: "sellingPrice",
       label: "Giá bán",
       align: "center",
       format: "price",
-      introId: "selling-price-header",
     },
-    //{ id: "importCosts", label: "Giá nhập", align: "center", format: "price", introId: "import-costs-header" },
-    { id: "unit", label: "Đơn vị", align: "center", introId: "unit-header" },
     {
       id: "createDate",
       label: "Ngày tạo",
       align: "center",
       format: "date",
-      introId: "date-header",
     },
     {
       id: "isDeleted",
       label: "Trạng thái",
       align: "center",
       format: "deleted",
-      introId: "deleted-header",
     },
   ];
 
@@ -215,7 +134,9 @@ const ProductTable = () => {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={() => { }}
+          onClick={() => {
+            navigate(config.adminRoutes.CreateProduct);
+          }}
         >
           Tạo sản phẩm
         </Button>
@@ -246,6 +167,10 @@ const ProductTable = () => {
         selectedData={(row: Product) => setSelectedRow(row)}
         data={products}
         title="Danh sách sản phẩm"
+        responsiveConfig={{
+          hideFormatsOnMobile: ["datetime", "price", "boolean", "date"], // Hide these formats on mobile
+          hideFormatsOnTablet: ["datetime"], // Hide these formats on tablet
+        }}
       />
     </div>
   );

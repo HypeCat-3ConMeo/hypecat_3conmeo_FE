@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Chip,
   Table,
   TableBody,
   TableCell,
@@ -13,13 +12,14 @@ import {
   TableRow,
   Typography,
   useTheme,
-  CircularProgress,
   Alert,
   TablePagination,
+  Skeleton,
+  useMediaQuery,
 } from "@mui/material";
-import { alpha, styled } from "@mui/material/styles";
-import React, { type ReactNode } from "react";
-import moment from "moment"; // Import moment.js for date formatting
+import { alpha, keyframes, styled } from "@mui/material/styles";
+import React, { type ReactNode, useMemo } from "react";
+import moment from "moment";
 import { colors } from "../../styles/Color/color";
 import { OrderStatus } from "../../enum/OrderStatus";
 
@@ -46,6 +46,13 @@ interface CTableProps {
   sx?: any;
   onRowClick?: (row: any) => void;
   selectedRow?: any;
+  // New responsive props
+  responsiveConfig?: {
+    hideFormatsOnMobile?: string[]; // Column formats to hide on mobile (e.g., ['datetime', 'boolean'])
+    hideFormatsOnTablet?: string[]; // Column formats to hide on tablet
+    hideColumnsOnMobile?: string[]; // Specific column IDs to hide on mobile
+    hideColumnsOnTablet?: string[]; // Specific column IDs to hide on tablet
+  };
 }
 
 // Styled Components
@@ -66,12 +73,30 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 
   "& .MuiTable-root": {
     minWidth: 650,
+
+    // Responsive table adjustments
+    [theme.breakpoints.down("md")]: {
+      minWidth: 500,
+    },
+    [theme.breakpoints.down("sm")]: {
+      minWidth: 320,
+    },
   },
 
   "& .MuiTableCell-root": {
     borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
     padding: theme.spacing(1.5),
     fontSize: "0.875rem",
+
+    // Responsive padding
+    [theme.breakpoints.down("md")]: {
+      padding: theme.spacing(1),
+      fontSize: "0.8rem",
+    },
+    [theme.breakpoints.down("sm")]: {
+      padding: theme.spacing(0.75),
+      fontSize: "0.75rem",
+    },
   },
 
   "& .MuiTableHead-root": {
@@ -86,6 +111,13 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
       color: colors.white,
       backgroundColor: alpha(theme.palette.primary.main, 0.04),
       borderBottom: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+
+      [theme.breakpoints.down("md")]: {
+        fontSize: "0.8rem",
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "0.75rem",
+      },
     },
   },
 
@@ -129,56 +161,30 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
         },
       },
     },
-    // Support for custom row styling based on data attributes
-    '&[data-expired="true"]': {
-      backgroundColor: alpha(theme.palette.error.main, 0.05),
-      "&:hover": {
-        backgroundColor: alpha(theme.palette.error.main, 0.1),
-      },
-    },
-    '&[data-expiring-soon="true"]': {
-      backgroundColor: alpha(theme.palette.warning.main, 0.05),
-      "&:hover": {
-        backgroundColor: alpha(theme.palette.warning.main, 0.1),
-      },
-    },
   },
-  // "& .MuiTableHead-root": {
-  //   "& .MuiTableCell-head": {
-  //     fontWeight: "bold",
-  //     fontSize: "0.875rem",
-  //   },
-  // },
 }));
 
-// const StyledTablePagination = styled(TablePagination)(({ theme }) => ({
-//   borderTop: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
-//   backgroundColor: alpha(theme.palette.background.default, 0.5),
+// Animations
+const shimmer = keyframes`
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+`;
 
-//   "& .MuiTablePagination-toolbar": {
-//     paddingLeft: theme.spacing(2),
-//     paddingRight: theme.spacing(2),
-//   },
-
-//   "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows": {
-//     fontSize: "0.875rem",
-//     color: theme.palette.text.secondary,
-//   },
-// }));
-
-const LoadingOverlay = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: alpha(theme.palette.background.paper, 0.8),
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  zIndex: 2,
-  backdropFilter: "blur(2px)",
-  borderRadius: "inherit",
+const LoadingSkeleton = styled(Skeleton)(({ theme }) => ({
+  background: `linear-gradient(90deg, ${alpha(
+    theme.palette.grey[300],
+    0.1
+  )} 25%, ${alpha(theme.palette.grey[300], 0.2)} 50%, ${alpha(
+    theme.palette.grey[300],
+    0.1
+  )} 75%)`,
+  backgroundSize: "200px 100%",
+  animation: `${shimmer} 2s infinite linear`,
+  borderRadius: 8,
 }));
 
 const CTable: React.FC<CTableProps> = ({
@@ -199,8 +205,59 @@ const CTable: React.FC<CTableProps> = ({
   sx,
   onRowClick,
   selectedRow,
+  responsiveConfig,
 }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+
+  // Default responsive configuration - hide columns by format type
+  const defaultResponsiveConfig = useMemo(() => {
+    return {
+      // Hide these formats on mobile (small screens)
+      hideFormatsOnMobile: ["datetime", "date", "boolean", "array", "number"],
+      // Hide these formats on tablet (medium screens)
+      hideFormatsOnTablet: ["datetime", "boolean"],
+      // You can also hide specific column IDs
+      hideColumnsOnMobile: [],
+      hideColumnsOnTablet: [],
+    };
+  }, []);
+
+  const finalResponsiveConfig = responsiveConfig || defaultResponsiveConfig;
+
+  // Filter visible columns based on screen size and format types
+  const visibleColumns = useMemo(() => {
+    if (!tableHeaderTitle) return [];
+
+    return tableHeaderTitle.filter((column: any) => {
+      // Check if column format should be hidden on mobile
+      if (isMobile) {
+        if (
+          finalResponsiveConfig.hideFormatsOnMobile?.includes(column.format)
+        ) {
+          return false;
+        }
+        if (finalResponsiveConfig.hideColumnsOnMobile?.includes(column.id)) {
+          return false;
+        }
+      }
+
+      // Check if column format should be hidden on tablet (but not mobile)
+      if (isTablet && !isMobile) {
+        if (
+          finalResponsiveConfig.hideFormatsOnTablet?.includes(column.format)
+        ) {
+          return false;
+        }
+        if (finalResponsiveConfig.hideColumnsOnTablet?.includes(column.id)) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [tableHeaderTitle, isMobile, isTablet, finalResponsiveConfig]);
 
   function getNestedValue(obj: any, path: any) {
     return path
@@ -226,36 +283,17 @@ const CTable: React.FC<CTableProps> = ({
       return column.render(value, row);
     }
 
-    // Handle null/undefined values early
-    if (value === null || value === undefined) {
-      // Special cases for date formats
-      if (
-        column.format === "datetime" ||
-        column.format === "dateTimeDiscount"
-      ) {
-        return "không có thời hạn";
-      }
-      return "-";
-    }
-
     // Date formatting
     if (column.format === "date") {
       return value ? moment(value).format("DD/MM/YYYY") : "-";
     }
 
-    // DateTime formatting
+    // DateTime formatting - show shorter format on mobile
     if (column.format === "datetime") {
-      return value
-        ? moment(value).format("DD/MM/YYYY HH:mm")
-        : "không có thời hạn";
-    }
-
-    // DateTime discount formatting
-    if (column.format === "dateTimeDiscount") {
-      if (!value || value === "") {
-        return "không có thời hạn";
-      }
-      return moment(value).format("DD/MM/YYYY");
+      if (!value) return "không có thời hạn";
+      return isMobile
+        ? moment(value).format("DD/MM")
+        : moment(value).format("DD/MM/YYYY HH:mm");
     }
 
     // Number formatting
@@ -268,10 +306,13 @@ const CTable: React.FC<CTableProps> = ({
       return value ? "Có" : "Không";
     }
 
-    // Array formatting
+    // Array formatting - truncate on mobile
     if (column.format === "array") {
       if (Array.isArray(value)) {
-        return value.join(", ");
+        const joined = value.join(", ");
+        return isMobile && joined.length > 20
+          ? joined.substring(0, 20) + "..."
+          : joined;
       }
       return value || "-";
     }
@@ -287,98 +328,55 @@ const CTable: React.FC<CTableProps> = ({
       return roleMap[value] || "-";
     }
 
-    // Status formatting
-    if (column.format === "status") {
-      const statusMap: { [key: string]: string } = {
-        Pending: "Đang chờ",
-        Complete: "Hoàn thành",
-      };
-      return statusMap[value] || "-";
-    }
-
-    // Status discount formatting
-    if (column.format === "statusDiscount") {
-      if (value === true) {
-        return (
-          <Chip
-            label="Hoạt động"
-            color="success"
-            variant="outlined"
-            size="small"
-            sx={{ minWidth: "90px" }}
-          />
-        );
-      } else if (value === false) {
-        return (
-          <Chip
-            label="Kết thúc"
-            color="warning"
-            variant="outlined"
-            size="small"
-            sx={{ minWidth: "90px" }}
-          />
-        );
-      }
-      return (
-        <Chip
-          label="-"
-          color="default"
-          variant="outlined"
-          size="small"
-          sx={{ minWidth: "90px" }}
-        />
-      );
-    }
-
-    // Status hotpot formatting
-    if (column.format === "statusHotpot") {
-      const statusConfig: { [key: string]: { label: string; color: any } } = {
-        Pending: { label: "Đang chờ", color: "warning" },
-        Completed: { label: "Hoàn thành", color: "success" },
-        "In Progress": { label: "Đang tiến hành", color: "info" },
-        Cancelled: { label: "Huỷ", color: "error" },
-      };
-
-      const config = statusConfig[value] || { label: "-", color: "default" };
-      return (
-        <Chip
-          label={config.label}
-          color={config.color}
-          variant="outlined"
-          size="small"
-          sx={{ minWidth: "90px" }}
-        />
-      );
-    }
-
-    // Status detail hotpot formatting
-    if (column.format === "statusDetailHopot") {
-      const statusConfig: { [key: string]: { label: string; color: any } } = {
-        Available: { label: "Khả dụng", color: "success" },
-        Damaged: { label: "Bị hư", color: "error" },
-        Rented: { label: "Đang Cho thuê", color: "primary" },
-      };
-
-      const config = statusConfig[value] || { label: "-", color: "default" };
-      return (
-        <Chip
-          label={config.label}
-          color={config.color}
-          variant="outlined"
-          size="small"
-          sx={{ minWidth: "90px" }}
-        />
-      );
-    }
-
-    // Price formatting
+    // Price formatting - shorter format on mobile
     if (column.format === "price") {
       if (typeof value === "number") {
-        return value.toLocaleString("vi-VN") + " VND";
+        const formatted = value.toLocaleString("vi-VN");
+        return isMobile ? formatted + "đ" : formatted + " VND";
       }
       return "N/A";
     }
 
+    //IMAGES formatting - smaller on mobile
+    if (column.format && column.format === "images") {
+      if (Array.isArray(value) && value.length > 0) {
+        const imageSize = isMobile ? 40 : 56;
+        return (
+          <Box
+            sx={{
+              position: "relative",
+              display: "inline-block",
+              "&:hover": {
+                transform: "scale(1.1)",
+                transition: "transform 0.2s ease-in-out",
+              },
+            }}
+          >
+            <img
+              src={value[0]?.urlPath}
+              alt="product"
+              style={{
+                width: `${imageSize}px`,
+                height: `${imageSize}px`,
+                borderRadius: isMobile ? "8px" : "12px",
+                objectFit: "cover",
+                border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                boxShadow: `0 4px 12px ${alpha(
+                  theme.palette.common.black,
+                  0.1
+                )}`,
+              }}
+            />
+          </Box>
+        );
+      }
+    }
+
+    // Truncate long text on mobile
+    if (typeof value === "string" && isMobile && value.length > 30) {
+      return value.substring(0, 30) + "...";
+    }
+    // Order status formatting
     if (column.format && column.format === "orderStatus") {
       const statusConfig = {
         [OrderStatus.PENDING]: {
@@ -426,11 +424,42 @@ const CTable: React.FC<CTableProps> = ({
     return value;
   }
 
+  const renderSkeletonRows = () => {
+    return Array.from({ length: size }).map((_, index) => (
+      <TableRow key={`skeleton-${index}`}>
+        <TableCell>
+          <LoadingSkeleton variant="text" width={30} height={20} />
+        </TableCell>
+        {visibleColumns?.map((column: any) => (
+          <TableCell key={`skeleton-${column.id}-${index}`}>
+            <LoadingSkeleton
+              variant="rectangular"
+              width={Math.random() * 100 + 80}
+              height={20}
+            />
+          </TableCell>
+        ))}
+        {menuAction && (
+          <TableCell>
+            <LoadingSkeleton variant="circular" width={32} height={32} />
+          </TableCell>
+        )}
+      </TableRow>
+    ));
+  };
+
   const isClickableRow = Boolean(onRowClick || selectedData);
   const hasData = data && data.length > 0;
 
   return (
-    <Box sx={{ minWidth: "600px", mx: "auto", p: 2, ...sx }}>
+    <Box
+      sx={{
+        minWidth: isMobile ? "100%" : "600px",
+        mx: "auto",
+        p: isMobile ? 1 : 2,
+        ...sx,
+      }}
+    >
       <StyledCard>
         {/* Header Section */}
         <Box
@@ -440,13 +469,14 @@ const CTable: React.FC<CTableProps> = ({
             alignItems: "center",
             flexWrap: "wrap",
             gap: 2,
+            flexDirection: isMobile ? "column" : "row",
           }}
         >
           {title && (
             <CardHeader
               title={
                 <Typography
-                  variant="h5"
+                  variant={isMobile ? "h6" : "h5"}
                   sx={{
                     fontWeight: 700,
                     background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
@@ -458,41 +488,62 @@ const CTable: React.FC<CTableProps> = ({
                   {title}
                 </Typography>
               }
-              sx={{ pb: 0 }}
+              sx={{ pb: 0, textAlign: isMobile ? "center" : "left" }}
             />
           )}
           {eventAction && (
-            <Box sx={{ pr: 2, display: "flex", gap: 1 }}>{eventAction}</Box>
+            <Box
+              sx={{
+                pr: isMobile ? 0 : 2,
+                display: "flex",
+                gap: 1,
+                justifyContent: isMobile ? "center" : "flex-end",
+                width: isMobile ? "100%" : "auto",
+              }}
+            >
+              {eventAction}
+            </Box>
           )}
         </Box>
 
         {/* Search Tool Section */}
         {searchTool && <Box sx={{ px: 2, pb: 1 }}>{searchTool}</Box>}
 
-        <CardContent sx={{ pt: 1 }}>
+        <CardContent sx={{ pt: 1, px: isMobile ? 1 : 2 }}>
           <Box sx={{ position: "relative" }}>
             {/* Loading Overlay */}
-            {loading && (
-              <LoadingOverlay>
-                <CircularProgress size={40} />
-              </LoadingOverlay>
-            )}
+            {loading && renderSkeletonRows()}
 
             <StyledTableContainer>
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: "bold", minWidth: "60px" }}>
+                    <TableCell
+                      sx={{
+                        fontWeight: "bold",
+                        minWidth: isMobile ? "40px" : "60px",
+                        padding: isMobile ? "8px 4px" : undefined,
+                      }}
+                    >
                       #
                     </TableCell>
-                    {tableHeaderTitle?.map((column: any) => (
+                    {visibleColumns?.map((column: any) => (
                       <TableCell
                         key={column.id}
                         align={column.align || "left"}
                         sx={{
                           fontWeight: "bold",
-                          minWidth: column.minWidth || "auto",
-                          maxWidth: column.maxWidth || "none",
+                          minWidth: isMobile
+                            ? column.minWidth
+                              ? Math.min(column.minWidth, 100)
+                              : "auto"
+                            : column.minWidth || "auto",
+                          maxWidth: isMobile
+                            ? column.maxWidth
+                              ? Math.min(column.maxWidth, 150)
+                              : "150px"
+                            : column.maxWidth || "none",
+                          padding: isMobile ? "8px 4px" : undefined,
                         }}
                       >
                         {column.label}
@@ -502,11 +553,12 @@ const CTable: React.FC<CTableProps> = ({
                       <TableCell
                         sx={{
                           fontWeight: "bold",
-                          minWidth: "100px",
+                          minWidth: isMobile ? "60px" : "100px",
                           textAlign: "center",
+                          padding: isMobile ? "8px 4px" : undefined,
                         }}
                       >
-                        Thao tác
+                        {isMobile ? "..." : "Thao tác"}
                       </TableCell>
                     )}
                   </TableRow>
@@ -516,7 +568,7 @@ const CTable: React.FC<CTableProps> = ({
                     <TableRow>
                       <TableCell
                         colSpan={
-                          (tableHeaderTitle?.length || 0) + (menuAction ? 2 : 1)
+                          (visibleColumns?.length || 0) + (menuAction ? 2 : 1)
                         }
                         align="center"
                         sx={{ py: 6 }}
@@ -548,17 +600,33 @@ const CTable: React.FC<CTableProps> = ({
                           if (selectedData) selectedData(row);
                         }}
                       >
-                        <TableCell sx={{ fontWeight: "medium" }}>
+                        <TableCell
+                          sx={{
+                            fontWeight: "medium",
+                            padding: isMobile ? "8px 4px" : undefined,
+                          }}
+                        >
                           {page * size + index + 1}
                         </TableCell>
-                        {tableHeaderTitle?.map((column: any) => (
+                        {visibleColumns?.map((column: any) => (
                           <TableCell
                             key={column.id}
                             align={column.align || "left"}
                             sx={{
-                              minWidth: column.minWidth || "auto",
-                              maxWidth: column.maxWidth || "none",
+                              minWidth: isMobile
+                                ? column.minWidth
+                                  ? Math.min(column.minWidth, 100)
+                                  : "auto"
+                                : column.minWidth || "auto",
+                              maxWidth: isMobile
+                                ? column.maxWidth
+                                  ? Math.min(column.maxWidth, 150)
+                                  : "150px"
+                                : column.maxWidth || "none",
                               wordBreak: column.wordBreak || "normal",
+                              padding: isMobile ? "8px 4px" : undefined,
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
                             }}
                           >
                             {column.id === "imageURL" ? (
@@ -567,8 +635,8 @@ const CTable: React.FC<CTableProps> = ({
                                 src={getNestedValue(row, column.id)}
                                 alt="Thumbnail"
                                 sx={{
-                                  width: 50,
-                                  height: 50,
+                                  width: isMobile ? 40 : 50,
+                                  height: isMobile ? 40 : 50,
                                   borderRadius: 2,
                                   objectFit: "cover",
                                   border: `1px solid ${alpha(
@@ -586,8 +654,8 @@ const CTable: React.FC<CTableProps> = ({
                                 src={getNestedValue(row, column.id)?.[0]}
                                 alt="Thumbnail"
                                 sx={{
-                                  width: 50,
-                                  height: 50,
+                                  width: isMobile ? 40 : 50,
+                                  height: isMobile ? 40 : 50,
                                   borderRadius: 2,
                                   objectFit: "cover",
                                   border: `1px solid ${alpha(
@@ -609,7 +677,14 @@ const CTable: React.FC<CTableProps> = ({
                           </TableCell>
                         ))}
                         {menuAction && (
-                          <TableCell align="center">{menuAction}</TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              padding: isMobile ? "8px 4px" : undefined,
+                            }}
+                          >
+                            {menuAction}
+                          </TableCell>
                         )}
                       </TableRow>
                     ))
@@ -618,20 +693,30 @@ const CTable: React.FC<CTableProps> = ({
               </Table>
 
               <TablePagination
-                rowsPerPageOptions={[10, 25, 50, 100]}
+                rowsPerPageOptions={isMobile ? [10, 25] : [10, 25, 50, 100]}
                 component="div"
                 count={total ?? 0}
                 rowsPerPage={size ?? 10}
                 page={page ?? 0}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage="Số hàng trên trang:"
+                labelRowsPerPage={isMobile ? "Rows:" : "Số hàng trên trang:"}
                 labelDisplayedRows={({ from, to, count }) => {
                   return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
                     }`;
                 }}
-                showFirstButton
-                showLastButton
+                showFirstButton={!isMobile}
+                showLastButton={!isMobile}
+                sx={{
+                  "& .MuiTablePagination-toolbar": {
+                    paddingLeft: isMobile ? 1 : 2,
+                    paddingRight: isMobile ? 1 : 2,
+                  },
+                  "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
+                  {
+                    fontSize: isMobile ? "0.75rem" : "0.875rem",
+                  },
+                }}
               />
             </StyledTableContainer>
           </Box>

@@ -9,6 +9,7 @@ export const authRoutes = {
 export const adminRoutes = {
   dashboard: "/dashboard",
   manageProduct: "/manage-product",
+  CreateProduct: "/create-product",
   manageBatch: "/manage-batch",
   manageOrder: "/manage-order",
   detailOrder: "/manage-order/:id/orderDetail",
