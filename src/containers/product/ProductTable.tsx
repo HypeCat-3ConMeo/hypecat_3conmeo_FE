@@ -19,7 +19,6 @@ import type { Product } from "../../types/ProductType";
 import CTable from "../../components/table/CTable";
 
 // Types
-
 interface SearchToolProps {
   filter: any;
   setFilter: any;
@@ -216,7 +215,7 @@ const ProductTable = () => {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={() => {}}
+          onClick={() => { }}
         >
           Tạo sản phẩm
         </Button>

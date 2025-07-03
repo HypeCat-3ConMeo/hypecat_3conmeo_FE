@@ -21,6 +21,7 @@ import { alpha, styled } from "@mui/material/styles";
 import React, { type ReactNode } from "react";
 import moment from "moment"; // Import moment.js for date formatting
 import { colors } from "../../styles/Color/color";
+import { OrderStatus } from "../../enum/OrderStatus";
 
 interface CTableProps {
   tableHeaderTitle?: any;
@@ -206,7 +207,19 @@ const CTable: React.FC<CTableProps> = ({
       .split(".")
       .reduce((acc: any, part: any) => acc && acc[part], obj);
   }
-
+  const StyledChip = styled(Chip)(({ theme }) => ({
+    fontWeight: 600,
+    borderRadius: 12,
+    fontSize: "0.75rem",
+    height: 28,
+    border: "1px solid",
+    backdropFilter: "blur(8px)",
+    transition: "all 0.2s ease-in-out",
+    "&:hover": {
+      transform: "scale(1.05)",
+      boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, 0.15)}`,
+    },
+  }));
   function formatValue(value: any, column: any, row?: any) {
     // Check if column has custom render function
     if (column.render && typeof column.render === "function") {
@@ -364,6 +377,50 @@ const CTable: React.FC<CTableProps> = ({
         return value.toLocaleString("vi-VN") + " VND";
       }
       return "N/A";
+    }
+
+    if (column.format && column.format === "orderStatus") {
+      const statusConfig = {
+        [OrderStatus.PENDING]: {
+          label: "Chờ xử lý",
+          bgcolor: alpha(colors.yellow_200, 0.9),
+          color: colors.yellow_800,
+          borderColor: colors.yellow_400,
+        },
+        [OrderStatus.FINISH]: {
+          label: "Đã thanh toán",
+          bgcolor: alpha(colors.green_200, 0.9),
+          color: colors.green_800,
+          borderColor: colors.green_400,
+        },
+        [OrderStatus.CANCELED]: {
+          label: "Đã hủy",
+          bgcolor: alpha(colors.red_200, 0.9),
+          color: colors.red_800,
+          borderColor: colors.red_400,
+        },
+        [OrderStatus.PREPARED]: {
+          label: "Đã chuẩn bị",
+          bgcolor: alpha(colors.blue_200, 0.9),
+          color: colors.blue_800,
+          borderColor: colors.blue_400,
+        },
+      };
+
+      const config = statusConfig[value];
+      if (config) {
+        return (
+          <StyledChip
+            label={config.label}
+            sx={{
+              bgcolor: config.bgcolor,
+              color: config.color,
+              borderColor: config.borderColor,
+            }}
+          />
+        );
+      }
+      return "-";
     }
 
     return value;
@@ -570,9 +627,8 @@ const CTable: React.FC<CTableProps> = ({
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 labelRowsPerPage="Số hàng trên trang:"
                 labelDisplayedRows={({ from, to, count }) => {
-                  return `${from}–${to} trên ${
-                    count !== -1 ? count : `nhiều hơn ${to}`
-                  }`;
+                  return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
+                    }`;
                 }}
                 showFirstButton
                 showLastButton

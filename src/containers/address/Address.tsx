@@ -10,8 +10,6 @@ import {
     Stack,
     Paper,
     Fade,
-    useTheme,
-    useMediaQuery
 } from '@mui/material';
 import {
     Add as AddIcon,
@@ -34,6 +32,7 @@ interface Address {
 // Styled Components
 const StyledCard = styled(Card)(({ theme }) => ({
     transition: 'all 0.3s ease',
+    height: '100%',
     '&:hover': {
         transform: 'translateY(-2px)',
         boxShadow: theme.shadows[4]
@@ -53,11 +52,6 @@ const DefaultChip = styled(Chip)(({ theme }) => ({
 }));
 
 const AddressManager: React.FC = () => {
-    const theme = useTheme();
-    //const isDesktop = useMediaQuery(theme.breakpoints.between('desktop', 'laptop'));
-    const isTablet = useMediaQuery(theme.breakpoints.between('tablet', 'mobile'));
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
     const [addresses, setAddresses] = useState<Address[]>([
         {
             id: '1',
@@ -86,97 +80,35 @@ const AddressManager: React.FC = () => {
     ]);
 
     const [openDialog, setOpenDialog] = useState(false);
-    const [editingId, setEditingId] = useState<string | null>(null);
-    const [formData, setFormData] = useState({
-        name: '',
-        phone: '',
-        address: '',
-        isDefault: false,
-        label: 'Địa chỉ lấy hàng'
-    });
-    const [errors, setErrors] = useState({
-        name: '',
-        phone: '',
-        address: ''
-    });
-
-    const validateForm = (): boolean => {
-        const newErrors = { name: '', phone: '', address: '' };
-        let isValid = true;
-
-        if (!formData.name.trim()) {
-            newErrors.name = 'Tên người nhận là bắt buộc';
-            isValid = false;
-        }
-
-        if (!formData.phone.trim()) {
-            newErrors.phone = 'Số điện thoại là bắt buộc';
-            isValid = false;
-        } else if (!/^(\+84|0)[0-9]{9,10}$/.test(formData.phone.replace(/\s/g, ''))) {
-            newErrors.phone = 'Số điện thoại không hợp lệ';
-            isValid = false;
-        }
-
-        if (!formData.address.trim()) {
-            newErrors.address = 'Địa chỉ là bắt buộc';
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        return isValid;
-    };
+    const [editingAddress, setEditingAddress] = useState<Address | null>(null);
 
     const handleAdd = () => {
+        setEditingAddress(null);
         setOpenDialog(true);
-        setEditingId(null);
-        setFormData({
-            name: '',
-            phone: '',
-            address: '',
-            isDefault: false,
-            label: 'Địa chỉ lấy hàng'
-        });
-        setErrors({ name: '', phone: '', address: '' });
     };
 
     const handleEdit = (address: Address) => {
+        setEditingAddress(address);
         setOpenDialog(true);
-        setEditingId(address.id);
-        setFormData({
-            name: address.name,
-            phone: address.phone,
-            address: address.address,
-            isDefault: address.isDefault,
-            label: address.label
-        });
-        setErrors({ name: '', phone: '', address: '' });
     };
 
-    const handleSave = () => {
-        if (!validateForm()) return;
-
-        if (editingId) {
+    const handleSave = (addressData: Address) => {
+        if (editingAddress) {
+            // Update existing address
             setAddresses(prev => prev.map(addr =>
-                addr.id === editingId
-                    ? { ...addr, ...formData }
-                    : formData.isDefault ? { ...addr, isDefault: false } : addr
+                addr.id === editingAddress.id
+                    ? { ...addressData, id: editingAddress.id }
+                    : addressData.isDefault ? { ...addr, isDefault: false } : addr
             ));
         } else {
-            const newAddress: Address = {
-                id: Date.now().toString(),
-                ...formData
-            };
-
+            // Add new address
             setAddresses(prev => {
-                if (formData.isDefault) {
-                    return [...prev.map(addr => ({ ...addr, isDefault: false })), newAddress];
+                if (addressData.isDefault) {
+                    return [...prev.map(addr => ({ ...addr, isDefault: false })), addressData];
                 }
-                return [...prev, newAddress];
+                return [...prev, addressData];
             });
         }
-
-        setOpenDialog(false);
-        setEditingId(null);
     };
 
     const handleDelete = (id: string) => {
@@ -222,17 +154,23 @@ const AddressManager: React.FC = () => {
                         Thêm địa chỉ mới
                     </Button>
                 </Box>
-                <Stack spacing={2}>
+
+                {/* Grid Layout for Addresses */}
+                <Box
+                    sx={{
+                        display: 'grid',
+                        gridTemplateColumns: {
+                            xs: '1fr',
+                            sm: 'repeat(2, 1fr)'
+                        },
+                        gap: 2
+                    }}
+                >
                     {addresses.map((address) => (
-                        <Fade in key={address.id} timeout={300}>
-                            <StyledCard elevation={1} sx={{ borderRadius: 2 }}>
-                                <CardContent sx={{ p: 3 }}>
-                                    <Stack
-                                        direction={isMobile || isTablet ? 'column' : 'row'}
-                                        justifyContent="space-between"
-                                        alignItems="center"
-                                        spacing={2}
-                                    >
+                        <Box key={address.id}>
+                            <Fade in timeout={300}>
+                                <StyledCard elevation={1} sx={{ borderRadius: 2 }}>
+                                    <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
                                         <Box flex={1}>
                                             {/* Name and Status */}
                                             <Stack direction="row" alignItems="center" spacing={2} mb={2} flexWrap="wrap" useFlexGap>
@@ -255,7 +193,7 @@ const AddressManager: React.FC = () => {
                                             </Stack>
 
                                             {/* Address */}
-                                            <Stack direction="row" alignItems="flex-start" spacing={1}>
+                                            <Stack direction="row" alignItems="flex-start" spacing={1} mb={2}>
                                                 <LocationIcon sx={{ fontSize: 18, color: 'text.secondary', mt: 0.2 }} />
                                                 <Typography
                                                     variant="body2"
@@ -268,8 +206,8 @@ const AddressManager: React.FC = () => {
                                         </Box>
 
                                         {/* Action Buttons */}
-                                        <Stack spacing={1} alignItems={isMobile || isTablet ? 'center' : 'flex-end'}>
-                                            <Stack direction="row" spacing={1}>
+                                        <Stack spacing={1} alignItems="stretch">
+                                            <Stack direction="row" spacing={1} justifyContent="flex-end">
                                                 <Button
                                                     size="small"
                                                     onClick={() => handleEdit(address)}
@@ -307,12 +245,12 @@ const AddressManager: React.FC = () => {
                                                 </Button>
                                             )}
                                         </Stack>
-                                    </Stack>
-                                </CardContent>
-                            </StyledCard>
-                        </Fade>
+                                    </CardContent>
+                                </StyledCard>
+                            </Fade>
+                        </Box>
                     ))}
-                </Stack>
+                </Box>
             </Box>
 
             {/* Empty State */}
@@ -343,10 +281,7 @@ const AddressManager: React.FC = () => {
                 open={openDialog}
                 onClose={() => setOpenDialog(false)}
                 onSave={handleSave}
-                isEditing={!!editingId}
-                formData={formData}
-                setFormData={setFormData}
-                errors={errors}
+                editingAddress={editingAddress}
             />
         </Container>
     );

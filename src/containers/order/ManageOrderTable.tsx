@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Button, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import React from "react";
@@ -9,6 +10,7 @@ import CreateOrder from "./popup/CreateOrder";
 import orderApi from "../../api/services/OrderApi/orderAPI";
 import useDebounce from "../../hooks/useDebounce";
 import type { Order } from "../../types/OrderType";
+import CTable from "../../components/table/CTable";
 
 interface SearchToolProps {
   filter: any;
@@ -95,6 +97,7 @@ const ManageOrderTable = () => {
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [totalItemsCount, setTotalItemsCount] = React.useState<number>(0);
   const debounce = useDebounce(filter, 1000);
+  const [openCreateOrder, setOpenCreateOrder] = React.useState(false);
 
   //Call the API to get the orders
   const getOrders = async () => {
@@ -109,6 +112,7 @@ const ManageOrderTable = () => {
       setTotalItemsCount(res.totalItemsCount);
     } catch (error) {
       toast.error("Có lỗi xay ra trong quá trình lấy danh sách đơn hàng");
+      console.error("Error fetching orders:", error);
     }
   };
 
@@ -158,20 +162,26 @@ const ManageOrderTable = () => {
       align: "center",
     },
     {
-      id: "orderStatus",
-      label: "Trạng thái",
-      format: "orderStatus",
-      introId: "order-status-header",
-      align: "center",
-    },
-    {
       id: "orderAmount",
       label: "Đơn giá",
       format: "price",
       introId: "order-amount-header",
       align: "center",
     },
+    {
+      id: "orderStatus",
+      label: "Trạng thái",
+      format: "orderStatus",
+      introId: "order-status-header",
+      align: "center",
+    },
   ];
+  const handleClickOpen = () => {
+    setOpenCreateOrder(true);
+  };
+  const handleClose = () => {
+    setOpenCreateOrder(false);
+  };
 
   //Event action
   const CreateOrderAction = () => {
@@ -206,14 +216,6 @@ const ManageOrderTable = () => {
     );
   };
 
-  //Handle open create order popup
-  const [openCreateOrder, setOpenCreateOrder] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpenCreateOrder(true);
-  };
-  const handleClose = () => {
-    setOpenCreateOrder(false);
-  };
 
   return (
     <div>
@@ -222,7 +224,7 @@ const ManageOrderTable = () => {
         handleClose={handleClose}
         fetchData={getOrders}
       />
-      <CustomizeTable
+      <CTable
         data={orders}
         tableHeaderTitle={tableHeader}
         title="Quản lý đơn hàng"
@@ -242,7 +244,7 @@ const ManageOrderTable = () => {
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
         searchTool={<SearchTool filter={filter} setFilter={setFilter} />}
-        tableContainerId="intro-order-table"
+      //tableContainerId="intro-order-table"
       />
     </div>
   );

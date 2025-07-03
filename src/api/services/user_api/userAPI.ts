@@ -1,11 +1,10 @@
-import type { AxiosResponse } from "axios";
 import type { User } from "../../../types/Usertype";
 import axiosClient from "../../axiosInstance";
 import { PROFILE } from "../../PathnameApi";
 
 const userApi = {
   //GET api
-  getListUsers: (params?: string[]) => {
+  getListUsers: (params?: { pageIndex?: number; pageSize?: number }) => {
     const url = "/Users/GetUserPagination";
     return axiosClient.get(url, {
       params,
@@ -15,7 +14,7 @@ const userApi = {
     });
   },
 
-  getUserByPhone: (params?: string) => {
+  getUserByPhone: (params?: { phone: string }) => {
     const url = "/Users/GetCustomerInfoByPhone";
     return axiosClient.get(url, {
       params,

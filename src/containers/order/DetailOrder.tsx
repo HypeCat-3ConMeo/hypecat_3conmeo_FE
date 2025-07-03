@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { OrderStatus } from "../../enum/OrderStatus";
 import {
   Box,
   Chip,
-  Grid2,
+  Grid,
   Paper,
   Stack,
   Table,
@@ -39,6 +40,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
       console.log(res);
     } catch (error) {
       toast.error("Có lỗi xảy ra trong quá trình lấy chi tiết đơn hàng");
+      console.log(error);
     }
   };
 
@@ -212,7 +214,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box>
       {/* Hidden receipt content for printing */}
       <div ref={receiptRef} style={{ display: "none" }}>
         <div>
@@ -245,9 +247,9 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
             <div key={index} className="item-line">
               <span className="item-number">{index + 1}.</span>
               <span className="item-name">
-                {item.product.name.length > 20
+                {/* {item.product.name.length > 20
                   ? item.product.name.substring(0, 20) + "..."
-                  : item.product.name}
+                  : item.product.name} */}
               </span>
               <div className="item-prices">
                 <span className="quantity">{item.quantity}</span>
@@ -293,8 +295,8 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
           </Button>
         </Box>
 
-        <Grid2 container spacing={3}>
-          <Grid2 size={{ mobile: 12, desktop: 4 }}>
+        <Grid container spacing={3}>
+          <Grid size={{ mobile: 12, desktop: 4 }}>
             <Paper
               component={Box}
               sx={{
@@ -382,8 +384,8 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
                 )}
               </Stack>
             </Paper>
-          </Grid2>
-          <Grid2 size={{ mobile: 12, desktop: 8 }}>
+          </Grid>
+          <Grid size={{ mobile: 12, desktop: 8 }}>
             <Box style={{ backgroundColor: colors.bgCardColor }}>
               <Paper
                 component={Box}
@@ -437,8 +439,8 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
                 </TableContainer>
               </Paper>
             </Box>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Stack>
     </Box>
   );

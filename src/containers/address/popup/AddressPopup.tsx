@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -22,7 +22,8 @@ import {
 } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 
-interface AddressFormData {
+interface Address {
+    id: string;
     name: string;
     phone: string;
     address: string;
@@ -33,29 +34,116 @@ interface AddressFormData {
 interface AddressDialogProps {
     open: boolean;
     onClose: () => void;
-    onSave: () => void;
-    isEditing: boolean;
-    formData: AddressFormData;
-    setFormData: React.Dispatch<React.SetStateAction<AddressFormData>>;
-    errors: { name: string; phone: string; address: string };
+    onSave: (address: Address) => void;
+    editingAddress?: Address | null;
 }
 
 const AddressDialog: React.FC<AddressDialogProps> = ({
     open,
     onClose,
     onSave,
-    isEditing,
-    formData,
-    setFormData,
-    errors
+    editingAddress
 }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isEditing = !!editingAddress;
+
+    const [formData, setFormData] = useState({
+        name: '',
+        phone: '',
+        address: '',
+        isDefault: false,
+        label: 'Địa chỉ lấy hàng'
+    });
+
+    const [errors, setErrors] = useState({
+        name: '',
+        phone: '',
+        address: ''
+    });
+
+    // Reset form when dialog opens/closes or editing address changes
+    useEffect(() => {
+        if (open) {
+            if (editingAddress) {
+                setFormData({
+                    name: editingAddress.name,
+                    phone: editingAddress.phone,
+                    address: editingAddress.address,
+                    isDefault: editingAddress.isDefault,
+                    label: editingAddress.label
+                });
+            } else {
+                setFormData({
+                    name: '',
+                    phone: '',
+                    address: '',
+                    isDefault: false,
+                    label: 'Địa chỉ lấy hàng'
+                });
+            }
+            setErrors({ name: '', phone: '', address: '' });
+        }
+    }, [open, editingAddress]);
+
+    const validateForm = (): boolean => {
+        const newErrors = { name: '', phone: '', address: '' };
+        let isValid = true;
+
+        if (!formData.name.trim()) {
+            newErrors.name = 'Tên người nhận là bắt buộc';
+            isValid = false;
+        }
+
+        if (!formData.phone.trim()) {
+            newErrors.phone = 'Số điện thoại là bắt buộc';
+            isValid = false;
+        } else if (!/^(\+84|0)[0-9]{9,10}$/.test(formData.phone.replace(/\s/g, ''))) {
+            newErrors.phone = 'Số điện thoại không hợp lệ';
+            isValid = false;
+        }
+
+        if (!formData.address.trim()) {
+            newErrors.address = 'Địa chỉ là bắt buộc';
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
+    const handleSave = () => {
+        if (!validateForm()) return;
+
+        const addressData: Address = {
+            id: editingAddress?.id || Date.now().toString(),
+            name: formData.name,
+            phone: formData.phone,
+            address: formData.address,
+            isDefault: formData.isDefault,
+            label: formData.isDefault ? 'Mặc định' : 'Địa chỉ lấy hàng'
+        };
+
+        onSave(addressData);
+        onClose();
+    };
+
+    const handleClose = () => {
+        setFormData({
+            name: '',
+            phone: '',
+            address: '',
+            isDefault: false,
+            label: 'Địa chỉ lấy hàng'
+        });
+        setErrors({ name: '', phone: '', address: '' });
+        onClose();
+    };
 
     return (
         <Dialog
             open={open}
-            onClose={onClose}
+            onClose={handleClose}
             maxWidth="sm"
             fullWidth
             fullScreen={isMobile}
@@ -69,14 +157,14 @@ const AddressDialog: React.FC<AddressDialogProps> = ({
                     <Typography variant="h6" fontWeight="bold">
                         {isEditing ? 'Chỉnh sửa địa chỉ' : 'Thêm địa chỉ mới'}
                     </Typography>
-                    <IconButton onClick={onClose} size="small">
+                    <IconButton onClick={handleClose} size="small">
                         <CloseIcon />
                     </IconButton>
                 </Stack>
             </DialogTitle>
 
             <DialogContent sx={{ pt: 2 }}>
-                <Stack spacing={3}>
+                <Stack spacing={3} sx={{ mt: 1 }}>
                     <TextField
                         fullWidth
                         label="Tên người nhận"
@@ -137,11 +225,11 @@ const AddressDialog: React.FC<AddressDialogProps> = ({
             </DialogContent>
 
             <DialogActions sx={{ p: 3, pt: 2 }}>
-                <Button onClick={onClose} variant="outlined" sx={{ borderRadius: 2, px: 3 }}>
+                <Button onClick={handleClose} variant="outlined" sx={{ borderRadius: 2, px: 3 }}>
                     Hủy
                 </Button>
                 <Button
-                    onClick={onSave}
+                    onClick={handleSave}
                     variant="contained"
                     sx={{
                         backgroundColor: '#ff6b35',

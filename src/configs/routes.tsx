@@ -11,6 +11,7 @@ export const adminRoutes = {
   manageProduct: "/manage-product",
   manageBatch: "/manage-batch",
   manageOrder: "/manage-order",
+  detailOrder: "/manage-order/:id/orderDetail",
   manageUser: "/manage-user",
   manageCategory: "/manage-category",
   manageNews: "/manage-news",
@@ -27,4 +28,6 @@ export const customerRoutes = {
   home: "/",
   news: "/news",
   productList: "/product-list",
+  test: "/test",
+  address: "/address",
 };

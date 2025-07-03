@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,7 +10,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid2,
+  Grid,
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -18,6 +19,7 @@ import type { Product } from "../../../types/ProductType";
 import productApi from "../../../api/services/ProductApi/productAPI";
 import orderApi from "../../../api/services/OrderApi/orderAPI";
 import { colors, font_weight } from "../../../styles/config-file";
+import { FormProvider, RHFSelect, RHFTextField } from "../../../components/hook-form";
 
 interface UpdateOrderProps {
   orderData: any;
@@ -35,6 +37,7 @@ interface UpdateOrderForm {
   name: string;
   phone: string;
   address: string;
+  email: string;
   orderDetails: OrderDetailForm[];
 }
 
@@ -52,6 +55,7 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
     name: "",
     phone: "",
     address: "",
+    email: "",
     orderDetails: [],
   };
 
@@ -85,6 +89,7 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
     name: Yup.string().required("Vui lòng nhập tên người đặt"),
     phone: Yup.string().required("Vui lòng nhập số điện thoại"),
     address: Yup.string().required("Vui lòng nhập địa chỉ"),
+    email: Yup.string().email("Email không hợp lệ").notRequired(),
     orderDetails: Yup.array()
       .of(orderDetailSchema)
       .min(1, "Vui lòng chọn ít nhất một sản phẩm"),
@@ -111,9 +116,9 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
     if (orderData) {
       const initialOrderDetails = orderData.orderDetails?.length
         ? orderData.orderDetails.map((item: any) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-          }))
+          productId: item.productId,
+          quantity: item.quantity,
+        }))
         : [{ productId: 0, quantity: 1 }];
 
       initialProductIdsRef.current =
@@ -123,6 +128,7 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
         name: orderData.name || "",
         phone: orderData.phone || "",
         address: orderData.address || "",
+        email: orderData.email || "",
         orderDetails: initialOrderDetails,
       });
     }
@@ -186,20 +192,23 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
           </IconButton>
         </Box>
         <DialogContent>
-          <Grid2 container spacing={4} sx={{ mt: 1 }}>
-            <Grid2 size={12}>
+          <Grid container spacing={4} sx={{ mt: 1 }}>
+            <Grid size={12}>
               <RHFTextField name="name" label="Tên người đặt" />
-            </Grid2>
-            <Grid2 size={12}>
+            </Grid>
+            <Grid size={12}>
               <RHFTextField name="phone" label="Số điện thoại" />
-            </Grid2>
-            <Grid2 size={12}>
+            </Grid>
+            <Grid size={12}>
               <RHFTextField name="address" label="Địa chỉ" />
-            </Grid2>
+            </Grid>
+            <Grid size={12}>
+              <RHFTextField name="email" label="Email" />
+            </Grid>
             {fields.map((item, index) => (
               <React.Fragment key={item.id}>
-                <Grid2 container spacing={2} alignItems="center">
-                  <Grid2 size={8}>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid size={8}>
                     <RHFSelect
                       name={`orderDetails.${index}.productId`}
                       label="Sản Phẩm"
@@ -212,28 +221,28 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
                         </option>
                       ))}
                     </RHFSelect>
-                  </Grid2>
-                  <Grid2 size={3}>
+                  </Grid>
+                  <Grid size={3}>
                     <RHFTextField
                       name={`orderDetails.${index}.quantity`}
                       label="Số lượng"
                       type="number"
                     />
-                  </Grid2>
-                  <Grid2 size={1}>
+                  </Grid>
+                  <Grid size={1}>
                     <IconButton onClick={() => remove(index)} color="error">
                       <CloseIcon />
                     </IconButton>
-                  </Grid2>
-                </Grid2>
+                  </Grid>
+                </Grid>
               </React.Fragment>
             ))}
-            <Grid2 size={12}>
+            <Grid size={12}>
               <Button onClick={handleAddProduct} variant="outlined">
                 Thêm sản phẩm
               </Button>
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
           <Button
