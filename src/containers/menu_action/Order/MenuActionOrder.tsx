@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import BlockIcon from "@mui/icons-material/Block";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
@@ -10,6 +11,7 @@ import * as React from "react";
 import type { OrderStatusType } from "../../../enum/OrderStatus";
 import UpdateOrder from "../../order/popup/UpdateOrder";
 import ConfirmOrder from "../../order/popup/ConfirmOrder";
+import { useNavigate } from "react-router-dom";
 
 interface MenuActionOrderProps {
   orderData: any;
@@ -36,6 +38,7 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
   const [openConfirm, setOpenConfirm] = React.useState<boolean>(false);
   const [selectedType, setSelectedType] = React.useState<string>("");
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   //func
   const handleClick = (event: any) => {
@@ -56,7 +59,8 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
   const handleDetail = () => {
     setOpenDetail(true);
     setAnchorEl(null);
-    redirect(`/admin/manage_orders/${orderData.id}/order_detail`);
+    console.log(orderData.id);
+    navigate(`/manage-order/${orderData.id}/orderDetail`);
   };
 
   const handleDelete = () => {
@@ -150,14 +154,6 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
       >
         {renderMenuItems()}
       </Menu>
-      {/* {openDetail == true && (
-        <DetailPopup
-          handleOpen={openDetail}
-          handleClose={handleCloseDetail}
-          orderData={orderData}
-        />
-      )} */}
-
       {openUpdate == true && (
         <UpdateOrder
           open={openUpdate}

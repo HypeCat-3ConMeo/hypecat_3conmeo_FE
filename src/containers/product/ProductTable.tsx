@@ -21,7 +21,6 @@ import { useNavigate } from "react-router-dom";
 import config from "../../configs";
 
 // Types
-
 interface SearchToolProps {
   filter: any;
   setFilter: any;

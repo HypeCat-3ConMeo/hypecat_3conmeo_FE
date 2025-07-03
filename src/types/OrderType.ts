@@ -1,7 +1,7 @@
 interface Product {
   id: number;
   name: string;
-  sellingPrice: number;
+  sellingPrice?: number;
 }
 
 interface OrderDetail {
@@ -9,6 +9,7 @@ interface OrderDetail {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
+  batchBreakdown: string[];
   product: Product;
 }
 
