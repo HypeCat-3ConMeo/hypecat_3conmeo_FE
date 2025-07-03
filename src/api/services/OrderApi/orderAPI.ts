@@ -4,7 +4,7 @@ import axiosClient from "../../axiosInstance";
 const orderApi = {
   //GET api
   getListOrder: (params?: any) => {
-    const url = "/Orders/GetOrderPagination";
+    const url = "/Orders/GetOrderPagination?IsDescending=true";
     return axiosClient.get(url, {
       params,
       paramsSerializer: {

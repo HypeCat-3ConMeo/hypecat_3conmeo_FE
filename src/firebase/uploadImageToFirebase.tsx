@@ -1,7 +1,7 @@
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "./firebase";
 
-export function uploadImageToFirebase(file: File) {
+export function uploadImageToFirebase(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const imageName = new Date().getTime() + file.name;
     const storageRef = ref(storage, imageName);
