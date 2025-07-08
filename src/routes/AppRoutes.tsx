@@ -8,6 +8,11 @@ import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 import ProductPage from "../pages/Admin/manage_product/ManageProductPage";
 import CreateProductPage from "../pages/Admin/manage_product/CreateProduct/CreateProductPage";
 import ManageCategoryPage from "../pages/Admin/manage_category/ManageCategory";
+import ProfilePage from "../pages/Customer/Profile/Profile";
+import AddressPage from "../pages/Customer/Address/Address";
+import ManagerOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
+import OrderPage from "../pages/Customer/Order/Order";
+import InformationLayout from "../layouts/InformationLayout/InformationLayout";
 
 const AppRoute: React.FC = () => {
   return (
@@ -23,6 +28,23 @@ const AppRoute: React.FC = () => {
           key={"news"}
           path={config.customerRoutes.home}
           element={<Home />}
+        />
+      </Route>
+      <Route key={"profile"} element={<InformationLayout />}>
+        <Route
+          key={"profile"}
+          path={config.customerRoutes.userProfile}
+          element={<ProfilePage />}
+        />
+        <Route
+          key={"orders"}
+          path={config.customerRoutes.order}
+          element={<OrderPage />}
+        />
+        <Route
+          key={"addresses"}
+          path={config.customerRoutes.address}
+          element={<AddressPage />}
         />
       </Route>
 
@@ -42,8 +64,13 @@ const AppRoute: React.FC = () => {
           path={config.adminRoutes.manageCategory}
           element={<ManageCategoryPage />}
         />
+        <Route
+          key={"categories"}
+          path={config.adminRoutes.manageOrder}
+          element={<ManageCategoryPage />}
+        />
       </Route>
-    </Routes>
+    </Routes >
   );
 };
 

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { User } from "../../../types/Usertype";
 import axiosClient from "../../axiosInstance";
-import { PROFILE } from "../../PathnameApi";
+import { PROFILE, PROFILE_UPDATE } from "../../PathnameApi";
 
 const userApi = {
   //GET api
@@ -47,9 +48,8 @@ const userApi = {
   },
 
   //PUT api
-  putSomeThing: (body: string) => {
-    const url = "/api/v1/someThing";
-    return axiosClient.put(url, body);
+  updateProfile: (id: any, body: any): Promise<User> => {
+    return axiosClient.put(`${PROFILE_UPDATE}/${id}`, body);
   },
 
   //DELETE api

@@ -1,3 +1,5 @@
+import type { Address } from "./AddressType";
+
 interface Role {
   id: number;
   roleName: string;
@@ -5,19 +7,24 @@ interface Role {
 
 interface Image {
   id?: number;
-  urlPath: unknown;
+  urlPath: string;
+}
+interface UpdateImage {
+  id?: number;
+  userImages: string;
 }
 
 export interface User {
   id: number;
   name: string;
   email: string;
-  password?: string; // Password có thể không bắt buộc trong một số trường hợp
+  password?: string;
   phone: string;
-  address: string;
-  status: "Active" | "Inactive" | string; // Sử dụng union type cho các giá trị status có thể
+  addresses: Address[];
+  status: "Active" | "Inactive" | string;
   role: Role;
   images: Image[];
+  userImages: UpdateImage[];
 }
 
 // // Ví dụ sử dụng type alias (tương đương với interface trong trường hợp này)

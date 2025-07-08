@@ -1,6 +1,6 @@
 import ManageOrderTable from "../../../containers/order/ManageOrderTable";
 
-const OrderPage = () => {
+const ManageOrderPage = () => {
     return (
         <>
             <ManageOrderTable />
@@ -8,4 +8,4 @@ const OrderPage = () => {
     );
 };
 
-export default OrderPage;
+export default ManageOrderPage;
