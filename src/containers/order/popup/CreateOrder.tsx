@@ -152,6 +152,7 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
     control,
     getValues,
     watch,
+    reset,
     formState: { isSubmitting },
   } = methods;
 
@@ -167,6 +168,7 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
       console.log("Phản hồi từ API:", res);
       toast.success("Tạo đơn hàng thành công");
       handleClose();
+      reset(defaultValues); // Reset form to default values
       fetchData();
     } catch (error: any) {
       toast.error("Tạo đơn hàng thất bại");
@@ -205,6 +207,14 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
       setIsPhoneNumber(false);
     }
   }, [phoneValue]);
+
+  React.useEffect(() => {
+    if (!open) {
+      reset(defaultValues); // reset lại form
+      setIsPhoneNumber(false);
+      setUserInformation(undefined);
+    }
+  }, [open]);
 
   return (
     <Dialog

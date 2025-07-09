@@ -35,4 +35,5 @@ export const customerRoutes = {
   productList: "/product-list",
   test: "/test",
   address: "/address",
+  order: "/order",
 };

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+//import type { get } from "react-hook-form";
+import type { Order } from "../../../types/OrderType";
 import axiosClient from "../../axiosInstance";
 
 const orderApi = {
@@ -16,6 +18,16 @@ const orderApi = {
   getOrderDetail: (id?: any) => {
     const url = `/Orders/GetOrderById/${id}`;
     return axiosClient.get(url);
+  },
+
+  getOrderByUser: (params?: any): Promise<Order[]> => {
+    const url = `/Orders/GetMyOrders`;
+    return axiosClient.get(url, {
+      params,
+      paramsSerializer: {
+        indexes: null, // by default: false
+      },
+    });
   },
 
   checkOut: (id?: any, paymentMethod?: any) => {
