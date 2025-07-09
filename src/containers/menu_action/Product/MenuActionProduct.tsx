@@ -7,6 +7,8 @@ import AddIcon from "@mui/icons-material/Add";
 import BlockIcon from "@mui/icons-material/Block";
 import { Button, Menu, MenuItem } from "@mui/material";
 import DeleteProduct from "../../product/popup/DeleteProduct";
+import { useNavigate } from "react-router-dom";
+import config from "../../../configs";
 
 export default function MenuActionTableProduct({
   product,
@@ -22,19 +24,28 @@ export default function MenuActionTableProduct({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+  const navigate = useNavigate();
 
   const actions = [
     {
       label: "Chi Tiết",
       icon: <InfoIcon sx={{ mr: 1 }} color="info" />,
-      action: () => {},
+      action: () => {
+        navigate(
+          config.adminRoutes.ManageProductDetail.replace(":id", product.id)
+        );
+      },
     },
     ...(!isDeleted
       ? [
           {
             label: "Chỉnh sửa",
             icon: <EditIcon sx={{ mr: 1, color: "#9ADE7B" }} />,
-            action: () => {},
+            action: () => {
+              navigate(
+                config.adminRoutes.EditProductDetail.replace(":id", product.id)
+              );
+            },
           },
         ]
       : []),

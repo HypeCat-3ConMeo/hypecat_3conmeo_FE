@@ -25,6 +25,16 @@ export const menuItems: MenuItemLayout[] = [
         label: "Loại Sản Phẩm",
         path: config.adminRoutes.manageCategory,
       },
+      {
+        icon: <Iconify icon="mdi:truck-delivery" width={24} height={24} />,
+        label: "Lô Hàng",
+        path: config.adminRoutes.manageBatch,
+      },
+      {
+        icon: <Iconify icon="mdi:tray-arrow-down" width={24} height={24} />,
+        label: "Nhập hàng",
+        path: config.adminRoutes.importBatch,
+      },
     ],
   },
 ];

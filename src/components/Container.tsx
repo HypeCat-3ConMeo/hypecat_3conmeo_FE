@@ -8,7 +8,12 @@ interface ContainerWrapperType {
 const ContainerWrapper: React.FC<ContainerWrapperType> = ({ children }) => {
   return (
     <>
-      <Container sx={{ width: "100% !important", maxWidth: "none !important" }}>
+      <Container
+        sx={{
+          maxWidth: "none !important",
+          minHeight: "100vh",
+        }}
+      >
         <>{children}</>
       </Container>
     </>

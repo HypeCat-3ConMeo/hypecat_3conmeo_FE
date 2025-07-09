@@ -24,18 +24,17 @@ const LogTableTabs = ({ logs }: { logs: ProductLog[] }) => {
     }, {});
   }, [logs]);
 
-  const tabKeys = ["Import", "Export", "UpdatePrice"].filter(
+  const tabKeys = ["Import", "Export", "BreakBox"].filter(
     (key) => key in groupedLogs
   );
 
   const tabLabels: Record<string, string> = {
     Import: "Nhập kho",
     Export: "Xuất kho",
-    UpdatePrice: "Cập nhật giá",
+    BreakBox: "Tách hộp",
   };
 
   const importExportHeaders = [
-    { id: "name", label: "Tên", align: "center" },
     { id: "quantity", label: "Số lượng", align: "center" },
     { id: "type", label: "Nhập/Xuất", align: "center", format: "type" },
     { id: "createDate", label: "Thời gian", align: "center", format: "date" },
@@ -44,12 +43,10 @@ const LogTableTabs = ({ logs }: { logs: ProductLog[] }) => {
   const headerByType: Record<string, any[]> = {
     Import: importExportHeaders,
     Export: importExportHeaders,
-    UpdatePrice: [
-      { id: "oldImportCost", label: "Giá nhập cũ", align: "center" },
-      { id: "newImportCost", label: "Giá nhập mới", align: "center" },
-      { id: "oldSellingPrice", label: "Giá bán cũ", align: "center" },
-      { id: "newSellingPrice", label: "Giá bán mới", align: "center" },
-      { id: "createDate", label: "Thời gian", align: "center", format: "date" },
+    BreakBox: [
+      { id: "quantity", label: "Số lượng tách", align: "center" },
+      { id: "createDate", label: "Ngày tách", align: "center", format: "date" },
+      { id: "type", label: "Loại", align: "center", format: "type" },
     ],
   };
 

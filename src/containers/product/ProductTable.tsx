@@ -100,12 +100,6 @@ const ProductTable = () => {
       align: "center",
     },
     {
-      id: "sellingPrice",
-      label: "Giá bán",
-      align: "center",
-      format: "price",
-    },
-    {
       id: "createDate",
       label: "Ngày tạo",
       align: "center",

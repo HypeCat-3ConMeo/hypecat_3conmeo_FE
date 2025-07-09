@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ProductImage {
   id: number;
   urlPath: string;
@@ -25,7 +26,12 @@ export interface ProductBatch {
 export interface Product {
   id: number;
   name: string;
-  sellingPrice: number;
+  category: Category;
+}
+
+export interface Category {
+  id: number;
+  name: string;
 }
 export interface SourceOfProduct {
   id: number;
@@ -36,15 +42,11 @@ export interface BatchDetail {
   id: number;
   batchId: number;
   productId: number;
-  SourceOfProductId: number;
-  remainingQuantity: number;
   daysUntilExpiration: number;
   createDate: string;
-  expiredDate: string;
-  isExpiredLogged: boolean;
   quantity: number;
   productDTO: Product;
-  sourceOfProductDTO: SourceOfProduct;
+  sellingPrice: number;
 }
 
 export interface Batch {

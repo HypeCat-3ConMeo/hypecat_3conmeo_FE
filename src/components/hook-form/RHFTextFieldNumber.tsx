@@ -66,16 +66,19 @@ export default function RHFTextFieldNumber({ name, ...other }: Props) {
               setValue(name, parseFormattedNumber(displayValue));
             }
           }}
-          InputProps={{
-            ...other.InputProps,
-            type: "text",
-            inputProps: { ...other.InputProps?.inputProps, min: 0 },
-          }}
-          InputLabelProps={{
-            required: true,
-            sx: {
-              "& .MuiInputLabel-asterisk": {
-                color: "red",
+          slotProps={{
+            input: {
+              ...other.slotProps?.input,
+              type: "text",
+            },
+            inputLabel: {
+              ...other.slotProps?.inputLabel,
+              required: true,
+              sx: {
+                ...other.slotProps?.inputLabel,
+                "& .MuiInputLabel-asterisk": {
+                  color: "red",
+                },
               },
             },
           }}

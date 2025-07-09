@@ -1,6 +1,5 @@
 import type { BatchDetail } from "./BatchType";
 import type { Category } from "./CategoryType";
-import type { SourceOfProduct } from "./SourceOfProduct";
 
 export interface ProductImage {
   id?: string;
@@ -25,19 +24,18 @@ export interface CreateProductFormInput {
   language: string;
   description: string;
   status: string;
-  productImages: string;
+  productImages: (File | string | undefined)[];
+  cover: string;
 }
 
 export interface EditProductFormInput {
   name: string;
   categoryId: number;
-  //originalPrice: number;
-  sellingPrice: number;
-  importCosts: number;
-  //stockQuantity: number;
-  unit: string;
+  packsPerUnit: number;
   status: string;
-  productImages: (File | string)[];
+  productImages: (File | string | undefined)[];
+  language: string;
+  cover: string;
 }
 
 export interface Product {
@@ -45,11 +43,6 @@ export interface Product {
   name: string;
   categoryId: number;
   category: Category;
-  //originalPrice: number;
-  sellingPrice: number;
-  sourceOfProduct: SourceOfProduct;
-  sourceOfProductId: number;
-  importCosts: number;
   isDeleted: boolean;
   stockQuantity: number;
   status: string;
@@ -58,6 +51,9 @@ export interface Product {
   logs: ProductLog[];
   createDate: string;
   batchDetails: BatchDetail[];
+  language: string;
+  packsPerUnit: number;
+  cover: string;
 }
 
 export interface ProductListResponse {
@@ -69,3 +65,14 @@ export interface ProductListResponse {
   next: boolean;
   previous: boolean;
 }
+
+export const productStatusOptions = [
+  { value: "", label: "Chọn trạng thái" },
+  { value: "Available", label: "Còn hàng" },
+  { value: "OutOfStock", label: "Hết hàng" },
+  { value: "Incoming", label: "Hàng về" },
+  { value: "Discontinued", label: "Ngừng" },
+  { value: "PendingApproval", label: "Phê duyệt" },
+  { value: "Damaged", label: "Hư hỏng" },
+  { value: "Expired", label: "Hết hạn" },
+];
