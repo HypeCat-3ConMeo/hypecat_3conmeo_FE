@@ -47,6 +47,7 @@ interface CTableProps {
   sx?: any;
   onRowClick?: (row: any) => void;
   selectedRow?: any;
+  hideRowsPerPageOptions?: boolean;
   // New responsive props
   responsiveConfig?: {
     hideFormatsOnMobile?: string[]; // Column formats to hide on mobile (e.g., ['datetime', 'boolean'])
@@ -66,20 +67,6 @@ const StyledCard = styled(Card)(({ theme }) => ({
   borderRadius: 16,
   boxShadow: `0 8px 32px 0 ${alpha(theme.palette.common.black, 0.08)}`,
   border: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
-}));
-
-const StyledChip = styled(Chip)(({ theme }) => ({
-  fontWeight: 600,
-  borderRadius: 12,
-  fontSize: "0.75rem",
-  height: 28,
-  border: "1px solid",
-  backdropFilter: "blur(8px)",
-  transition: "all 0.2s ease-in-out",
-  "&:hover": {
-    transform: "scale(1.05)",
-    boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, 0.15)}`,
-  },
 }));
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
@@ -221,6 +208,7 @@ const CTable: React.FC<CTableProps> = ({
   onRowClick,
   selectedRow,
   responsiveConfig,
+  hideRowsPerPageOptions,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -768,7 +756,13 @@ const CTable: React.FC<CTableProps> = ({
               </Table>
 
               <TablePagination
-                rowsPerPageOptions={isMobile ? [10, 25] : [10, 25, 50, 100]}
+                rowsPerPageOptions={
+                  hideRowsPerPageOptions
+                    ? []
+                    : isMobile
+                    ? [5, 10, 25]
+                    : [5, 10, 25, 50, 100]
+                }
                 component="div"
                 count={total ?? 0}
                 rowsPerPage={size ?? 10}
@@ -777,8 +771,9 @@ const CTable: React.FC<CTableProps> = ({
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 labelRowsPerPage={isMobile ? "Rows:" : "Số hàng trên trang:"}
                 labelDisplayedRows={({ from, to, count }) => {
-                  return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
-                    }`;
+                  return `${from}–${to} trên ${
+                    count !== -1 ? count : `nhiều hơn ${to}`
+                  }`;
                 }}
                 showFirstButton={!isMobile}
                 showLastButton={!isMobile}
@@ -788,9 +783,9 @@ const CTable: React.FC<CTableProps> = ({
                     paddingRight: isMobile ? 1 : 2,
                   },
                   "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
-                  {
-                    fontSize: isMobile ? "0.75rem" : "0.875rem",
-                  },
+                    {
+                      fontSize: isMobile ? "0.75rem" : "0.875rem",
+                    },
                 }}
               />
             </StyledTableContainer>

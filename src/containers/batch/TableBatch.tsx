@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import MenuActionTableBatch from "../menu_action/Batch/MenuActionTableBatch";
 import BatchAPI from "../../api/services/BatchApi/batchAPI";
+import CTable from "../../components/table/CTable";
 
 // Define the Batch model interface
 interface BatchModel {
   batchNumber: string;
   receivedDate: string;
-  provideCompanies: string[];
 }
 
 // API returns all data without server-side pagination
@@ -60,7 +61,7 @@ const TableBatch = () => {
       id: "createDate",
       label: "Ngày nhận",
       align: "center" as const,
-      format: "date" as const,
+      format: "datetime" as const,
     },
   ];
 
@@ -80,7 +81,7 @@ const TableBatch = () => {
 
   return (
     <>
-      <CustomizeTable
+      <CTable
         data={dataBatch}
         tableHeaderTitle={tableHeader}
         title="Bảng quản lý lô hàng"

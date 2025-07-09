@@ -1,23 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useState } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import InfoIcon from "@mui/icons-material/Info";
 import { Button, Menu, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import config from "../../../configs";
+import BreakBoxModal from "../../batch/popup/BreakBoxModal";
+import type { BatchDetail } from "../../../types/BatchType";
 
-export default function MenuActionTableBatch({
+export default function MenuActionTableBatchDetail({
   batchData,
   introId,
+  fetchData,
 }: {
-  batchData: any;
+  batchData: BatchDetail;
   isDeleted?: boolean;
   introId?: string;
   onOpenDetail?: any;
+  fetchData?: () => void;
 }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+  const [openBreakBoxModal, setOpenBreakBoxModal] = useState(false);
 
   const actions = [
     {
@@ -25,8 +30,18 @@ export default function MenuActionTableBatch({
       icon: <InfoIcon sx={{ mr: 1 }} color="info" />,
       action: () => {
         navigate(
-          config.adminRoutes.manageBatchDetail.replace(":id", batchData.id)
+          config.adminRoutes.manageBatchDetail.replace(
+            ":id",
+            batchData.batchId.toString()
+          )
         );
+      },
+    },
+    {
+      label: "Tách Hộp",
+      icon: <MoreHorizIcon sx={{ mr: 1 }} color="primary" />,
+      action: () => {
+        setOpenBreakBoxModal(true);
       },
     },
   ];
@@ -41,6 +56,12 @@ export default function MenuActionTableBatch({
     setAnchorEl(null);
   };
 
+  const handleUpdateSuccess = () => {
+    if (fetchData) {
+      fetchData();
+    }
+    setOpenBreakBoxModal(false);
+  };
   return (
     <div>
       <Button
@@ -84,6 +105,16 @@ export default function MenuActionTableBatch({
           </MenuItem>
         ))}
       </Menu>
+      {openBreakBoxModal && (
+        <BreakBoxModal
+          openPopup={openBreakBoxModal}
+          handleCLose={() => setOpenBreakBoxModal(false)}
+          ProductData={batchData}
+          onUpdateSuccess={() => {
+            handleUpdateSuccess();
+          }}
+        />
+      )}
     </div>
   );
 }
