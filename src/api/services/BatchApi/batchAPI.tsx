@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axiosClient from "../../axiosInstance";
+import { BATCH_LIST, BREAK_BOX, CREATE_BATCH } from "../../PathnameApi";
 
 const BatchAPI = {
   //GET api
   getBatchList: (params?: any) => {
-    const url = "/Batch/GetBatchPagination?IsDescending=true";
+    const url = BATCH_LIST;
     return axiosClient.get(url, {
       params,
     });
@@ -19,7 +20,13 @@ const BatchAPI = {
 
   //POST api
   CreateBatch: (params?: any) => {
-    const url = "/Batch/CreateBatch";
+    const url = CREATE_BATCH;
+    return axiosClient.post(url, params);
+  },
+
+  //break box
+  BreakBox: (params?: any) => {
+    const url = BREAK_BOX;
     return axiosClient.post(url, params);
   },
 };

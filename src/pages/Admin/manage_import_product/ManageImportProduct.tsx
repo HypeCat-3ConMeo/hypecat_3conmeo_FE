@@ -1,32 +1,29 @@
-import type React from "react";
-import ProductTable from "../../../containers/product/ProductTable";
 import ContainerWrapper from "../../../components/Container";
 import HeaderBreadcrumbs from "../../../components/HeaderBreadcrumbs";
 import config from "../../../configs";
+import ImportProduct from "../../../containers/importProduct/ImportProduct";
 
-const ProductPage: React.FC = () => {
+const ManageImportBatchPage = () => {
   return (
     <>
-      <title>HypeCat | Quản lý sản phẩm</title>
       <ContainerWrapper>
         <HeaderBreadcrumbs
-          heading="Quản lý sản phẩm"
+          heading="Quản lý loại sản phẩm"
           links={[
             {
-              name: "Bảng thống kê",
+              name: "Bảng Thống Kê",
               href: config.adminRoutes.dashboard,
             },
             {
-              name: "Quản lí sản phẩm",
-              href: config.adminRoutes.manageProduct,
+              name: "Nhập hàng",
             },
           ]}
         />
 
-        <ProductTable />
+        <ImportProduct />
       </ContainerWrapper>
     </>
   );
 };
 
-export default ProductPage;
+export default ManageImportBatchPage;

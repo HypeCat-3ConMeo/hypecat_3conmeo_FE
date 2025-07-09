@@ -16,6 +16,7 @@ import {
   TablePagination,
   Skeleton,
   useMediaQuery,
+  Chip,
 } from "@mui/material";
 import { alpha, keyframes, styled } from "@mui/material/styles";
 import React, { type ReactNode, useMemo } from "react";
@@ -46,6 +47,7 @@ interface CTableProps {
   sx?: any;
   onRowClick?: (row: any) => void;
   selectedRow?: any;
+  hideRowsPerPageOptions?: boolean;
   // New responsive props
   responsiveConfig?: {
     hideFormatsOnMobile?: string[]; // Column formats to hide on mobile (e.g., ['datetime', 'boolean'])
@@ -206,6 +208,7 @@ const CTable: React.FC<CTableProps> = ({
   onRowClick,
   selectedRow,
   responsiveConfig,
+  hideRowsPerPageOptions,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -369,6 +372,66 @@ const CTable: React.FC<CTableProps> = ({
             />
           </Box>
         );
+      }
+    }
+
+    // Deleted status
+    if (column.format && column.format === "deleted") {
+      switch (value) {
+        case true:
+          return (
+            <StyledChip
+              label="Không khả dụng"
+              sx={{
+                bgcolor: alpha(colors.red_200, 0.9),
+                color: colors.red_800,
+                borderColor: colors.red_400,
+              }}
+            />
+          );
+        case false:
+          return (
+            <StyledChip
+              label="Đang khả dụng"
+              sx={{
+                bgcolor: alpha(colors.green_200, 0.9),
+                color: colors.green_800,
+                borderColor: colors.green_400,
+              }}
+            />
+          );
+        default:
+          return "-";
+      }
+    }
+
+    ///// Status formatting
+    if (column.format && column.format === "status") {
+      switch (value) {
+        case "Active":
+          return (
+            <StyledChip
+              label="Hoạt động"
+              sx={{
+                bgcolor: alpha(colors.green_200, 0.9),
+                color: colors.green_800,
+                borderColor: colors.green_400,
+              }}
+            />
+          );
+        case "UnActive":
+          return (
+            <StyledChip
+              label="Không hoạt động"
+              sx={{
+                bgcolor: alpha(colors.red_200, 0.9),
+                color: colors.red_600,
+                borderColor: colors.red_400,
+              }}
+            />
+          );
+        default:
+          return "-";
       }
     }
 
@@ -693,7 +756,13 @@ const CTable: React.FC<CTableProps> = ({
               </Table>
 
               <TablePagination
-                rowsPerPageOptions={isMobile ? [10, 25] : [10, 25, 50, 100]}
+                rowsPerPageOptions={
+                  hideRowsPerPageOptions
+                    ? []
+                    : isMobile
+                    ? [5, 10, 25]
+                    : [5, 10, 25, 50, 100]
+                }
                 component="div"
                 count={total ?? 0}
                 rowsPerPage={size ?? 10}
@@ -702,8 +771,9 @@ const CTable: React.FC<CTableProps> = ({
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 labelRowsPerPage={isMobile ? "Rows:" : "Số hàng trên trang:"}
                 labelDisplayedRows={({ from, to, count }) => {
-                  return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
-                    }`;
+                  return `${from}–${to} trên ${
+                    count !== -1 ? count : `nhiều hơn ${to}`
+                  }`;
                 }}
                 showFirstButton={!isMobile}
                 showLastButton={!isMobile}
@@ -713,9 +783,9 @@ const CTable: React.FC<CTableProps> = ({
                     paddingRight: isMobile ? 1 : 2,
                   },
                   "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
-                  {
-                    fontSize: isMobile ? "0.75rem" : "0.875rem",
-                  },
+                    {
+                      fontSize: isMobile ? "0.75rem" : "0.875rem",
+                    },
                 }}
               />
             </StyledTableContainer>

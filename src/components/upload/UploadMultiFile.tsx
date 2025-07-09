@@ -77,7 +77,12 @@ export default function UploadMultiFile({
 
       {files?.length > 0 && (
         <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-          <Button color="inherit" size="small" onClick={onRemoveAll}>
+          <Button
+            color="inherit"
+            size="small"
+            onClick={onRemoveAll}
+            variant="outlined"
+          >
             Xoá hết
           </Button>
         </Stack>
