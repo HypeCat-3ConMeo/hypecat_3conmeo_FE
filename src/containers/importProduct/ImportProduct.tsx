@@ -33,7 +33,6 @@ import {
 import BatchPagination from "./BatchPagination";
 import { toast } from "react-toastify";
 import { type ProductBatch } from "../../types/BatchType";
-import { formatMoney } from "../../utils/fn";
 import useDebounce from "../../hooks/useDebounce";
 import { useNavigate } from "react-router-dom";
 import productApi from "../../api/services/ProductApi/productAPI";
@@ -47,6 +46,7 @@ interface BatchDetail {
   sellingPrice: number;
   importCosts: number;
   quantity: number;
+  cover?: string; // Optional cover image for the product
 }
 
 interface CreateBatchModel {
@@ -271,6 +271,10 @@ const ImportProduct = () => {
     return productBatch ? productBatch.name : `Product ID: ${id}`;
   };
 
+  const getProductBatchCoverById = (id: number): string => {
+    const productBatch = productBatches.find((i) => i.id === id);
+    return productBatch ? productBatch.cover : `Product ID: ${id}`;
+  };
   // Handle batch page change
   const handleBatchPageChange = (page: number) => {
     setBatchesPage(page);
@@ -410,8 +414,8 @@ const ImportProduct = () => {
                       />
                     </TableCell>
                     <TableCell>Tên sản phẩm</TableCell>
+                    <TableCell>Hình ảnh</TableCell>
                     <TableCell>Loại</TableCell>
-                    <TableCell align="right">Giá</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -440,13 +444,22 @@ const ImportProduct = () => {
                       <TableCell
                         onClick={() => handleCheckboxToggle(productBatch.id)}
                       >
-                        {productBatch.category.name}
+                        <Box
+                          component="img"
+                          src={productBatch.cover}
+                          alt={productBatch.name}
+                          sx={{
+                            width: 100,
+                            height: 100,
+                            objectFit: "cover",
+                            borderRadius: 1,
+                          }}
+                        />
                       </TableCell>
                       <TableCell
-                        align="right"
                         onClick={() => handleCheckboxToggle(productBatch.id)}
                       >
-                        {formatMoney(productBatch.sellingPrice)}
+                        {productBatch.category.name}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -504,6 +517,17 @@ const ImportProduct = () => {
                           borderColor: "divider",
                         }}
                       >
+                        <Box
+                          component="img"
+                          src={getProductBatchCoverById(batch.productId)}
+                          alt={getProductBatchNameById(batch.productId)}
+                          sx={{
+                            width: 250,
+                            height: 250,
+                            objectFit: "cover",
+                            borderRadius: 1,
+                          }}
+                        />
                         {/* Product Name Header */}
                         <Box
                           sx={{

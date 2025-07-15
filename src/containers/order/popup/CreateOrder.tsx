@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import PersonIcon from "@mui/icons-material/Person";
-//import PhoneIcon from "@mui/icons-material/Phone";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-//import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
   Box,
   Button,
@@ -32,7 +31,12 @@ import type { User } from "../../../types/Usertype";
 import productApi from "../../../api/services/ProductApi/productAPI";
 import userApi from "../../../api/services/user_api/userAPI";
 import orderApi from "../../../api/services/OrderApi/orderAPI";
-import { FormProvider, RHFAutoComplete, RHFSelect, RHFTextField } from "../../../components/hook-form";
+import {
+  FormProvider,
+  RHFAutoComplete,
+  RHFSelect,
+  RHFTextField,
+} from "../../../components/hook-form";
 import { colors, font_weight } from "../../../styles/config-file";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -135,7 +139,9 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
     name: Yup.string().required("Vui lòng nhập tên người đặt"),
     phone: Yup.string().required("Vui lòng nhập số điện thoại"),
     address: Yup.string().required("Vui lòng nhập địa chỉ đặt hàng"),
-    email: Yup.string().required("Vui lòng nhập email").email("Email không hợp lệ"),
+    email: Yup.string()
+      .required("Vui lòng nhập email")
+      .email("Email không hợp lệ"),
     orderDetails: Yup.array()
       .of(orderDetailSchema)
       .min(1, "Vui lòng chọn ít nhất một sản phẩm"),
@@ -343,7 +349,9 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
                   <Grid size={12}>
                     {isPhoneNumber && (
                       <Stack spacing={2}>
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                        >
                           {/* <CheckCircleIcon sx={{ color: colors.green_400 }} /> */}
                           <RHFTextField
                             name="name"

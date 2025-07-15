@@ -18,6 +18,9 @@ import EditProductPage from "../pages/Admin/manage_product/EditProduct/EditProdu
 import BatchPage from "../pages/Admin/manage_batch/ManageBatchPage";
 import ManageImportBatchPage from "../pages/Admin/manage_import_product/ManageImportProduct";
 import DetailBatchPage from "../pages/Admin/manage_batch/DetailBatch/DetailBatchPage";
+import ManageUserPage from "../pages/Admin/manage_users/ManageUserPage";
+import UserDetailPage from "../pages/Admin/manage_users/DetailUser/UserDetailPage";
+import DashboardPage from "../pages/Admin/manage_dashboard/DashboardPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -54,6 +57,11 @@ const AppRoute: React.FC = () => {
       </Route>
 
       <Route key={"dashboard"} element={<AdminLayout />}>
+        <Route
+          key={"dashboardPage"}
+          path={config.adminRoutes.dashboard}
+          element={<DashboardPage />}
+        />
         <Route
           key={"products"}
           path={config.adminRoutes.manageProduct}
@@ -94,8 +102,23 @@ const AppRoute: React.FC = () => {
           path={config.adminRoutes.importBatch}
           element={<ManageImportBatchPage />}
         />
+        <Route
+          key={"ordersAdmin"}
+          path={config.adminRoutes.manageOrder}
+          element={<ManagerOrderPage />}
+        />
+        <Route
+          key={"usersAdmin"}
+          path={config.adminRoutes.manageUser}
+          element={<ManageUserPage />}
+        />
+        <Route
+          key={"detailUser"}
+          path={config.adminRoutes.detailUser}
+          element={<UserDetailPage />}
+        />
       </Route>
-    </Routes >
+    </Routes>
   );
 };
 

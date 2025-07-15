@@ -28,7 +28,7 @@ interface CTableProps {
   tableHeaderTitle?: any;
   data?: any;
   title?: string;
-  menuAction?: any;
+  menuAction?: (row: any) => React.ReactNode;
   selectedData?: any;
   searchTool?: ReactNode;
   eventAction?: ReactNode;
@@ -745,8 +745,11 @@ const CTable: React.FC<CTableProps> = ({
                             sx={{
                               padding: isMobile ? "8px 4px" : undefined,
                             }}
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent row click
+                            }}
                           >
-                            {menuAction}
+                            {menuAction(row)}
                           </TableCell>
                         )}
                       </TableRow>

@@ -200,18 +200,18 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
   };
 
   // Get status text for print
-  const getStatusText = (status?: string) => {
-    switch (status) {
-      case OrderStatus.PENDING:
-        return "Chờ xử lý";
-      case OrderStatus.FINISH:
-        return "Đã thanh toán";
-      case OrderStatus.CANCELED:
-        return "Đã hủy";
-      default:
-        return "-";
-    }
-  };
+  // const getStatusText = (status?: string) => {
+  //   switch (status) {
+  //     case OrderStatus.PENDING:
+  //       return "Chờ xử lý";
+  //     case OrderStatus.FINISH:
+  //       return "Đã thanh toán";
+  //     case OrderStatus.CANCELED:
+  //       return "Đã hủy";
+  //     default:
+  //       return "-";
+  //   }
+  // };
 
   return (
     <Box>
