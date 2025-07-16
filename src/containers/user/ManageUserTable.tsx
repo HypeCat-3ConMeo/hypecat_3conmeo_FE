@@ -1,8 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Box, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import AddUser from "./popup/AddUser";
+import AddUser from "./popup/AddUserDialog";
 import type { UserData } from "../../types/Usertype";
 import userApi from "../../api/services/user_api/userAPI";
 import CTable from "../../components/table/CTable";
@@ -17,14 +25,44 @@ interface STProps {
 
 const SearchTool: React.FC<STProps> = ({ filter, setFilter }) => {
   return (
-    <Box sx={{ p: 2 }}>
+    <Box
+      sx={{
+        p: 2,
+        display: "flex",
+        gap: 2,
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
       <TextField
         size="small"
         placeholder="Tìm kiếm"
         label="Khách hàng"
         id="intro-search-user"
         onChange={(e) => setFilter({ ...filter, SearchTerm: e.target.value })}
+        sx={{ minWidth: 200 }}
       />
+
+      <FormControl size="small" sx={{ minWidth: 150 }}>
+        <InputLabel id="delete-status-label">Trạng thái xóa</InputLabel>
+        <Select
+          labelId="delete-status-label"
+          id="delete-status-select"
+          value={filter.IsDeleted ?? ""}
+          label="Trạng thái xóa"
+          onChange={(e) => {
+            const value = e.target.value;
+            setFilter({
+              ...filter,
+              IsDeleted: value === "" ? undefined : value === "true",
+            });
+          }}
+        >
+          <MenuItem value="">Tất cả</MenuItem>
+          <MenuItem value="false">Chưa xóa</MenuItem>
+          <MenuItem value="true">Đã xóa</MenuItem>
+        </Select>
+      </FormControl>
     </Box>
   );
 };
@@ -35,7 +73,10 @@ const ManageUserTable = () => {
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
   const [total, setTotal] = React.useState(0);
-  const [filter, setFilter] = React.useState({ SearchTerm: "" });
+  const [filter, setFilter] = React.useState({
+    SearchTerm: "",
+    isDelete: undefined,
+  });
   const [selectedRow, setSelectedRow] = React.useState<any>(null);
   const navigate = useNavigate();
 
@@ -149,12 +190,21 @@ const ManageUserTable = () => {
       </Box>
     );
   };
+  const SearchEvent = () => {
+    return (
+      <>
+        <Box>
+          <SearchTool filter={filter} setFilter={setFilter} />
+        </Box>
+      </>
+    );
+  };
   return (
     <div>
       <AddUser open={open} handleClose={handleClose} fetchData={getListUsers} />
       <CTable
         data={usersData}
-        searchTool={<SearchTool filter={filter} setFilter={setFilter} />}
+        searchTool={<SearchEvent />}
         title="Danh sách người dùng"
         tableHeaderTitle={tableHeaderTitle}
         eventAction={<EventAction />}

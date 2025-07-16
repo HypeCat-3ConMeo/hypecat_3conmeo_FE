@@ -38,6 +38,9 @@ import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import { viVN } from "@mui/x-date-pickers/locales";
 import "dayjs/locale/vi";
+import Logo from "../../components/Logo/Logo";
+import { useResponsive } from "../../hooks/useResponsive";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 // Styled components
 const StyledCard = styled(Card)(() => ({
@@ -431,6 +434,7 @@ const Dashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(
     null
   );
+  const { isMobile } = useResponsive();
   const date = new Date();
   const [value, setValue] = React.useState<Dayjs | null>(dayjs(date));
   const [loading, setLoading] = useState(true);
@@ -502,41 +506,213 @@ const Dashboard: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+      {/* Calender */}
 
-      <LocalizationProvider
-        dateAdapter={AdapterDayjs}
-        adapterLocale="vi"
-        localeText={
-          viVN.components.MuiLocalizationProvider.defaultProps.localeText
-        }
-      >
-        <Box
-          sx={{
-            mb: 2,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-          }}
+      {!isMobile ? (
+        <LocalizationProvider
+          dateAdapter={AdapterDayjs}
+          adapterLocale="vi"
+          localeText={
+            viVN.components.MuiLocalizationProvider.defaultProps.localeText
+          }
         >
-          <StaticDatePicker
-            value={value}
-            onChange={handleDateChange}
-            sx={{ fontWeight: 500, fontSize: "16px", border: "1px solid #ccc" }}
-            slotProps={{
-              day: {
-                sx: { fontSize: "1.1rem" }, // số ngày trong lịch
-              },
-              calendarHeader: {
-                sx: { fontSize: "1.2rem" }, // tiêu đề tháng/năm
-              },
-              toolbar: {
-                sx: { fontSize: "1.2rem" }, // nếu có toolbar
-              },
+          <Box
+            sx={{
+              mb: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "100%",
+              maxWidth: "400px",
+              mx: "auto",
+              border: "2px solid #e0e0e0",
+              borderRadius: "16px",
+              padding: "20px",
+              backgroundColor: "#fafafa",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
             }}
-          />
-        </Box>
-      </LocalizationProvider>
+          >
+            {/* Logo Section */}
+            <Box
+              sx={{
+                mb: 3,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Logo
+                style={{
+                  borderRadius: "5%",
+                  width: "200px",
+                }}
+              />
+            </Box>
+
+            {/* Calendar Section */}
+            <Box
+              sx={{
+                width: "100%",
+                "& .MuiPickersCalendarHeader-root": {
+                  borderBottom: "1px solid #e0e0e0",
+                  paddingBottom: "8px",
+                  marginBottom: "8px",
+                },
+                "& .MuiDayCalendar-root": {
+                  backgroundColor: "white",
+                  borderRadius: "12px",
+                  padding: "8px",
+                },
+              }}
+            >
+              <StaticDatePicker
+                value={value}
+                onChange={handleDateChange}
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "16px",
+                  "& .MuiPickersLayout-root": {
+                    border: "none",
+                  },
+                  "& .MuiPickersCalendarHeader-root": {
+                    backgroundColor: "transparent",
+                  },
+                }}
+                slotProps={{
+                  day: {
+                    sx: {
+                      fontSize: "1.1rem",
+                      "&:hover": {
+                        backgroundColor: "#e3f2fd",
+                      },
+                      "&.Mui-selected": {
+                        backgroundColor: "#1976d2",
+                        "&:hover": {
+                          backgroundColor: "#1565c0",
+                        },
+                      },
+                    },
+                  },
+                  calendarHeader: {
+                    sx: {
+                      fontSize: "1.2rem",
+                      fontWeight: "600",
+                      color: "#333",
+                    },
+                  },
+                  toolbar: {
+                    sx: { fontSize: "1.2rem" },
+                  },
+                }}
+              />
+            </Box>
+          </Box>
+        </LocalizationProvider>
+      ) : (
+        <LocalizationProvider
+          dateAdapter={AdapterDayjs}
+          adapterLocale="vi"
+          localeText={
+            viVN.components.MuiLocalizationProvider.defaultProps.localeText
+          }
+        >
+          <Box
+            sx={{
+              mb: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "100%",
+              maxWidth: "400px",
+              mx: "auto",
+              border: "2px solid #e0e0e0",
+              borderRadius: "16px",
+              padding: "20px",
+              backgroundColor: "#fafafa",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            {/* Logo Section */}
+            <Box
+              sx={{
+                mb: 3,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Logo
+                style={{
+                  borderRadius: "5%",
+                  width: "200px",
+                }}
+              />
+            </Box>
+
+            {/* Calendar Section */}
+            <Box
+              sx={{
+                width: "100%",
+                "& .MuiPickersCalendarHeader-root": {
+                  borderBottom: "1px solid #e0e0e0",
+                  paddingBottom: "8px",
+                  marginBottom: "8px",
+                },
+                "& .MuiDayCalendar-root": {
+                  backgroundColor: "white",
+                  borderRadius: "12px",
+                  padding: "8px",
+                },
+              }}
+            >
+              <DatePicker
+                value={value}
+                onChange={handleDateChange}
+                sx={{
+                  width: "100%",
+                  fontWeight: 500,
+                  fontSize: "16px",
+                  "& .MuiPickersLayout-root": {
+                    border: "none",
+                  },
+                  "& .MuiPickersCalendarHeader-root": {
+                    backgroundColor: "transparent",
+                  },
+                }}
+                format="DD/MM/YYYY"
+                slotProps={{
+                  day: {
+                    sx: {
+                      fontSize: "1.1rem",
+                      "&:hover": {
+                        backgroundColor: "#e3f2fd",
+                      },
+                      "&.Mui-selected": {
+                        backgroundColor: "#1976d2",
+                        "&:hover": {
+                          backgroundColor: "#1565c0",
+                        },
+                      },
+                    },
+                  },
+                  calendarHeader: {
+                    sx: {
+                      fontSize: "1.2rem",
+                      fontWeight: "600",
+                      color: "#333",
+                    },
+                  },
+                  toolbar: {
+                    sx: { fontSize: "1.2rem" },
+                  },
+                }}
+              />
+            </Box>
+          </Box>
+        </LocalizationProvider>
+      )}
 
       {/* Summary Statistics */}
       <Box id="summary-stats" sx={{ mb: 4 }}>

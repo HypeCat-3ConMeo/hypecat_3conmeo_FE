@@ -37,8 +37,6 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
 
   const defaultValues = {
     name: "",
-    email: "",
-    password: "",
     phone: "",
     province: "",
     ward: "",
@@ -49,12 +47,6 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Tên người dùng là bắt buộc"),
-    email: Yup.string()
-      .email("Email không hợp lệ")
-      .required("Email là bắt buộc"),
-    password: Yup.string()
-      .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
-      .required("Mật khẩu là bắt buộc"),
     phone: Yup.string()
       .matches(/^[0-9]+$/, "Số điện thoại chỉ được chứa số")
       .min(10, "Số điện thoại phải có ít nhất 10 số")
@@ -214,21 +206,9 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
                 </Typography>
                 <Divider sx={{ mb: 3 }} />
               </Box>
-
               <Grid container spacing={3}>
                 <Grid size={12}>
                   <RHFTextField name="name" label="Tên người dùng" fullWidth />
-                </Grid>
-                <Grid size={12}>
-                  <RHFTextField name="email" label="Email" fullWidth />
-                </Grid>
-                <Grid size={12}>
-                  <RHFTextField
-                    name="password"
-                    label="Mật khẩu"
-                    type="password"
-                    fullWidth
-                  />
                 </Grid>
                 <Grid size={12}>
                   <RHFTextField name="phone" label="Số điện thoại" fullWidth />

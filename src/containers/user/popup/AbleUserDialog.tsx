@@ -23,11 +23,8 @@ interface Props {
   fetchData: () => void;
 }
 
-const DeleteUser: React.FC<Props> = ({ onOpen, onClose, data, fetchData }) => {
+const AbleUser: React.FC<Props> = ({ onOpen, onClose, data, fetchData }) => {
   const isDelete = 1;
-
-  console.log("data delete user", data);
-
   //Call API
   const handleDeleteUser = async () => {
     try {
@@ -78,4 +75,4 @@ const DeleteUser: React.FC<Props> = ({ onOpen, onClose, data, fetchData }) => {
   );
 };
 
-export default DeleteUser;
+export default AbleUser;

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { UserData } from "../../../types/Usertype";
 import axiosClient from "../../axiosInstance";
-import { PROFILE, PROFILE_UPDATE } from "../../PathnameApi";
+import { PROFILE, PROFILE_UPDATE, UPDATE_USER } from "../../PathnameApi";
 
 const userApi = {
   //GET api
@@ -66,6 +66,10 @@ const userApi = {
   getAccountById: (id: string): Promise<UserData> => {
     const url = `Users/GetAccountById/${id}`;
     return axiosClient.get(url);
+  },
+
+  updateAccount: (id: any, body: any): any => {
+    return axiosClient.put(UPDATE_USER.replace(":id", id), body);
   },
 };
 
