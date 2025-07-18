@@ -94,10 +94,10 @@ const ProductTable = () => {
   };
   const tableHeaderTitle = [
     {
-      id: "images",
+      id: "cover",
       label: "Hình ảnh",
       align: "center",
-      format: "images",
+      format: "image",
     },
     {
       id: "name",

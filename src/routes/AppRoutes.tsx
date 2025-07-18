@@ -21,6 +21,7 @@ import DetailBatchPage from "../pages/Admin/manage_batch/DetailBatch/DetailBatch
 import ManageUserPage from "../pages/Admin/manage_users/ManageUserPage";
 import UserDetailPage from "../pages/Admin/manage_users/DetailUser/UserDetailPage";
 import DashboardPage from "../pages/Admin/manage_dashboard/DashboardPage";
+import DetailOrderPage from "../pages/Admin/manage_order/DetailOrder/DetailOrderPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -106,6 +107,11 @@ const AppRoute: React.FC = () => {
           key={"ordersAdmin"}
           path={config.adminRoutes.manageOrder}
           element={<ManagerOrderPage />}
+        />
+        <Route
+          key={"ordersDetailAdmin"}
+          path={config.adminRoutes.detailOrder}
+          element={<DetailOrderPage />}
         />
         <Route
           key={"usersAdmin"}
