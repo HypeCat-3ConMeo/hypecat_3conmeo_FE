@@ -1,17 +1,18 @@
-"use client";
-import orderApi from "@/axios-clients/order_api/orderAPI";
-import CustomizeTable from "@/components/table/customize-table";
-import useDebounce from "@/hook/useDebounce";
-import { Order } from "@/types/OrderType";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Button, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import React from "react";
 import { toast } from "react-toastify";
 import MenuActionOrder from "../menu_action/Order/MenuActionOrder";
 import CreateOrder from "./popup/CreateOrder";
-import { font_size } from "@/styles/config-file";
-import IntroTour from "@/components/intro/IntroTour";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+//import IntroTour from "@/components/intro/IntroTour";
+//import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import orderApi from "../../api/services/OrderApi/orderAPI";
+import useDebounce from "../../hooks/useDebounce";
+import type { Order } from "../../types/OrderType";
+import CTable from "../../components/table/CTable";
+import { useNavigate } from "react-router-dom";
+import config from "../../configs";
 
 interface SearchToolProps {
   filter: any;
@@ -32,62 +33,62 @@ const SearchTool: React.FC<SearchToolProps> = ({ filter, setFilter }) => {
   );
 };
 
-const orderTableIntroSteps = [
-  {
-    element: "#intro-order-table",
-    title: "Bảng đơn hàng",
-    intro: "Đây là danh sách các đơn hàng đã tạo.",
-    position: "left",
-  },
-  {
-    element: "#name-header",
-    title: "Cột Khách hàng",
-    intro: "Hiển thị tên khách hàng đặt đơn.",
-    position: "right",
-  },
-  {
-    element: "#phone-header",
-    title: "Cột Số điện thoại",
-    intro: "Hiển thị số điện thoại của khách hàng.",
-    position: "left",
-  },
-  {
-    element: "#order-date-header",
-    title: "Cột Ngày đặt",
-    intro: "Hiển thị ngày khách hàng đặt đơn.",
-    position: "left",
-  },
-  {
-    element: "#order-status-header",
-    title: "Cột Trạng thái",
-    intro: "Hiển thị trạng thái đơn hàng.",
-    position: "left",
-  },
-  {
-    element: "#order-amount-header",
-    title: "Cột Đơn giá",
-    intro: "Hiển thị giá trị đơn hàng.",
-    position: "left",
-  },
-  {
-    element: "#menu-action",
-    title: "Nút hành động",
-    intro: "Nhấn vào đây để thực hiện các hành động trên đơn hàng đã chọn.",
-    position: "left",
-  },
-  {
-    element: "#search-order",
-    title: "Thanh tìm kiếm",
-    intro: "Nhập vào đây để tìm kiếm đơn hàng",
-    position: "right",
-  },
-  {
-    element: "#create-order-btn",
-    title: "Tạo đơn hàng",
-    intro: "Nhấn vào đây để thêm đơn hàng mới.",
-    position: "left",
-  },
-];
+// const orderTableIntroSteps = [
+//   {
+//     element: "#intro-order-table",
+//     title: "Bảng đơn hàng",
+//     intro: "Đây là danh sách các đơn hàng đã tạo.",
+//     position: "left",
+//   },
+//   {
+//     element: "#name-header",
+//     title: "Cột Khách hàng",
+//     intro: "Hiển thị tên khách hàng đặt đơn.",
+//     position: "right",
+//   },
+//   {
+//     element: "#phone-header",
+//     title: "Cột Số điện thoại",
+//     intro: "Hiển thị số điện thoại của khách hàng.",
+//     position: "left",
+//   },
+//   {
+//     element: "#order-date-header",
+//     title: "Cột Ngày đặt",
+//     intro: "Hiển thị ngày khách hàng đặt đơn.",
+//     position: "left",
+//   },
+//   {
+//     element: "#order-status-header",
+//     title: "Cột Trạng thái",
+//     intro: "Hiển thị trạng thái đơn hàng.",
+//     position: "left",
+//   },
+//   {
+//     element: "#order-amount-header",
+//     title: "Cột Đơn giá",
+//     intro: "Hiển thị giá trị đơn hàng.",
+//     position: "left",
+//   },
+//   {
+//     element: "#menu-action",
+//     title: "Nút hành động",
+//     intro: "Nhấn vào đây để thực hiện các hành động trên đơn hàng đã chọn.",
+//     position: "left",
+//   },
+//   {
+//     element: "#search-order",
+//     title: "Thanh tìm kiếm",
+//     intro: "Nhập vào đây để tìm kiếm đơn hàng",
+//     position: "right",
+//   },
+//   {
+//     element: "#create-order-btn",
+//     title: "Tạo đơn hàng",
+//     intro: "Nhấn vào đây để thêm đơn hàng mới.",
+//     position: "left",
+//   },
+// ];
 
 const ManageOrderTable = () => {
   //Define the state for orders
@@ -98,6 +99,8 @@ const ManageOrderTable = () => {
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [totalItemsCount, setTotalItemsCount] = React.useState<number>(0);
   const debounce = useDebounce(filter, 1000);
+  const [openCreateOrder, setOpenCreateOrder] = React.useState(false);
+  const navigate = useNavigate();
 
   //Call the API to get the orders
   const getOrders = async () => {
@@ -112,6 +115,7 @@ const ManageOrderTable = () => {
       setTotalItemsCount(res.totalItemsCount);
     } catch (error) {
       toast.error("Có lỗi xay ra trong quá trình lấy danh sách đơn hàng");
+      console.error("Error fetching orders:", error);
     }
   };
 
@@ -139,6 +143,10 @@ const ManageOrderTable = () => {
     setPageIndex(0);
   };
 
+  const handleOrderRowClick = (row: Order) => {
+    navigate(config.adminRoutes.detailOrder.replace(":id", row.id.toString()));
+  };
+
   //TableHeader
   const tableHeader = [
     {
@@ -161,20 +169,26 @@ const ManageOrderTable = () => {
       align: "center",
     },
     {
-      id: "orderStatus",
-      label: "Trạng thái",
-      format: "orderStatus",
-      introId: "order-status-header",
-      align: "center",
-    },
-    {
       id: "orderAmount",
       label: "Đơn giá",
       format: "price",
       introId: "order-amount-header",
       align: "center",
     },
+    {
+      id: "orderStatus",
+      label: "Trạng thái",
+      format: "orderStatus",
+      introId: "order-status-header",
+      align: "center",
+    },
   ];
+  const handleClickOpen = () => {
+    setOpenCreateOrder(true);
+  };
+  const handleClose = () => {
+    setOpenCreateOrder(false);
+  };
 
   //Event action
   const CreateOrderAction = () => {
@@ -201,21 +215,12 @@ const ManageOrderTable = () => {
         >
           Tạo đơn hàng
         </Button>
-        <IntroTour
+        {/* <IntroTour
           steps={orderTableIntroSteps}
           buttonContent={<InfoOutlinedIcon sx={{ cursor: "pointer" }} />}
-        />
+        /> */}
       </Box>
     );
-  };
-
-  //Handle open create order popup
-  const [openCreateOrder, setOpenCreateOrder] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpenCreateOrder(true);
-  };
-  const handleClose = () => {
-    setOpenCreateOrder(false);
   };
 
   return (
@@ -225,27 +230,27 @@ const ManageOrderTable = () => {
         handleClose={handleClose}
         fetchData={getOrders}
       />
-      <CustomizeTable
+      <CTable
         data={orders}
         tableHeaderTitle={tableHeader}
         title="Quản lý đơn hàng"
-        menuAction={
+        menuAction={(row) => (
           <MenuActionOrder
-            orderData={selectedRow}
+            orderData={row}
             fetchData={getOrders}
             onOpenDetail={selectedData}
             introId="menu-action"
           />
-        }
+        )}
         eventAction={<CreateOrderAction />}
         page={pageIndex}
         size={pageSize}
         total={totalItemsCount}
-        selectedData={selectedData}
+        selectedData={selectedRow}
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
         searchTool={<SearchTool filter={filter} setFilter={setFilter} />}
-        tableContainerId="intro-order-table"
+        onRowClick={handleOrderRowClick}
       />
     </div>
   );

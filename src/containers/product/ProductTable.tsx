@@ -1,28 +1,26 @@
-"use client";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { useRouter } from "next/navigation";
 
 // MUI
 import { Box, Button, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 // library
 import { toast } from "react-toastify";
 
 // Components
-import CustomizeTable from "@/components/table/customize-table";
-import IntroTour from "@/components/intro/IntroTour";
+//import IntroTour from "@/components/intro/IntroTour";
 import MenuActionTableProduct from "../menu_action/Product/MenuActionProduct";
 
 // Hooks & API
-import useDebounce from "@/hook/useDebounce";
-import productApi from "@/axios-clients/product_api/productAPI";
+import useDebounce from "../../hooks/useDebounce";
+import productApi from "../../api/services/ProductApi/productAPI";
+import type { Product } from "../../types/ProductType";
+import CTable from "../../components/table/CTable";
+import { useNavigate } from "react-router-dom";
+import config from "../../configs";
 
 // Types
-import { Product } from "@/types/ProductType";
-
 interface SearchToolProps {
   filter: any;
   setFilter: any;
@@ -42,81 +40,6 @@ const SearchTool: React.FC<SearchToolProps> = ({ filter, setFilter }) => {
   );
 };
 
-const productTableIntroSteps = [
-  {
-    element: "#intro-product-table",
-    title: "Bảng sản phẩm",
-    intro: "Đây là danh sách các sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#image-header",
-    title: "Cột Hình ảnh",
-    intro: "Hình ảnh sản phẩm.",
-    position: "right",
-  },
-  {
-    element: "#name-header",
-    title: "Cột tên sản phẩm",
-    intro: "Tên sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#selling-price-header",
-    title: "Cột Giá bán",
-    intro: "Giá bán của sản phẩm.",
-    position: "left",
-  },
-  // {
-  //   element: "#import-costs-header",
-  //   title: "Cột Giá nhập",
-  //   intro: "Giá nhập của sản phẩm.",
-  //   position: "left"
-  // },
-  {
-    element: "#stock-quantity-header",
-    title: "Cột Số lượng tồn",
-    intro: "Số lượng tồn của sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#unit-header",
-    title: "Cột Đơn vị",
-    intro: "Đơn vị của sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#date-header",
-    title: "Cột Ngày tạo",
-    intro: "Ngày tạo của sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#deleted-header",
-    title: "Cột Trạng thái",
-    intro: "Trạng thái của sản phẩm.",
-    position: "left",
-  },
-  {
-    element: "#menu-action",
-    title: "Nút hành động",
-    intro: "Nhấn vào đây để thực hiện các hành động trên sản phẩm đã chọn.",
-    position: "left",
-  },
-  {
-    element: "#search-order",
-    title: "Thanh tìm kiếm",
-    intro: "Nhập vào đây để tìm kiếm sản phẩm",
-    position: "right",
-  },
-  {
-    element: "#create-order-btn",
-    title: "Tạo sản phẩm",
-    intro: "Nhấn vào đây để thêm sản phẩm mới.",
-    position: "left",
-  },
-];
-
 const ProductTable = () => {
   //Define the state for products
   const [products, setProducts] = React.useState<Product[]>([]);
@@ -124,9 +47,9 @@ const ProductTable = () => {
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [totalItemsCount, setTotalItemsCount] = React.useState<number>(0);
   const [selectedRow, setSelectedRow] = React.useState<any>(null);
-  const router = useRouter();
   const [filter, setFilter] = React.useState<any>({ SearchTerm: "" });
   const debounce = useDebounce(filter, 0);
+  const navigate = useNavigate();
 
   //Call the API to get the products
   const getProducts = async () => {
@@ -150,10 +73,6 @@ const ProductTable = () => {
   }, [pageIndex, pageSize, debounce]);
 
   //select data
-  const selectedData = (row: any) => {
-    setSelectedRow(row);
-  };
-
   const handleChangePage = (
     _event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -168,44 +87,34 @@ const ProductTable = () => {
     setPageIndex(0);
   };
 
+  const handleProductRowClick = (row: Product) => {
+    navigate(
+      config.adminRoutes.ManageProductDetail.replace(":id", row.id.toString())
+    );
+  };
   const tableHeaderTitle = [
     {
-      id: "images",
+      id: "cover",
       label: "Hình ảnh",
       align: "center",
-      format: "images",
-      introId: "image-header",
+      format: "image",
     },
     {
       id: "name",
       label: "Tên sản phẩm",
       align: "center",
-      introId: "name-header",
     },
-    //{ id: "category", label: "Loại", align: "center" },
-    //{ id: "sourceOfProducts", label: "Nguồn nhập", align: "center" },
-    {
-      id: "sellingPrice",
-      label: "Giá bán",
-      align: "center",
-      format: "price",
-      introId: "selling-price-header",
-    },
-    //{ id: "importCosts", label: "Giá nhập", align: "center", format: "price", introId: "import-costs-header" },
-    { id: "unit", label: "Đơn vị", align: "center", introId: "unit-header" },
     {
       id: "createDate",
       label: "Ngày tạo",
       align: "center",
       format: "date",
-      introId: "date-header",
     },
     {
       id: "isDeleted",
       label: "Trạng thái",
       align: "center",
       format: "deleted",
-      introId: "deleted-header",
     },
   ];
 
@@ -224,21 +133,19 @@ const ProductTable = () => {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={() => router.push("/admin/manage_product/create")}
+          onClick={() => {
+            navigate(config.adminRoutes.CreateProduct);
+          }}
         >
           Tạo sản phẩm
         </Button>
-        <IntroTour
-          steps={productTableIntroSteps}
-          buttonContent={<InfoOutlinedIcon sx={{ cursor: "pointer" }} />}
-        />
       </Box>
     );
   };
 
-  const menuAction = (
+  const menuAction = (row: Product) => (
     <MenuActionTableProduct
-      product={selectedRow}
+      product={row}
       isDeleted={selectedRow?.isDeleted as boolean}
       fetchProduct={getProducts}
       introId="menu-action"
@@ -246,7 +153,7 @@ const ProductTable = () => {
   );
   return (
     <div>
-      <CustomizeTable
+      <CTable
         tableHeaderTitle={tableHeaderTitle}
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
@@ -254,12 +161,16 @@ const ProductTable = () => {
         size={pageSize}
         page={pageIndex}
         searchTool={<SearchTool filter={filter} setFilter={setFilter} />}
-        menuAction={menuAction}
+        menuAction={(row) => menuAction(row)}
         eventAction={createProduct()}
         selectedData={(row: Product) => setSelectedRow(row)}
         data={products}
         title="Danh sách sản phẩm"
-        tableContainerId="intro-product-table"
+        responsiveConfig={{
+          hideFormatsOnMobile: ["datetime", "price", "boolean", "date"], // Hide these formats on mobile
+          hideFormatsOnTablet: ["datetime"], // Hide these formats on tablet
+        }}
+        onRowClick={handleProductRowClick}
       />
     </div>
   );

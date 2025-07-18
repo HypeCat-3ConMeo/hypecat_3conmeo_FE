@@ -18,7 +18,15 @@ export default function MultiFilePreview({
 }: UploadMultiFileProps) {
   const hasFile = files?.length > 0;
   return (
-    <List disablePadding sx={{ ...(hasFile && { my: 3 }) }}>
+    <List
+      disablePadding
+      sx={{
+        ...(hasFile && { my: 3 }),
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+      }}
+    >
       <AnimatePresence>
         {files?.map((file, index) => {
           const { key, name, size, preview } = getFileData(file, index);

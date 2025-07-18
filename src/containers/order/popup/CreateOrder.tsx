@@ -1,21 +1,9 @@
-"use client";
-import productApi from "@/axios-clients/product_api/productAPI";
-import orderApi from "@/axios-clients/order_api/orderAPI";
-import {
-  FormProvider,
-  RHFAutoComplete,
-  RHFSelect,
-  RHFTextField,
-} from "@/components/hook_form";
-import { colors, font_weight } from "@/styles/config-file";
-import { Product } from "@/types/ProductType";
-import { yupResolver } from "@hookform/resolvers/yup";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import PersonIcon from "@mui/icons-material/Person";
-import PhoneIcon from "@mui/icons-material/Phone";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
   Box,
   Button,
@@ -23,7 +11,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid2,
+  Grid,
   IconButton,
   Paper,
   Typography,
@@ -38,8 +26,19 @@ import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import userApi from "@/axios-clients/user_api/userAPI";
-import { User } from "@/types/Usertype";
+import type { Product } from "../../../types/ProductType";
+import type { User } from "../../../types/Usertype";
+import productApi from "../../../api/services/ProductApi/productAPI";
+import userApi from "../../../api/services/user_api/userAPI";
+import orderApi from "../../../api/services/OrderApi/orderAPI";
+import {
+  FormProvider,
+  RHFAutoComplete,
+  RHFSelect,
+  RHFTextField,
+} from "../../../components/hook-form";
+import { colors, font_weight } from "../../../styles/config-file";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface CreateOrderProps {
   open: boolean;
@@ -55,6 +54,8 @@ interface OrderDetailForm {
 interface CreateOrderForm {
   name: string;
   phone: string;
+  address: string;
+  email: string;
   orderDetails: OrderDetailForm[];
 }
 
@@ -80,6 +81,8 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   const defaultValues: CreateOrderForm = {
     name: "",
     phone: "",
+    address: "",
+    email: "",
     orderDetails: [
       {
         productId: 0,
@@ -135,6 +138,10 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Vui lòng nhập tên người đặt"),
     phone: Yup.string().required("Vui lòng nhập số điện thoại"),
+    address: Yup.string().required("Vui lòng nhập địa chỉ đặt hàng"),
+    email: Yup.string()
+      .required("Vui lòng nhập email")
+      .email("Email không hợp lệ"),
     orderDetails: Yup.array()
       .of(orderDetailSchema)
       .min(1, "Vui lòng chọn ít nhất một sản phẩm"),
@@ -151,6 +158,7 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
     control,
     getValues,
     watch,
+    reset,
     formState: { isSubmitting },
   } = methods;
 
@@ -166,6 +174,7 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
       console.log("Phản hồi từ API:", res);
       toast.success("Tạo đơn hàng thành công");
       handleClose();
+      reset(defaultValues); // Reset form to default values
       fetchData();
     } catch (error: any) {
       toast.error("Tạo đơn hàng thất bại");
@@ -181,11 +190,14 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   //func check phone number
   const handleCheckPhoneNumber = async () => {
     const phone = getValues("phone");
+    console.log("Số điện thoại kiểm tra:", phone);
     try {
       const res: any = await userApi.getUserByPhone({ phone });
       console.log("Thông tin khách hàng:", res);
       setUserInformation(res);
       methods.setValue("name", res.name);
+      methods.setValue("address", res.address);
+      methods.setValue("email", res.email);
       setIsPhoneNumber(true);
     } catch (error) {
       toast.error("Có lỗi xảy ra trong quá trình lấy thông tin khách hàng");
@@ -201,6 +213,14 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
       setIsPhoneNumber(false);
     }
   }, [phoneValue]);
+
+  React.useEffect(() => {
+    if (!open) {
+      reset(defaultValues); // reset lại form
+      setIsPhoneNumber(false);
+      setUserInformation(undefined);
+    }
+  }, [open]);
 
   return (
     <Dialog
@@ -291,8 +311,8 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
                 Thông tin khách hàng
               </Typography>
 
-              <Grid2 container spacing={3}>
-                <Grid2 size={12}>
+              <Grid container spacing={3}>
+                <Grid size={12}>
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Box sx={{ flex: 1 }}>
                       <RHFAutoComplete
@@ -323,18 +343,35 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
                       Chọn
                     </Button>
                   </Stack>
-                </Grid2>
+                </Grid>
 
                 <Fade in={isPhoneNumber} timeout={500}>
-                  <Grid2 size={12}>
+                  <Grid size={12}>
                     {isPhoneNumber && (
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
-                      >
-                        <CheckCircleIcon sx={{ color: colors.green_400 }} />
+                      <Stack spacing={2}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                        >
+                          {/* <CheckCircleIcon sx={{ color: colors.green_400 }} /> */}
+                          <RHFTextField
+                            name="name"
+                            label="Tên người đặt"
+                            slotProps={{
+                              input: {
+                                readOnly: true,
+                              },
+                            }}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#e8f5e8",
+                              },
+                            }}
+                          />
+                        </Box>
+
                         <RHFTextField
-                          name="name"
-                          label="Tên người đặt"
+                          name="email"
+                          label="Email"
                           slotProps={{
                             input: {
                               readOnly: true,
@@ -346,11 +383,26 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
                             },
                           }}
                         />
-                      </Box>
+
+                        <RHFTextField
+                          name="address"
+                          label="Địa chỉ"
+                          slotProps={{
+                            input: {
+                              readOnly: true,
+                            },
+                          }}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              backgroundColor: "#e8f5e8",
+                            },
+                          }}
+                        />
+                      </Stack>
                     )}
-                  </Grid2>
+                  </Grid>
                 </Fade>
-              </Grid2>
+              </Grid>
             </Paper>
 
             {/* Products Section */}
@@ -408,8 +460,8 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
                     }}
                   >
                     <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-                      <Grid2 container spacing={2} alignItems="center">
-                        <Grid2 size={0.5}>
+                      <Grid container spacing={2} alignItems="center">
+                        <Grid size={0.5}>
                           <Box
                             sx={{
                               width: 32,
@@ -426,8 +478,8 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
                           >
                             {index + 1}
                           </Box>
-                        </Grid2>
-                        <Grid2 size={7.5}>
+                        </Grid>
+                        <Grid size={7.5}>
                           <RHFSelect
                             name={`orderDetails.${index}.productId`}
                             label="Sản Phẩm"
@@ -445,8 +497,8 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
                               </option>
                             ))}
                           </RHFSelect>
-                        </Grid2>
-                        <Grid2 size={3}>
+                        </Grid>
+                        <Grid size={3}>
                           <RHFTextField
                             name={`orderDetails.${index}.quantity`}
                             label="Số lượng"
@@ -457,8 +509,8 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
                               },
                             }}
                           />
-                        </Grid2>
-                        <Grid2 size={1}>
+                        </Grid>
+                        <Grid size={1}>
                           <IconButton
                             onClick={() => remove(index)}
                             color="error"
@@ -473,8 +525,8 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
                           >
                             <CloseIcon />
                           </IconButton>
-                        </Grid2>
-                      </Grid2>
+                        </Grid>
+                      </Grid>
                     </CardContent>
                   </Card>
                 ))}

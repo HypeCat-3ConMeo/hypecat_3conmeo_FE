@@ -3,13 +3,38 @@ export const managerRoutes = {
 };
 
 export const authRoutes = {
-  authenticate: "/",
+  authenticate: "/authenticate",
 };
 
 export const adminRoutes = {
   dashboard: "/dashboard",
+  manageProduct: "/manage-product",
+  CreateProduct: "/create-product",
+  ManageProductDetail: "/manage-product/:id/detail",
+  EditProductDetail: "/manage-product/:id/edit",
+  manageBatch: "/manage-batch",
+  manageBatchDetail: "/manage-batch/:id",
+  importBatch: "/import-batch",
+  manageOrder: "/manage-order",
+  detailOrder: "/manage-order/:id/orderDetail",
+  manageUser: "/manage-user",
+  detailUser: "/manage-user/:id/detail",
+  manageCategory: "/manage-category",
+  manageNews: "/manage-news",
 };
 
 export const staffRoutes = {};
 
-export const customerRoutes = {};
+export const customerRoutes = {
+  cart: "/cart",
+  userProfile: "/user-profile",
+  aboutUs: "/about-us",
+  privacyPolicy: "/privacy-policy",
+  termsOfService: "/terms-of-service",
+  home: "/",
+  news: "/news",
+  productList: "/product-list",
+  test: "/test",
+  address: "/address",
+  order: "/order",
+};
