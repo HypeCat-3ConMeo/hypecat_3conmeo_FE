@@ -227,7 +227,7 @@ const ManageOrderByUser: React.FC = () => {
   }, []);
 
   const handleChangeTab = (
-    event: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     newValue: "All" | OrderStatusType
   ) => {
     setTab(newValue);
