@@ -18,6 +18,7 @@ export const adminRoutes = {
   manageOrder: "/manage-order",
   detailOrder: "/manage-order/:id/orderDetail",
   manageUser: "/manage-user",
+  detailUser: "/manage-user/:id/detail",
   manageCategory: "/manage-category",
   manageNews: "/manage-news",
 };

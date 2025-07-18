@@ -39,9 +39,6 @@ const TableBatchDetail: React.FC<DetailBatchProps> = ({ id }) => {
   const [dataBatchDetail, setDataBatchDetail] = useState<BatchDetail[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedData, setSelectedData] = useState<BatchDetail>(
-    {} as BatchDetail
-  );
 
   // Calculate summary statistics
   const summary = {
@@ -71,11 +68,6 @@ const TableBatchDetail: React.FC<DetailBatchProps> = ({ id }) => {
   useEffect(() => {
     fetchBatchData();
   }, [id]);
-
-  // Select data handler
-  const selectData = (row: BatchDetail) => {
-    setSelectedData(row);
-  };
 
   // Enhanced table headers with optimized widths and responsive design
   const tableHeader = [
@@ -346,19 +338,17 @@ const TableBatchDetail: React.FC<DetailBatchProps> = ({ id }) => {
               data={paginatedData.map((item) => ({
                 ...item,
               }))}
-              // data={dataBatchDetail}
               total={total}
               page={page}
               size={size}
               handleChangePage={handleChangePage}
               handleChangeRowsPerPage={handleChangeRowsPerPage}
-              selectedData={selectData}
-              menuAction={
+              menuAction={(row) => (
                 <MenuActionTableBatchDetail
-                  batchData={selectedData}
+                  batchData={row}
                   fetchData={fetchBatchData}
                 />
-              } // No menu action for this table
+              )} // No menu action for this table
             />
           </Box>
         </TableContainer>

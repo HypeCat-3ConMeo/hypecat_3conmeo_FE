@@ -11,6 +11,8 @@ import orderApi from "../../api/services/OrderApi/orderAPI";
 import useDebounce from "../../hooks/useDebounce";
 import type { Order } from "../../types/OrderType";
 import CTable from "../../components/table/CTable";
+import { useNavigate } from "react-router-dom";
+import config from "../../configs";
 
 interface SearchToolProps {
   filter: any;
@@ -98,6 +100,7 @@ const ManageOrderTable = () => {
   const [totalItemsCount, setTotalItemsCount] = React.useState<number>(0);
   const debounce = useDebounce(filter, 1000);
   const [openCreateOrder, setOpenCreateOrder] = React.useState(false);
+  const navigate = useNavigate();
 
   //Call the API to get the orders
   const getOrders = async () => {
@@ -138,6 +141,10 @@ const ManageOrderTable = () => {
   ) => {
     setPageSize(parseInt(event.target.value, 10));
     setPageIndex(0);
+  };
+
+  const handleOrderRowClick = (row: Order) => {
+    navigate(config.adminRoutes.detailOrder.replace(":id", row.id.toString()));
   };
 
   //TableHeader
@@ -216,7 +223,6 @@ const ManageOrderTable = () => {
     );
   };
 
-
   return (
     <div>
       <CreateOrder
@@ -228,23 +234,23 @@ const ManageOrderTable = () => {
         data={orders}
         tableHeaderTitle={tableHeader}
         title="Quản lý đơn hàng"
-        menuAction={
+        menuAction={(row) => (
           <MenuActionOrder
-            orderData={selectedRow}
+            orderData={row}
             fetchData={getOrders}
             onOpenDetail={selectedData}
             introId="menu-action"
           />
-        }
+        )}
         eventAction={<CreateOrderAction />}
         page={pageIndex}
         size={pageSize}
         total={totalItemsCount}
-        selectedData={selectedData}
+        selectedData={selectedRow}
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
         searchTool={<SearchTool filter={filter} setFilter={setFilter} />}
-      //tableContainerId="intro-order-table"
+        onRowClick={handleOrderRowClick}
       />
     </div>
   );

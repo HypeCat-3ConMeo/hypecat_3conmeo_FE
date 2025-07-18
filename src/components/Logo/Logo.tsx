@@ -2,8 +2,11 @@ import React from "react";
 import images from "../../constants/images";
 import "./Logo.scss";
 
-const Logo: React.FC = () => {
-  return <img className="logo" alt="icon" src={images.logo} />;
+interface LogoProps {
+  style?: React.CSSProperties;
+}
+const Logo: React.FC<LogoProps> = ({ style }) => {
+  return <img className="logo" alt="icon" src={images.logo} style={style} />;
 };
 
 export default Logo;

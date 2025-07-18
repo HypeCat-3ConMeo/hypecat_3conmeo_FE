@@ -87,12 +87,17 @@ const ProductTable = () => {
     setPageIndex(0);
   };
 
+  const handleProductRowClick = (row: Product) => {
+    navigate(
+      config.adminRoutes.ManageProductDetail.replace(":id", row.id.toString())
+    );
+  };
   const tableHeaderTitle = [
     {
-      id: "images",
+      id: "cover",
       label: "Hình ảnh",
       align: "center",
-      format: "images",
+      format: "image",
     },
     {
       id: "name",
@@ -138,9 +143,9 @@ const ProductTable = () => {
     );
   };
 
-  const menuAction = (
+  const menuAction = (row: Product) => (
     <MenuActionTableProduct
-      product={selectedRow}
+      product={row}
       isDeleted={selectedRow?.isDeleted as boolean}
       fetchProduct={getProducts}
       introId="menu-action"
@@ -156,7 +161,7 @@ const ProductTable = () => {
         size={pageSize}
         page={pageIndex}
         searchTool={<SearchTool filter={filter} setFilter={setFilter} />}
-        menuAction={menuAction}
+        menuAction={(row) => menuAction(row)}
         eventAction={createProduct()}
         selectedData={(row: Product) => setSelectedRow(row)}
         data={products}
@@ -165,6 +170,7 @@ const ProductTable = () => {
           hideFormatsOnMobile: ["datetime", "price", "boolean", "date"], // Hide these formats on mobile
           hideFormatsOnTablet: ["datetime"], // Hide these formats on tablet
         }}
+        onRowClick={handleProductRowClick}
       />
     </div>
   );
