@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import config from "../configs";
 import AuthenticatePage from "../pages/Auth/AuthenticatePage";
-import Home from "../pages/Customer/Home/home";
 import CustomerLayout from "../layouts/CustomerLayout/CustomerLayout";
 import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 import ProductPage from "../pages/Admin/manage_product/ManageProductPage";
@@ -22,6 +21,7 @@ import ManageUserPage from "../pages/Admin/manage_users/ManageUserPage";
 import UserDetailPage from "../pages/Admin/manage_users/DetailUser/UserDetailPage";
 import DashboardPage from "../pages/Admin/manage_dashboard/DashboardPage";
 import DetailOrderPage from "../pages/Admin/manage_order/DetailOrder/DetailOrderPage";
+import LandingPage from "../pages/Customer/Home/LandingPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -36,7 +36,7 @@ const AppRoute: React.FC = () => {
         <Route
           key={"news"}
           path={config.customerRoutes.home}
-          element={<Home />}
+          element={<LandingPage />}
         />
       </Route>
       <Route key={"profile"} element={<InformationLayout />}>

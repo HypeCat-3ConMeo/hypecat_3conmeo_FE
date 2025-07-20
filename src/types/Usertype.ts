@@ -10,6 +10,11 @@ interface Image {
   urlPath: string;
 }
 
+interface UpdateImage {
+  id?: number;
+  userImages: string;
+}
+
 // TypeScript interfaces
 export interface UserData {
   id: number;
@@ -20,6 +25,7 @@ export interface UserData {
   status: string;
   role: Role;
   images: Image[];
+  userImages: UpdateImage[];
   addresses: Address[];
 }
 

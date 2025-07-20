@@ -27,7 +27,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import type { Product } from "../../../types/ProductType";
-import type { User } from "../../../types/Usertype";
+import type { UserData } from "../../../types/Usertype";
 import productApi from "../../../api/services/ProductApi/productAPI";
 import userApi from "../../../api/services/user_api/userAPI";
 import orderApi from "../../../api/services/OrderApi/orderAPI";
@@ -73,9 +73,9 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   // Define state
   const [listProduct, setListProduct] = React.useState<Product[]>([]);
   const [isPhoneNumber, setIsPhoneNumber] = React.useState<boolean>(false);
-  const [userInformation, setUserInformation] =
+  const [_userInformation, setUserInformation] =
     React.useState<userInformationType>();
-  const [usersList, setUsersList] = React.useState<User[]>([]);
+  const [usersList, setUsersList] = React.useState<UserData[]>([]);
 
   // Define default values
   const defaultValues: CreateOrderForm = {
