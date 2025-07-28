@@ -3,7 +3,6 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import config from "../configs";
 import AuthenticatePage from "../pages/Auth/AuthenticatePage";
-import Home from "../pages/Customer/Home/home";
 import CustomerLayout from "../layouts/CustomerLayout/CustomerLayout";
 import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 import ProductPage from "../pages/Admin/manage_product/ManageProductPage";
@@ -21,6 +20,13 @@ import DetailBatchPage from "../pages/Admin/manage_batch/DetailBatch/DetailBatch
 import NewsFormPage from "../pages/Admin/manage_news/NewsForm/NewsFormPage";
 import DetailNewsPage from "../pages/Admin/manage_news/DetailNews/DetailNewsPage";
 import NewsPage from "../pages/Customer/News/News";
+import ManageUserPage from "../pages/Admin/manage_users/ManageUserPage";
+import UserDetailPage from "../pages/Admin/manage_users/DetailUser/UserDetailPage";
+import DashboardPage from "../pages/Admin/manage_dashboard/DashboardPage";
+import DetailOrderPage from "../pages/Admin/manage_order/DetailOrder/DetailOrderPage";
+import LandingPage from "../pages/Customer/Home/LandingPage";
+import ProductCustomerPage from "../pages/Customer/ProductCustomer/ProductPage";
+import ManageOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -40,6 +46,16 @@ const AppRoute: React.FC = () => {
           key={"newsDetail"}
           path={config.customerRoutes.newsDetail}
           element={<DetailNewsPage />}
+        />
+        <Route
+          key={"landingPage"}
+          path={config.customerRoutes.home}
+          element={<LandingPage />}
+        />
+        <Route
+          key={"productList"}
+          path={config.customerRoutes.productList}
+          element={<ProductCustomerPage />}
         />
       </Route>
       <Route key={"profile"} element={<InformationLayout />}>
@@ -61,6 +77,11 @@ const AppRoute: React.FC = () => {
       </Route>
 
       <Route key={"dashboard"} element={<AdminLayout />}>
+        <Route
+          key={"dashboardPage"}
+          path={config.adminRoutes.dashboard}
+          element={<DashboardPage />}
+        />
         <Route
           key={"products"}
           path={config.adminRoutes.manageProduct}
@@ -116,8 +137,28 @@ const AppRoute: React.FC = () => {
           path={config.adminRoutes.detailNews}
           element={<DetailNewsPage />}
         />
+        <Route
+          key={"ordersAdmin"}
+          path={config.adminRoutes.manageOrder}
+          element={<ManageOrderPage />}
+        />
+        <Route
+          key={"ordersDetailAdmin"}
+          path={config.adminRoutes.detailOrder}
+          element={<DetailOrderPage />}
+        />
+        <Route
+          key={"usersAdmin"}
+          path={config.adminRoutes.manageUser}
+          element={<ManageUserPage />}
+        />
+        <Route
+          key={"detailUser"}
+          path={config.adminRoutes.detailUser}
+          element={<UserDetailPage />}
+        />
       </Route>
-    </Routes >
+    </Routes>
   );
 };
 

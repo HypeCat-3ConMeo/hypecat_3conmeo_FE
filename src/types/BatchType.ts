@@ -22,6 +22,7 @@ export interface ProductBatch {
   category: ProductCategory;
   images: ProductImage[];
   logs: any[];
+  cover: string;
 }
 export interface Product {
   id: number;

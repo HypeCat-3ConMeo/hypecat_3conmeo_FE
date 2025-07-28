@@ -169,9 +169,9 @@ const CategoryTable = () => {
     );
   };
 
-  const menuAction = (
+  const menuAction = (row: Category) => (
     <MenuActionTableCategory
-      category={selectedRow}
+      category={row}
       isDeleted={selectedRow?.isDeleted as boolean}
       fetchCategory={getCategories}
       introId="menu-action"
@@ -191,7 +191,7 @@ const CategoryTable = () => {
         size={pageSize}
         page={pageIndex}
         searchTool={<SearchTool filter={filter} setFilter={setFilter} />}
-        menuAction={menuAction}
+        menuAction={(row) => menuAction(row)}
         eventAction={createProduct()}
         selectedData={(row: Category) => setSelectedRow(row)}
         data={categories}

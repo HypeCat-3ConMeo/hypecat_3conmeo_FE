@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { User } from "../../../types/Usertype";
+import type { UserData } from "../../../types/Usertype";
 import axiosClient from "../../axiosInstance";
-import { PROFILE, PROFILE_UPDATE } from "../../PathnameApi";
+import { PROFILE, PROFILE_UPDATE, UPDATE_USER } from "../../PathnameApi";
 
 const userApi = {
   //GET api
-  getListUsers: (params?: { pageIndex?: number; pageSize?: number }) => {
+  getListUsers: (params?: {
+    pageIndex?: number;
+    pageSize?: number;
+    RoleId?: number;
+  }) => {
     const url = "/Users/GetUserPagination";
     return axiosClient.get(url, {
       params,
@@ -26,7 +30,7 @@ const userApi = {
   },
 
   //Get profile
-  getProfile: (params?: string): Promise<User> => {
+  getProfile: (params?: string): Promise<UserData> => {
     return axiosClient.get(PROFILE, {
       params,
       paramsSerializer: {
@@ -41,6 +45,12 @@ const userApi = {
     return axiosClient.post(url, body);
   },
 
+  //update account
+  UpdateActive: (id?: number, isDelete?: string) => {
+    const url = `Users/DeleteOrEnable/${id}/${isDelete}`;
+    return axiosClient.put(url);
+  },
+
   //POST api
   postSomeThingNor: (body: string) => {
     const url = "/api/v1/someThing";
@@ -48,20 +58,18 @@ const userApi = {
   },
 
   //PUT api
-  updateProfile: (id: any, body: any): Promise<User> => {
+  updateProfile: (id: any, body: any): Promise<UserData> => {
     return axiosClient.put(`${PROFILE_UPDATE}/${id}`, body);
   },
 
-  //DELETE api
-  deleteSomeThing: (id: string) => {
-    const url = `/api/v1/someThing/${id}`;
-    return axiosClient.delete(url);
+  //get user by id
+  getAccountById: (id: string): Promise<UserData> => {
+    const url = `Users/GetAccountById/${id}`;
+    return axiosClient.get(url);
   },
 
-  //PATCH api
-  patchSomeThing: (id: string, body: string) => {
-    const url = `/api/v1/someThing/${id}`;
-    return axiosClient.patch(url, body);
+  updateAccount: (id: any, body: any): any => {
+    return axiosClient.put(UPDATE_USER.replace(":id", id), body);
   },
 };
 

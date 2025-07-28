@@ -4,11 +4,20 @@ import {
   type ProductListResponse,
 } from "../../../types/ProductType";
 import axiosClient from "../../axiosInstance";
+import { PRODUCT_CUSTOMER } from "../../PathnameApi";
 
 const productApi = {
   //GET api
   getProductList: (params?: any): Promise<ProductListResponse> => {
     const url = "/Products/GetProductPagination?IsDescending=true";
+    return axiosClient.get(url, {
+      params,
+    });
+  },
+
+
+   getProductCustomerList: (params?: any): Promise<any> => {
+    const url = PRODUCT_CUSTOMER;
     return axiosClient.get(url, {
       params,
     });

@@ -15,6 +15,20 @@ export const menuItems: MenuItemLayout[] = [
       },
       {
         icon: (
+          <Iconify icon="mdi:account-group-outline" width={24} height={24} />
+        ),
+        label: "Khách Hàng",
+        path: config.adminRoutes.manageUser,
+      },
+      {
+        icon: (
+          <Iconify icon="mdi:clipboard-list-outline" width={24} height={24} />
+        ),
+        label: "Đơn Hàng",
+        path: config.adminRoutes.manageOrder,
+      },
+      {
+        icon: (
           <Iconify icon="mdi:package-variant-closed" width={24} height={24} />
         ),
         label: "Sản Phẩm",

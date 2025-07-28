@@ -30,7 +30,7 @@ import {
 } from "@mui/material";
 import {
   KeyboardArrowDown,
-  ArrowRight,
+  // ArrowRight,
   Home,
   Article,
   Policy,
@@ -45,12 +45,12 @@ import { styled, alpha } from "@mui/material/styles";
 import Logo from "../../../../components/Logo/Logo";
 import RightMenu from "../RightMenu/RightMenu";
 import config from "../../../../configs";
+import categoryApi from "../../../../api/services/CategoryApi/categoryAPI";
 
 interface GetCategoryProps {
   id: string;
   name: string;
-  status: "Active";
-  type: "Parent" | "Child";
+  isDeleted: "false";
   masterCategoryId: string | null;
 }
 
@@ -62,7 +62,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
   border: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
   transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-  position: "sticky",
+  position: "fixed",
   top: 0,
   zIndex: 1100,
   [theme.breakpoints.down("sm")]: {
@@ -352,140 +352,32 @@ const TopBar: React.FC = () => {
 
   const [menuData, setMenuData] = useState<GetCategoryProps[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_selectedCategory, setSelectedCategory] = useState<string | null>(
+    null
+  );
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
 
+  const pageSize: string = "1000";
   // Mock data for categories
-  const mockCategoryData: GetCategoryProps[] = [
-    {
-      id: "1",
-      name: "Máy Tính Xách Tay",
-      status: "Active",
-      type: "Parent",
-      masterCategoryId: null,
-    },
-    {
-      id: "2",
-      name: "Gaming Laptop",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "1",
-    },
-    {
-      id: "3",
-      name: "Business Laptop",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "1",
-    },
-    {
-      id: "4",
-      name: "Ultrabook",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "1",
-    },
-    {
-      id: "5",
-      name: "Máy Tính Để Bàn",
-      status: "Active",
-      type: "Parent",
-      masterCategoryId: null,
-    },
-    {
-      id: "6",
-      name: "Gaming PC",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "5",
-    },
-    {
-      id: "7",
-      name: "Office PC",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "5",
-    },
-    {
-      id: "8",
-      name: "Workstation",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "5",
-    },
-    {
-      id: "9",
-      name: "Linh Kiện Máy Tính",
-      status: "Active",
-      type: "Parent",
-      masterCategoryId: null,
-    },
-    {
-      id: "10",
-      name: "CPU",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "9",
-    },
-    {
-      id: "11",
-      name: "GPU",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "9",
-    },
-    {
-      id: "12",
-      name: "RAM",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "9",
-    },
-    {
-      id: "13",
-      name: "Ổ Cứng",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "9",
-    },
-    {
-      id: "14",
-      name: "Thiết Bị Ngoại Vi",
-      status: "Active",
-      type: "Parent",
-      masterCategoryId: null,
-    },
-    {
-      id: "15",
-      name: "Bàn Phím",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "14",
-    },
-    {
-      id: "16",
-      name: "Chuột",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "14",
-    },
-    {
-      id: "17",
-      name: "Màn Hình",
-      status: "Active",
-      type: "Child",
-      masterCategoryId: "14",
-    },
-  ];
-
+  const fethCategory = async () => {
+    const param = {
+      CateType: "Product",
+      pageSize: pageSize,
+    };
+    const response: any = await categoryApi.getCategoryList(param);
+    setMenuData(response.items);
+  };
   useEffect(() => {
-    setMenuData(mockCategoryData);
+    fethCategory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCategoryClick = (categoryId?: string) => {
     const query = categoryId ? `?CategoryId=${categoryId}` : "";
+    console.log(categoryId);
+
     const targetPath = `/product-list${query}`;
     if (location.pathname === targetPath) {
       window.location.href = targetPath;
@@ -529,20 +421,23 @@ const TopBar: React.FC = () => {
   };
 
   const renderCategories = () => {
-    const parentCategories = menuData.filter(
-      (item) => item.status === "Active" && item.type === "Parent"
-    );
+    //   const parentCategories = menuData.filter(
+    //     (item) => item.status === "Active" && item.type === "Parent"
+    //   );
 
     return (
       <CategoryGrid>
-        {parentCategories.map((parent) => {
+        {menuData?.map((parent) => {
           const children = menuData.filter(
             (item) =>
-              item.masterCategoryId === parent.id && item.status === "Active"
+              item.masterCategoryId === parent.id && item.isDeleted === "false"
           );
 
           return (
-            <CategoryCard key={parent.id}>
+            <CategoryCard
+              key={parent.id}
+              onClick={() => handleCategoryClick(parent.id)}
+            >
               <Typography
                 variant={isSmallMobile ? "subtitle1" : "h6"}
                 sx={{
@@ -567,7 +462,7 @@ const TopBar: React.FC = () => {
                 onClick={() => handleCategoryClick(parent.id)}
               >
                 {parent.name}
-                <ArrowRight
+                {/* <ArrowRight
                   sx={{
                     ml: 1,
                     fontSize: isSmallMobile ? 18 : 20,
@@ -576,7 +471,7 @@ const TopBar: React.FC = () => {
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                   }}
-                />
+                /> */}
               </Typography>
               <MenuList dense>
                 {children.map((child) => (
@@ -620,18 +515,22 @@ const TopBar: React.FC = () => {
   ];
 
   const renderMobileCategories = () => {
-    const parentCategories = menuData.filter(
-      (item) => item.status === "Active" && item.type === "Parent"
-    );
+    // const parentCategories = menuData.filter(
+    //   (item) => item.status === "Active" && item.type === "Parent"
+    // );
 
-    return parentCategories.map((parent) => {
-      const children = menuData.filter(
-        (item) =>
-          item.masterCategoryId === parent.id && item.status === "Active"
-      );
+    return menuData.map((parent) => {
+      // const children = menuData.filter(
+      //   (item) =>
+      //     item.masterCategoryId === parent.id && item.isDeleted === "false"
+      // );
 
       return (
-        <Box key={parent.id}>
+        <Box
+          key={parent.id}
+          component="button"
+          onClick={() => handleCategoryClick(parent.id)}
+        >
           <ListItem
             onClick={() => handleCategoryClick(parent.id)}
             sx={{
@@ -655,7 +554,7 @@ const TopBar: React.FC = () => {
               }}
             />
           </ListItem>
-          {children.map((child) => (
+          {/* {children.map((child) => (
             <ListItem
               key={child.id}
               onClick={() => handleCategoryClick(child.id)}
@@ -678,7 +577,7 @@ const TopBar: React.FC = () => {
                 }}
               />
             </ListItem>
-          ))}
+          ))} */}
         </Box>
       );
     });
@@ -764,7 +663,7 @@ const TopBar: React.FC = () => {
                       />
                     }
                   >
-                    Loại Máy
+                    Loại Sản Phẩm
                   </Button>
 
                   <Button
@@ -957,7 +856,10 @@ const TopBar: React.FC = () => {
                   <ListItemIcon sx={{ color: theme.palette.primary.main }}>
                     <Article />
                   </ListItemIcon>
-                  <ListItemText primary="Loại Máy" sx={{ fontWeight: 500 }} />
+                  <ListItemText
+                    primary="Loại Sản Phẩm"
+                    sx={{ fontWeight: 500 }}
+                  />
                   {mobileCategoryOpen ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
 

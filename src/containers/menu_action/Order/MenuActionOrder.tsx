@@ -2,7 +2,7 @@
 import BlockIcon from "@mui/icons-material/Block";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
-import DoneIcon from '@mui/icons-material/Done';
+import DoneIcon from "@mui/icons-material/Done";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -24,17 +24,11 @@ interface MenuActionOrderProps {
 
 const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
   orderData,
-  onOpenUpdate,
-  onOpenDetail,
-  onOpenDelete,
   introId,
   fetchData,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<any>(null);
-  const [openDetail, setOpenDetail] = React.useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = React.useState<boolean>(false);
-  const [openDelete, setOpenDelete] = React.useState<boolean>(false);
-  const [openAssign, setOpenAssign] = React.useState<boolean>(false);
   const [openConfirm, setOpenConfirm] = React.useState<boolean>(false);
   const [selectedType, setSelectedType] = React.useState<string>("");
   const open = Boolean(anchorEl);
@@ -57,28 +51,19 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
   };
 
   const handleDetail = () => {
-    setOpenDetail(true);
     setAnchorEl(null);
     console.log(orderData.id);
     navigate(`/manage-order/${orderData.id}/orderDetail`);
   };
 
-  const handleDelete = () => {
-    onOpenDelete(orderData);
-    setOpenDelete(true);
-    setAnchorEl(null);
-  };
-  const handleCloseDelete = () => {
-    setOpenDelete(false);
-  };
   const handleConfirm = (type: OrderStatusType) => {
     setSelectedType(type);
     setOpenConfirm(true);
     setAnchorEl(null);
-  }
+  };
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-  }
+  };
 
   const menuConfig: Record<OrderStatusType, React.JSX.Element[]> = {
     Pending: [

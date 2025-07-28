@@ -9,22 +9,24 @@ interface Image {
   id?: number;
   urlPath: string;
 }
+
 interface UpdateImage {
   id?: number;
   userImages: string;
 }
 
-export interface User {
+// TypeScript interfaces
+export interface UserData {
   id: number;
   name: string;
   email: string;
-  password?: string;
+  password: string;
   phone: string;
-  addresses: Address[];
-  status: "Active" | "Inactive" | string;
+  status: string;
   role: Role;
   images: Image[];
   userImages: UpdateImage[];
+  addresses: Address[];
 }
 
 // // Ví dụ sử dụng type alias (tương đương với interface trong trường hợp này)

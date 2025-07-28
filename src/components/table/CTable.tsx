@@ -28,7 +28,7 @@ interface CTableProps {
   tableHeaderTitle?: any;
   data?: any;
   title?: string;
-  menuAction?: any;
+  menuAction?: (row: any) => React.ReactNode;
   selectedData?: any;
   searchTool?: ReactNode;
   eventAction?: ReactNode;
@@ -340,6 +340,35 @@ const CTable: React.FC<CTableProps> = ({
       return "N/A";
     }
 
+    if (column.format && column.format === "image") {
+      const imageSize = isMobile ? 40 : 56;
+      return (
+        <Box
+          sx={{
+            position: "relative",
+            display: "inline-block",
+            "&:hover": {
+              transform: "scale(1.1)",
+              transition: "transform 0.2s ease-in-out",
+            },
+          }}
+        >
+          <img
+            src={value}
+            alt="product"
+            style={{
+              width: `${imageSize}px`,
+              height: `${imageSize}px`,
+              borderRadius: isMobile ? "8px" : "12px",
+              objectFit: "cover",
+              border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+              boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, 0.1)}`,
+            }}
+          />
+        </Box>
+      );
+    }
+
     //IMAGES formatting - smaller on mobile
     if (column.format && column.format === "images") {
       if (Array.isArray(value) && value.length > 0) {
@@ -419,7 +448,7 @@ const CTable: React.FC<CTableProps> = ({
               }}
             />
           );
-        case "UnActive":
+        case "InActive":
           return (
             <StyledChip
               label="Không hoạt động"
@@ -758,8 +787,11 @@ const CTable: React.FC<CTableProps> = ({
                             sx={{
                               padding: isMobile ? "8px 4px" : undefined,
                             }}
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent row click
+                            }}
                           >
-                            {menuAction}
+                            {menuAction(row)}
                           </TableCell>
                         )}
                       </TableRow>
