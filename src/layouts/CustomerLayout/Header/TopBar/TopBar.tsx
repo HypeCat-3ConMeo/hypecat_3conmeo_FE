@@ -30,7 +30,7 @@ import {
 } from "@mui/material";
 import {
   KeyboardArrowDown,
-  ArrowRight,
+  // ArrowRight,
   Home,
   Article,
   Policy,
@@ -62,7 +62,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
   border: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
   transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-  position: "sticky",
+  position: "fixed",
   top: 0,
   zIndex: 1100,
   [theme.breakpoints.down("sm")]: {
@@ -376,6 +376,8 @@ const TopBar: React.FC = () => {
 
   const handleCategoryClick = (categoryId?: string) => {
     const query = categoryId ? `?CategoryId=${categoryId}` : "";
+    console.log(categoryId);
+
     const targetPath = `/product-list${query}`;
     if (location.pathname === targetPath) {
       window.location.href = targetPath;
@@ -432,7 +434,10 @@ const TopBar: React.FC = () => {
           );
 
           return (
-            <CategoryCard key={parent.id}>
+            <CategoryCard
+              key={parent.id}
+              onClick={() => handleCategoryClick(parent.id)}
+            >
               <Typography
                 variant={isSmallMobile ? "subtitle1" : "h6"}
                 sx={{
@@ -457,7 +462,7 @@ const TopBar: React.FC = () => {
                 onClick={() => handleCategoryClick(parent.id)}
               >
                 {parent.name}
-                <ArrowRight
+                {/* <ArrowRight
                   sx={{
                     ml: 1,
                     fontSize: isSmallMobile ? 18 : 20,
@@ -466,7 +471,7 @@ const TopBar: React.FC = () => {
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                   }}
-                />
+                /> */}
               </Typography>
               <MenuList dense>
                 {children.map((child) => (
@@ -515,13 +520,17 @@ const TopBar: React.FC = () => {
     // );
 
     return menuData.map((parent) => {
-      const children = menuData.filter(
-        (item) =>
-          item.masterCategoryId === parent.id && item.isDeleted === "false"
-      );
+      // const children = menuData.filter(
+      //   (item) =>
+      //     item.masterCategoryId === parent.id && item.isDeleted === "false"
+      // );
 
       return (
-        <Box key={parent.id}>
+        <Box
+          key={parent.id}
+          component="button"
+          onClick={() => handleCategoryClick(parent.id)}
+        >
           <ListItem
             onClick={() => handleCategoryClick(parent.id)}
             sx={{
@@ -545,7 +554,7 @@ const TopBar: React.FC = () => {
               }}
             />
           </ListItem>
-          {children.map((child) => (
+          {/* {children.map((child) => (
             <ListItem
               key={child.id}
               onClick={() => handleCategoryClick(child.id)}
@@ -568,7 +577,7 @@ const TopBar: React.FC = () => {
                 }}
               />
             </ListItem>
-          ))}
+          ))} */}
         </Box>
       );
     });

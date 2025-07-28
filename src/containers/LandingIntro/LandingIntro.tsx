@@ -20,6 +20,7 @@ import IntroductionHypeCat from "./LandingComponent/IntroductionHypeCat";
 import TransactionHypeCat from "./LandingComponent/TransactionHypeCat";
 import LiveStreamHypeCat from "./LandingComponent/LiveStreamHypeCat";
 import WhyChooseHypeCat from "./LandingComponent/WhyChooseHypeCat";
+import { useResponsive } from "../../hooks/useResponsive";
 
 // Declare AOS type cho TypeScript
 declare global {
@@ -32,6 +33,7 @@ const LandingIntro: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeLeftNav, setActiveLeftNav] = useState(0);
   const [activeRightNav, setActiveRightNav] = useState(0);
+  const {isMobile}  = useResponsive();
 
   useEffect(() => {
     // Đảm bảo AOS đã load xong
@@ -244,6 +246,7 @@ const LandingIntro: React.FC = () => {
       }}
     >
       {/* Left Navigation */}
+     {!isMobile && ( 
       <Box
         sx={{
           position: "fixed",
@@ -366,9 +369,9 @@ const LandingIntro: React.FC = () => {
             />
           ))}
         </Box>
-      </Box>
-
+      </Box>)}
       {/* Right Navigation */}
+     {!isMobile && (
       <Box
         sx={{
           position: "fixed",
@@ -500,7 +503,9 @@ const LandingIntro: React.FC = () => {
             />
           ))}
         </Box>
-      </Box>
+      </Box>)}
+
+      
 
       {/* Main Content */}
       <Box

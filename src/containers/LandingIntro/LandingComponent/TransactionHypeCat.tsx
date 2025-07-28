@@ -9,8 +9,11 @@ import {
   Chip,
 } from "@mui/material";
 import { Verified, LocalOffer, Security } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import config from "../../../configs";
 
 const TransactionHypeCat: React.FC = () => {
+  const navigation = useNavigate();
   const tradingFeatures = [
     {
       title: "Xác thực thẻ bài",
@@ -249,6 +252,7 @@ const TransactionHypeCat: React.FC = () => {
               transform: "translateY(-2px)",
             },
           }}
+          onClick={() => navigation(config.customerRoutes.productList)}
         >
           🛒 Xem Tất Cả Sản Phẩm
         </Button>

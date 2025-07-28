@@ -22,6 +22,7 @@ import UserDetailPage from "../pages/Admin/manage_users/DetailUser/UserDetailPag
 import DashboardPage from "../pages/Admin/manage_dashboard/DashboardPage";
 import DetailOrderPage from "../pages/Admin/manage_order/DetailOrder/DetailOrderPage";
 import LandingPage from "../pages/Customer/Home/LandingPage";
+import ProductCustomerPage from "../pages/Customer/ProductCustomer/ProductPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -37,6 +38,11 @@ const AppRoute: React.FC = () => {
           key={"news"}
           path={config.customerRoutes.home}
           element={<LandingPage />}
+        />
+        <Route
+          key={"productList"}
+          path={config.customerRoutes.productList}
+          element={<ProductCustomerPage />}
         />
       </Route>
       <Route key={"profile"} element={<InformationLayout />}>
@@ -55,6 +61,9 @@ const AppRoute: React.FC = () => {
           path={config.customerRoutes.address}
           element={<AddressPage />}
         />
+
+
+        
       </Route>
 
       <Route key={"dashboard"} element={<AdminLayout />}>

@@ -17,3 +17,7 @@ export const ADDRESS_UPDATE = "Address/UpdateAddress";
 
 //user
 export const UPDATE_USER = "Users/UpdateUser/:id";
+
+
+//product customer
+export const PRODUCT_CUSTOMER = "Products/GetUserProductPagination"
