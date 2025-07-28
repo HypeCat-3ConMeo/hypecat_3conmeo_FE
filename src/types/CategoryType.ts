@@ -11,3 +11,8 @@ export interface CategoryListResponse {
     next: boolean;
     previous: boolean;
 }
+
+export interface CategoryType extends Category {
+    cateType: string;
+    isDeleted: boolean
+}
