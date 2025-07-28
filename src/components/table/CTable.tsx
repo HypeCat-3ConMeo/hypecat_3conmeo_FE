@@ -513,6 +513,19 @@ const CTable: React.FC<CTableProps> = ({
       return "-";
     }
 
+    //category type formatting
+    if (column.format && column.format === "categoryType") {
+      if (value === "Product") {
+        return (
+          <Typography variant="body2">Loại sản phẩm</Typography>
+        );
+      } else if (value === "News") {
+        return (
+          <Typography variant="body2">Loại tin tức</Typography>
+        );
+      }
+    }
+
     return value;
   }
 
@@ -792,8 +805,8 @@ const CTable: React.FC<CTableProps> = ({
                   hideRowsPerPageOptions
                     ? []
                     : isMobile
-                    ? [5, 10, 25]
-                    : [5, 10, 25, 50, 100]
+                      ? [5, 10, 25]
+                      : [5, 10, 25, 50, 100]
                 }
                 component="div"
                 count={total ?? 0}
@@ -803,9 +816,8 @@ const CTable: React.FC<CTableProps> = ({
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 labelRowsPerPage={isMobile ? "Rows:" : "Số hàng trên trang:"}
                 labelDisplayedRows={({ from, to, count }) => {
-                  return `${from}–${to} trên ${
-                    count !== -1 ? count : `nhiều hơn ${to}`
-                  }`;
+                  return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
+                    }`;
                 }}
                 showFirstButton={!isMobile}
                 showLastButton={!isMobile}
@@ -815,9 +827,9 @@ const CTable: React.FC<CTableProps> = ({
                     paddingRight: isMobile ? 1 : 2,
                   },
                   "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
-                    {
-                      fontSize: isMobile ? "0.75rem" : "0.875rem",
-                    },
+                  {
+                    fontSize: isMobile ? "0.75rem" : "0.875rem",
+                  },
                 }}
               />
             </StyledTableContainer>
