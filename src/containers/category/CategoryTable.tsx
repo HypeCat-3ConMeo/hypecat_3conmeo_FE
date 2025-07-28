@@ -9,6 +9,7 @@ import CreateCategory from "./popup/CreateCategory";
 import CTable from "../../components/table/CTable";
 import useDebounce from "../../hooks/useDebounce";
 import type { Category } from "../../types/CategoryType";
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface SearchToolProps {
   filter: any;
@@ -78,10 +79,12 @@ const CategoryTable = () => {
   const [openCreateDialog, setOpenCreateDialog] = React.useState(false);
   const [filter, setFilter] = React.useState<any>({ SearchTerm: "" });
   const debounce = useDebounce(filter, 0);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   //Call the API to get the products
   const getCategories = async () => {
     try {
+      setIsLoading(true);
       const res: any = await categoryApi.getCategoryList({
         ...filter,
         pageIndex,
@@ -93,6 +96,8 @@ const CategoryTable = () => {
     } catch (error) {
       toast.error("Lấy loại sản phẩm thất bại");
       console.error("Lỗi khi lấy danh sách loại sản phẩm:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,12 +119,23 @@ const CategoryTable = () => {
     setPageIndex(0);
   };
 
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+
   const tableHeaderTitle = [
     {
       id: "name",
       label: "Tên loại sản phẩm",
       align: "center",
       introId: "name-header",
+    },
+    {
+      id: "cateType",
+      label: "Loại",
+      align: "center",
+      introId: "cate-type-header",
+      format: "categoryType",
     },
     {
       id: "isDeleted",

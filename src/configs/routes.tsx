@@ -19,7 +19,11 @@ export const adminRoutes = {
   detailOrder: "/manage-order/:id/orderDetail",
   manageUser: "/manage-user",
   manageCategory: "/manage-category",
-  manageNews: "/manage-news",
+  //manageNews: "/manage-news",
+  createNews: "/manage-news/create",
+  editNews: "/manage-news/:id/edit",
+  detailNews: "/manage-news/:id/detail",
+
 };
 
 export const staffRoutes = {};
@@ -32,6 +36,7 @@ export const customerRoutes = {
   termsOfService: "/terms-of-service",
   home: "/",
   news: "/news",
+  newsDetail: "/news/:id/detail",
   productList: "/product-list",
   test: "/test",
   address: "/address",
