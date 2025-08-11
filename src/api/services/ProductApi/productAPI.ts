@@ -35,6 +35,13 @@ const productApi = {
     });
   },
 
+  getProductCustomerById: (id: string, params?: any): Promise<Product> => {
+    const url = `/Products/GetProductUserById/${id}`;
+    return axiosClient.get(url, {
+      params,
+    });
+  },
+
   //POST api
   CreateProduct: (body: any) => {
     const url = "/Products/CreateProduct";

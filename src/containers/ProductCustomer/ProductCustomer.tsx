@@ -25,7 +25,8 @@ import { formatMoney } from "../../utils/fn";
 import CustomPagination from "../../components/pagination/CustomPagination";
 import categoryApi from "../../api/services/CategoryApi/categoryAPI";
 import { type CategoryType } from "../../types/CategoryType";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import config from "../../configs";
 
 // Types
 interface BatchDetail {
@@ -58,8 +59,8 @@ interface Product {
 
 const ProductCustomer: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const categoryId: string = searchParams.get("CategoryId")?.toString() ?? "";
+  const navigate = useNavigate();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -332,100 +333,111 @@ const ProductCustomer: React.FC = () => {
               <Grid container spacing={3}>
                 {products.map((product) => (
                   <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={product.id}>
-                    <Card
-                      elevation={3}
-                      sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        transition: "all 0.3s ease",
-                        cursor: "pointer",
-                        "&:hover": {
-                          transform: "translateY(-4px)",
-                          boxShadow: 6,
-                        },
-                      }}
+                    <Box
+                      onClick={() =>
+                        navigate(
+                          config.customerRoutes.productDetail.replace(
+                            ":id",
+                            product.id.toString()
+                          )
+                        )
+                      }
                     >
-                      <CardMedia
-                        component="img"
-                        height="200"
-                        image={
-                          product.cover ||
-                          "https://via.placeholder.com/300x200?text=No+Image"
-                        }
-                        alt={product.name}
-                        sx={{ objectFit: "cover" }}
-                      />
-                      <CardContent sx={{ flexGrow: 1, p: 2 }}>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            mb: 1,
-                          }}
-                        >
-                          <Typography
-                            variant="h6"
-                            component="h3"
-                            sx={{ fontWeight: 600, fontSize: "1.1rem" }}
+                      <Card
+                        elevation={3}
+                        sx={{
+                          height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          transition: "all 0.3s ease",
+                          cursor: "pointer",
+                          "&:hover": {
+                            transform: "translateY(-4px)",
+                            boxShadow: 6,
+                          },
+                        }}
+                      >
+                        <CardMedia
+                          component="img"
+                          height="200"
+                          image={
+                            product.cover ||
+                            "https://via.placeholder.com/300x200?text=No+Image"
+                          }
+                          alt={product.name}
+                          sx={{ objectFit: "cover" }}
+                        />
+                        <CardContent sx={{ flexGrow: 1, p: 2 }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "flex-start",
+                              mb: 1,
+                            }}
                           >
-                            {product.name}
-                          </Typography>
-                          <Chip
-                            label={product.status}
-                            color="success"
-                            size="small"
-                            sx={{ minWidth: "auto" }}
-                          />
-                        </Box>
-
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ mb: 2, minHeight: "40px" }}
-                        >
-                          {product.description}
-                        </Typography>
-
-                        <Box sx={{ mb: 2 }}>
-                          <Chip
-                            label={product.category.name}
-                            variant="outlined"
-                            size="small"
-                            icon={<Category />}
-                            sx={{ mr: 1, mb: 1 }}
-                          />
-                        </Box>
-
-                        {product.batchDetails &&
-                        product.batchDetails[0] &&
-                        product.batchDetails[0]?.sellingPrice ? (
-                          <Box sx={{ display: "flex", alignItems: "center" }}>
-                            <MonetizationOn
-                              sx={{ color: "primary.main", mr: 0.5 }}
-                            />
                             <Typography
                               variant="h6"
-                              color="primary"
-                              sx={{ fontWeight: 700 }}
+                              component="h3"
+                              sx={{ fontWeight: 600, fontSize: "1.1rem" }}
                             >
-                              {formatMoney(
-                                product.batchDetails[0].sellingPrice
-                              )}
+                              {product.name}
                             </Typography>
+                            <Chip
+                              label={product.status}
+                              color="success"
+                              size="small"
+                              sx={{ minWidth: "auto" }}
+                            />
                           </Box>
-                        ) : (
+
                           <Typography
                             variant="body2"
                             color="text.secondary"
-                            sx={{ fontStyle: "italic" }}
+                            sx={{ mb: 2, minHeight: "40px" }}
                           >
-                            Liên hệ để biết giá
+                            {product.description}
                           </Typography>
-                        )}
-                      </CardContent>
-                    </Card>
+
+                          <Box sx={{ mb: 2 }}>
+                            <Chip
+                              label={product.category.name}
+                              variant="outlined"
+                              size="small"
+                              icon={<Category />}
+                              sx={{ mr: 1, mb: 1 }}
+                            />
+                          </Box>
+
+                          {product.batchDetails &&
+                          product.batchDetails[0] &&
+                          product.batchDetails[0]?.sellingPrice ? (
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              <MonetizationOn
+                                sx={{ color: "primary.main", mr: 0.5 }}
+                              />
+                              <Typography
+                                variant="h6"
+                                color="primary"
+                                sx={{ fontWeight: 700 }}
+                              >
+                                {formatMoney(
+                                  product.batchDetails[0].sellingPrice
+                                )}
+                              </Typography>
+                            </Box>
+                          ) : (
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{ fontStyle: "italic" }}
+                            >
+                              Liên hệ để biết giá
+                            </Typography>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </Box>
                   </Grid>
                 ))}
               </Grid>

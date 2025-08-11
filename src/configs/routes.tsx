@@ -34,6 +34,7 @@ export const customerRoutes = {
   home: "/",
   news: "/news",
   productList: "/product-list",
+  productDetail: "/product-detail/:id",
   test: "/test",
   address: "/address",
   order: "/order",
