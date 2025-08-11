@@ -1,6 +1,8 @@
 export interface Category {
     id: string;
     name: string;
+    cateType: string;
+    isDeleted: boolean;
 }
 export interface CategoryListResponse {
     items: Category[];

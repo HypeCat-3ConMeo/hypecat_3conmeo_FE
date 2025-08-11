@@ -11,6 +11,9 @@ import { ToastContainer } from "react-toastify";
 import OverrideMuiTheme from "./theme/override.tsx";
 import { AuthContextProvider } from "./hooks/useAuth.tsx";
 
+// Quill styles
+import "react-quill-new/dist/quill.snow.css";
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <>
     <AuthContextProvider>

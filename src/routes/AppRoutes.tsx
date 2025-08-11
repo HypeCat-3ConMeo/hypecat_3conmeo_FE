@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import config from "../configs";
@@ -9,7 +10,6 @@ import CreateProductPage from "../pages/Admin/manage_product/CreateProduct/Creat
 import ManageCategoryPage from "../pages/Admin/manage_category/ManageCategory";
 import ProfilePage from "../pages/Customer/Profile/Profile";
 import AddressPage from "../pages/Customer/Address/Address";
-import ManagerOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
 import OrderPage from "../pages/Customer/Order/Order";
 import InformationLayout from "../layouts/InformationLayout/InformationLayout";
 import DetailProductPage from "../pages/Admin/manage_product/DetailProduct/DetailProductPage";
@@ -17,6 +17,9 @@ import EditProductPage from "../pages/Admin/manage_product/EditProduct/EditProdu
 import BatchPage from "../pages/Admin/manage_batch/ManageBatchPage";
 import ManageImportBatchPage from "../pages/Admin/manage_import_product/ManageImportProduct";
 import DetailBatchPage from "../pages/Admin/manage_batch/DetailBatch/DetailBatchPage";
+import NewsFormPage from "../pages/Admin/manage_news/NewsForm/NewsFormPage";
+import DetailNewsPage from "../pages/Admin/manage_news/DetailNews/DetailNewsPage";
+import NewsPage from "../pages/Customer/News/News";
 import ManageUserPage from "../pages/Admin/manage_users/ManageUserPage";
 import UserDetailPage from "../pages/Admin/manage_users/DetailUser/UserDetailPage";
 import DashboardPage from "../pages/Admin/manage_dashboard/DashboardPage";
@@ -24,6 +27,7 @@ import DetailOrderPage from "../pages/Admin/manage_order/DetailOrder/DetailOrder
 import LandingPage from "../pages/Customer/Home/LandingPage";
 import ProductCustomerPage from "../pages/Customer/ProductCustomer/ProductPage";
 import ProductCustomerDetailPage from "../pages/Customer/ProductCustomer/ProductDetail";
+import ManageOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -33,10 +37,19 @@ const AppRoute: React.FC = () => {
         path={config.authRoutes.authenticate}
         element={<AuthenticatePage />}
       />
-
       <Route key={"home"} element={<CustomerLayout />}>
         <Route
           key={"news"}
+          path={config.customerRoutes.news}
+          element={<NewsPage />}
+        />
+        <Route
+          key={"newsDetail"}
+          path={config.customerRoutes.newsDetail}
+          element={<DetailNewsPage />}
+        />
+        <Route
+          key={"landingPage"}
           path={config.customerRoutes.home}
           element={<LandingPage />}
         />
@@ -116,9 +129,24 @@ const AppRoute: React.FC = () => {
           element={<ManageImportBatchPage />}
         />
         <Route
+          key={"createNews"}
+          path={config.adminRoutes.createNews}
+          element={<NewsFormPage />}
+        />
+        <Route
+          key={"editNews"}
+          path={config.adminRoutes.editNews}
+          element={<NewsFormPage isEdit />}
+        />
+        <Route
+          key={"detailNews"}
+          path={config.adminRoutes.detailNews}
+          element={<DetailNewsPage />}
+        />
+        <Route
           key={"ordersAdmin"}
           path={config.adminRoutes.manageOrder}
-          element={<ManagerOrderPage />}
+          element={<ManageOrderPage />}
         />
         <Route
           key={"ordersDetailAdmin"}
