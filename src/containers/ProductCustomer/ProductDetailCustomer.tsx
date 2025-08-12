@@ -32,6 +32,8 @@ import {
 } from "@mui/icons-material";
 import productApi from "../../api/services/ProductApi/productAPI";
 import { formatMoney } from "../../utils/fn";
+import { useAuthContext } from "../../hooks/useAuth";
+import config from "../../configs";
 
 interface Category {
   id: number;
@@ -46,6 +48,7 @@ interface Image {
 interface BatchDetail {
   id: number;
   sellingPrice: number;
+  remainingQuantity: number;
 }
 
 interface Product {
@@ -61,12 +64,6 @@ interface Product {
   batchDetails: BatchDetail[];
 }
 
-const cartService = {
-  addToCart: (productId: number, quantity: number) => {
-    console.log(`Added ${quantity} of product ${productId} to cart`);
-  },
-};
-
 const CustomerProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -76,6 +73,7 @@ const CustomerProductDetail: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [quantity, setQuantity] = useState(1);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
+  const { auth } = useAuthContext();
 
   const productRef = useRef<HTMLElement>(null);
 
@@ -86,7 +84,6 @@ const CustomerProductDetail: React.FC = () => {
         setLoading(false);
         return;
       }
-
       try {
         setLoading(true);
         setError(null);
@@ -104,13 +101,24 @@ const CustomerProductDetail: React.FC = () => {
   }, [id]);
 
   useEffect(() => {
-    if (productRef.current) {
+    if (!loading && productRef.current) {
       productRef.current.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
     }
-  }, []);
+  }, [loading]);
+
+  const cartService = {
+    addToCart: (productId: number, quantity: number) => {
+      if (!auth) {
+        navigate(config.authRoutes.authenticate);
+        return;
+      } else {
+        console.log(`Added ${quantity} of product ${productId} to cart`);
+      }
+    },
+  };
 
   const handleQuantityChange = (action: "increase" | "decrease") => {
     if (action === "increase") {
@@ -404,9 +412,14 @@ const CustomerProductDetail: React.FC = () => {
 
                   {/* Quantity and Actions */}
                   <Box sx={{ mb: 4 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-                      Số lượng
-                    </Typography>
+                    <Stack display="flex" direction="row" spacing={2} mb={2}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+                        Số lượng
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 400, mb: 2 }}>
+                        hiện có {product.batchDetails[0].remainingQuantity}
+                      </Typography>
+                    </Stack>
 
                     <Box
                       sx={{
@@ -448,13 +461,21 @@ const CustomerProductDetail: React.FC = () => {
                               fontSize: "1.1rem",
                             },
                           }}
-                          inputProps={{
-                            style: { textAlign: "center" },
-                            min: 1,
-                          }}
                           onChange={(e) => {
-                            const value = parseInt(e.target.value) || 1;
+                            const max =
+                              product.batchDetails[0].remainingQuantity;
+                            let value: number = parseInt(e.target.value) || 1;
+                            if (value > max) value = max;
                             setQuantity(Math.max(1, value));
+                          }}
+                          slotProps={{
+                            input: {
+                              inputProps: {
+                                min: 1,
+                                max: product.batchDetails[0].remainingQuantity,
+                                style: { textAlign: "center" },
+                              },
+                            },
                           }}
                         />
                         <IconButton
@@ -463,6 +484,10 @@ const CustomerProductDetail: React.FC = () => {
                             color: "primary.main",
                             "&:hover": { backgroundColor: "primary.50" },
                           }}
+                          disabled={
+                            quantity >=
+                            product.batchDetails[0].remainingQuantity
+                          }
                         >
                           <Add />
                         </IconButton>
