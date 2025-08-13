@@ -4,7 +4,7 @@ import {
   type ProductListResponse,
 } from "../../../types/ProductType";
 import axiosClient from "../../axiosInstance";
-import { PRODUCT_CUSTOMER } from "../../PathnameApi";
+import { PRODUCT_CUSTOMER, PRODUCT_CUSTOMER_DETAIL } from "../../PathnameApi";
 
 const productApi = {
   //GET api
@@ -30,6 +30,13 @@ const productApi = {
   },
   getProductById: (id: string, params?: any): Promise<Product> => {
     const url = `/Products/GetProductById/${id}`;
+    return axiosClient.get(url, {
+      params,
+    });
+  },
+
+  getProductCustomerById: (id: string, params?: any): Promise<Product> => {
+    const url = PRODUCT_CUSTOMER_DETAIL.replace(":id", id);
     return axiosClient.get(url, {
       params,
     });

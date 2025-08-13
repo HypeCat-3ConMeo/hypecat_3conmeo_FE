@@ -13,11 +13,15 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Button } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 import LogoutModal from "./Modal/LogoutModal";
+import { useAuthContext } from "../../../hooks/useAuth";
 
 const AccountSection = () => {
-  const jsonString = localStorage.getItem("loginInfo");
-  const user = JSON.parse(jsonString || "{}");
-  const [name, setName] = React.useState(user?.fullName ? user.fullName : "U");
+  const { auth } = useAuthContext();
+  const user = auth?.Name;
+
+  const dataName = user.split(" ").slice(-1).join("");
+
+  const [name, setName] = React.useState(dataName ? dataName : "U");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const location = useLocation();
   const [openLogout, setOpenLogout] = React.useState<boolean>(false);

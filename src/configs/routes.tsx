@@ -39,6 +39,7 @@ export const customerRoutes = {
   news: "/news",
   newsDetail: "/news/:id/detail",
   productList: "/product-list",
+  productDetail: "/product-detail/:id",
   test: "/test",
   address: "/address",
   order: "/order",

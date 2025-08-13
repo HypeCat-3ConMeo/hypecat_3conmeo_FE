@@ -29,8 +29,10 @@ import {
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import LogoContainer from "../../../../components/Logo/Logo";
-import useAuth from "../../../../hooks/useAuth";
 import { menuItems } from "./MenuItems";
+import { useAuthContext } from "../../../../hooks/useAuth";
+import { AuthApi } from "../../../../api/services/AuthApi/AuthApi";
+import config from "../../../../configs";
 
 export const drawerWidth = 280;
 
@@ -60,9 +62,10 @@ const SidebarDrawer: React.FC<SidebarDrawerProps> = ({ open, setOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { auth } = useAuth();
+  const { auth } = useAuthContext();
+  const { logout } = AuthApi();
 
-  const role = auth?.user?.role || "Admin"; // Default to Staff if no role
+  const role = auth?.role?.toString() || "Admin"; // Default to Staff if no role
 
   // State for expanding/collapsing menu categories
   const [openCategories, setOpenCategories] = useState<{
@@ -70,7 +73,7 @@ const SidebarDrawer: React.FC<SidebarDrawerProps> = ({ open, setOpen }) => {
   }>({});
 
   // User data (replace with actual user data)
-  const userData = auth?.user;
+  const userData = auth?.role;
 
   // Auto-expand categories that contain the current active route
   useEffect(() => {
@@ -163,10 +166,10 @@ const SidebarDrawer: React.FC<SidebarDrawerProps> = ({ open, setOpen }) => {
 
   const handleLogout = async () => {
     try {
-      // await authApi.logout();
+      await logout();
       localStorage.removeItem("userInfor");
       handleUserMenuClose();
-      navigate("/");
+      navigate(config.customerRoutes.home);
     } catch (error) {
       console.log(error);
     }

@@ -25,13 +25,18 @@ import {
   // useTheme,
 } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
-import authApi from "../../api/services/AuthApi/AuthApi";
+import { AuthApi } from "../../api/services/AuthApi/AuthApi";
+import { useAuthContext } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import config from "../../configs";
 
 const Login = () => {
-  // const theme = useTheme();
-  //   const { setAuth } = useAuth();
+  const navigate = useNavigate();
+  const returnUrl = localStorage.getItem("redirectAfterLogin");
+  const { setAuth } = useAuthContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { login } = AuthApi();
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -68,14 +73,23 @@ const Login = () => {
 
     try {
       setIsLoading(true);
-      const res: any = await authApi.login(loginForm);
+      const res: any = await login(loginForm);
       localStorage.setItem("userInfor", JSON.stringify(res));
       const decoded: any = jwtDecode(res?.accessToken);
-      console.log("first", decoded);
-      // setAuth({
-      //     user: decoded,
-      //     accessToken: res?.accessToken,
-      //   });
+      setAuth(decoded);
+      if (!decoded) return;
+      if (decoded.Role == 2) {
+        if (returnUrl) {
+          navigate(returnUrl);
+          localStorage.removeItem("redirectAfterLogin");
+          console.log("User logged in:", decoded);
+        } else {
+          navigate(config.customerRoutes.home);
+        }
+      } else {
+        navigate(config.adminRoutes.dashboard);
+        return;
+      }
     } catch (error) {
       console.log("Login error", error);
       setErrors({
