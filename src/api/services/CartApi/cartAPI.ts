@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CartType } from "../../../types/CartType";
 import axiosClient from "../../axiosInstance"
-import { CART, DELETE_CART_ITEM, UPDATE_CART_ITEM_QUANTITY } from "../../PathnameApi"
+import { CART, CREATE_CART_ITEM, DELETE_CART_ITEM, UPDATE_CART_ITEM_QUANTITY } from "../../PathnameApi"
 
 const cartApi = {
     // get cart by user ID
@@ -22,6 +22,11 @@ const cartApi = {
     //Delete cart item by ID
     deleteCartItem: (id: string): Promise<{ message: string }> => {
         return axiosClient.delete(`${DELETE_CART_ITEM}?productId=${id}`);
-    }
+    },
+
+    //Add to cart 
+    CreateCartItem: (body: any) => {
+        return axiosClient.post(CREATE_CART_ITEM, body);
+    } 
 }
 export default cartApi;

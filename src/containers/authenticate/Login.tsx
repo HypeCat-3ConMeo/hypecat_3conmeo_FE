@@ -32,6 +32,7 @@ import config from "../../configs";
 
 const Login = () => {
   const navigate = useNavigate();
+  const returnUrl = localStorage.getItem("redirectAfterLogin");
   const { setAuth } = useAuthContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -78,9 +79,16 @@ const Login = () => {
       setAuth(decoded);
       if (!decoded) return;
       if (decoded.Role == 2) {
-        navigate(config.customerRoutes.home);
+        if (returnUrl) {
+          navigate(returnUrl);
+          localStorage.removeItem("redirectAfterLogin");
+          console.log("User logged in:", decoded);
+        } else {
+          navigate(config.customerRoutes.home);
+        }
       } else {
         navigate(config.adminRoutes.dashboard);
+        return;
       }
     } catch (error) {
       console.log("Login error", error);
