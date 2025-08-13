@@ -9,6 +9,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "react-router-dom";
 import config from "../../../../configs";
 import { Box } from "@mui/material";
+import { useAuthContext } from "../../../../hooks/useAuth";
 // import { useCheckout } from "../../../../zustand/useCheckout";
 // import { useAddress } from "../../../../zustand/useAddress";
 
@@ -18,24 +19,14 @@ interface LogoutProps {
 }
 
 export default function LogoutModal({ open, handleClose }: LogoutProps) {
-  // const { setAuthUser, setRole } = useAuthContext();
-  // const { setDiscountRank, setTotal, setProfile } = useCheckout();
-  // const { setSelectedAddress } = useAddress();
+  const { setAuth } = useAuthContext();
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // setAuthUser(null);
-    localStorage.removeItem("loginInfo");
+    setAuth(null);
+    localStorage.removeItem("userInfor");
     localStorage.removeItem("historyPath");
-    localStorage.removeItem("getUserInfo");
-    localStorage.removeItem("cart");
-    // setDiscountRank(0);
-    // setTotal(0);
-    // setSelectedAddress(null);
-    // setRole(null);
-    // setProfile(null);
-    sessionStorage.removeItem("checkoutTotal");
-    sessionStorage.removeItem("checkoutTotalDiscountRank");
     setTimeout(() => {
       navigate(config.customerRoutes.home);
     }, 700);

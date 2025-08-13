@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Container,
   Grid,
@@ -34,6 +34,7 @@ import productApi from "../../api/services/ProductApi/productAPI";
 import { formatMoney } from "../../utils/fn";
 import { useAuthContext } from "../../hooks/useAuth";
 import config from "../../configs";
+import cartApi from "../../api/services/CartApi/cartAPI";
 
 interface Category {
   id: number;
@@ -74,6 +75,7 @@ const CustomerProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
   const { auth } = useAuthContext();
+  const location = useLocation();
 
   const productRef = useRef<HTMLElement>(null);
 
@@ -110,12 +112,21 @@ const CustomerProductDetail: React.FC = () => {
   }, [loading]);
 
   const cartService = {
-    addToCart: (productId: number, quantity: number) => {
+    addToCart: async (productId: number, quantity: number) => {
       if (!auth) {
         navigate(config.authRoutes.authenticate);
+        localStorage.setItem("redirectAfterLogin", location.pathname);
         return;
       } else {
-        console.log(`Added ${quantity} of product ${productId} to cart`);
+        const response: any = await cartApi.CreateCartItem({
+          productId,
+          quantity,
+        });
+
+        setSnackbar({
+          open: true,
+          message: response.message || "Thêm vào giỏ hàng thành công",
+        });
       }
     },
   };
@@ -131,7 +142,7 @@ const CustomerProductDetail: React.FC = () => {
   const handleAddToCart = () => {
     if (product) {
       cartService.addToCart(product.id, quantity);
-      setSnackbar({ open: true, message: "✅ Đã thêm sản phẩm vào giỏ hàng!" });
+      setQuantity(1); // Reset quantity after adding to cart
     }
   };
 
@@ -231,6 +242,7 @@ const CustomerProductDetail: React.FC = () => {
         minHeight: "100vh",
         background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
         py: 12,
+        scrollMarginTop: "170px",
       }}
       ref={productRef}
       component="div"
