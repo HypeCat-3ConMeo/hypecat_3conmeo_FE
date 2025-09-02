@@ -66,6 +66,21 @@ const AppRoute: React.FC = () => {
           path={config.customerRoutes.productDetail}
           element={<ProductCustomerDetailPage />}
         />
+        <Route
+          key={"cart"}
+          path={config.customerRoutes.cart}
+          element={<CartPage />}
+        />
+        <Route
+          key={"addressList"}
+          path={config.customerRoutes.addressList}
+          element={<AddressListPage />}
+        />
+        <Route
+          key={"paymentMethod"}
+          path={config.customerRoutes.paymentMethod}
+          element={<PaymentMethodPage />}
+        />
       </Route>
       <Route key={"profile"} element={<InformationLayout />}>
         <Route
@@ -82,21 +97,6 @@ const AppRoute: React.FC = () => {
           key={"addresses"}
           path={config.customerRoutes.address}
           element={<AddressPage />}
-        />
-        <Route
-          key={"cart"}
-          path={config.customerRoutes.cart}
-          element={<CartPage />}
-        />
-        <Route
-          key={"addressList"}
-          path={config.customerRoutes.addressList}
-          element={<AddressListPage />}
-        />
-        <Route
-          key={"paymentMethod"}
-          path={config.customerRoutes.paymentMethod}
-          element={<PaymentMethodPage />}
         />
       </Route>
 

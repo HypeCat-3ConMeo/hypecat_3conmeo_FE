@@ -29,13 +29,17 @@ interface CartSummaryProps {
     //shipping: number;
     //onShippingChange: (cost: number) => void;
     itemCount?: number;
+    navigateTo?: string;
+    hideContinueButton?: boolean;
 }
 
 export const CartSummary = ({
     subtotal,
     //shipping,
     //onShippingChange,
-    itemCount = 0
+    itemCount = 0,
+    navigateTo,
+    hideContinueButton = false,
 }: CartSummaryProps) => {
     const theme = useTheme();
     const [isProcessing, setIsProcessing] = useState(false);
@@ -51,7 +55,7 @@ export const CartSummary = ({
         setIsProcessing(true);
         // Mock checkout process
         setTimeout(() => {
-            navigate(config.customerRoutes.addressList)
+            navigate(navigateTo || config.customerRoutes.cart, { state: { subtotal: subtotal, itemCount: itemCount } });
             setIsProcessing(false);
         }, 2000);
     };
@@ -156,31 +160,33 @@ export const CartSummary = ({
             </Box>
 
             {/* Checkout Button */}
-            <Button
-                variant="contained"
-                size="large"
-                fullWidth
-                onClick={handleCheckout}
-                disabled={isProcessing}
-                startIcon={isProcessing ? null : <Lock />}
-                sx={{
-                    py: 1.5,
-                    fontSize: '1.1rem',
-                    fontWeight: '600',
-                    borderRadius: 2,
-                    background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-                    boxShadow: theme.shadows[4],
-                    '&:hover': {
-                        background: 'linear-gradient(45deg, #1976D2 30%, #0288D1 90%)',
-                        boxShadow: theme.shadows[8],
-                    },
-                    '&:disabled': {
-                        background: alpha(theme.palette.action.disabled, 0.12),
-                    }
-                }}
-            >
-                {isProcessing ? 'Đang xử lý...' : 'Tiếp tục'}
-            </Button>
+            {!hideContinueButton && (
+                <Button
+                    variant="contained"
+                    size="large"
+                    fullWidth
+                    onClick={handleCheckout}
+                    disabled={isProcessing}
+                    startIcon={isProcessing ? null : <Lock />}
+                    sx={{
+                        py: 1.5,
+                        fontSize: '1.1rem',
+                        fontWeight: '600',
+                        borderRadius: 2,
+                        background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                        boxShadow: theme.shadows[4],
+                        '&:hover': {
+                            background: 'linear-gradient(45deg, #1976D2 30%, #0288D1 90%)',
+                            boxShadow: theme.shadows[8],
+                        },
+                        '&:disabled': {
+                            background: alpha(theme.palette.action.disabled, 0.12),
+                        }
+                    }}
+                >
+                    {isProcessing ? 'Đang xử lý...' : 'Tiếp tục'}
+                </Button>
+            )}
 
             {isProcessing && (
                 <LinearProgress sx={{ mt: 2, borderRadius: 1 }} />

@@ -14,8 +14,6 @@ import {
 } from '@mui/material';
 import {
     ShoppingCart,
-    LocalShipping,
-    Security,
 } from '@mui/icons-material';
 import { CartItem, CartTableHeader } from './CartItem';
 import { CartSummary } from './CartSummary';
@@ -24,6 +22,7 @@ import type { CartType } from '../../types/CartType';
 import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
 import useDebounce from '../../hooks/useDebounce';
+import config from '../../configs';
 
 export const Cart: React.FC = () => {
     const theme = useTheme();
@@ -143,24 +142,6 @@ export const Cart: React.FC = () => {
                         )}
                     </Box>
                 </Box>
-
-                {/* Trust Badges */}
-                <Box display="flex" gap={2} flexWrap="wrap">
-                    <Chip
-                        icon={<LocalShipping />}
-                        label="Miễn phí vận chuyển cho đơn hàng > 500k"
-                        variant="outlined"
-                        size="small"
-                        color="info"
-                    />
-                    <Chip
-                        icon={<Security />}
-                        label="Thanh toán an toàn 100%"
-                        variant="outlined"
-                        size="small"
-                        color="success"
-                    />
-                </Box>
             </Box>
 
             {carts.length === 0 ? (
@@ -237,6 +218,7 @@ export const Cart: React.FC = () => {
                                         //shipping={shippingCost}
                                         //onShippingChange={setShippingCost}
                                         itemCount={carts.reduce((sum, p) => sum + p.quantity, 0)}
+                                        navigateTo={config.customerRoutes.addressList}
                                     />
                                 </Box>
                             </Box>
