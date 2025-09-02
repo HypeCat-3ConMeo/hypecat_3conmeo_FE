@@ -17,6 +17,7 @@ import {
     FormControlLabel,
     RadioGroup,
     Chip,
+    Grid,
 } from "@mui/material";
 import {
     Payment,
@@ -36,6 +37,7 @@ import { useForm } from "react-hook-form";
 import { FormProvider, RHFTextField } from "../../components/hook-form";
 import orderApi from "../../api/services/OrderApi/orderAPI";
 import { toast } from "react-toastify";
+import { CartSummary } from "../cart/CartSummary";
 
 interface PaymentMethod {
     id: string;
@@ -60,6 +62,8 @@ const PaymentMethods: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const theme = useTheme();
     const addressId = location.state?.addressId;
+    const subtotal = location.state?.subtotal;
+    const itemCount = location.state?.itemCount;
 
     const methods = useForm<FormValues>({
         defaultValues: {
@@ -130,10 +134,10 @@ const PaymentMethods: React.FC = () => {
     ];
 
     useEffect(() => {
-        if (!addressId) {
+        if (!addressId && !subtotal && !itemCount) {
             navigate(config.customerRoutes.cart, { replace: true });
         }
-    }, [addressId, navigate]);
+    }, [addressId, subtotal, itemCount, navigate]);
 
     useEffect(() => {
         // Set recommended payment method as default
@@ -173,297 +177,311 @@ const PaymentMethods: React.FC = () => {
         <FormProvider methods={methods}>
             <Container maxWidth="md" sx={{ py: 3 }}>
                 <Box>
-                    {/* Header */}
-                    <Paper
-                        elevation={0}
-                        sx={{
-                            p: 3,
-                            mb: 3,
-                            textAlign: "center",
-                            background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.1)} 100%)`,
-                            borderRadius: 2,
-                        }}
-                    >
-                        <Payment
-                            sx={{
-                                fontSize: 48,
-                                color: "primary.main",
-                                mb: 1
-                            }}
-                        />
-                        <Typography
-                            variant="h4"
-                            gutterBottom
-                            fontWeight={700}
-                            color="primary.main"
-                        >
-                            Chọn phương thức thanh toán
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                            Chọn cách thức thanh toán phù hợp với bạn
-                        </Typography>
-                    </Paper>
-
-                    {/* Payment Methods */}
-                    <RadioGroup
-                        value={selectedPaymentId}
-                        onChange={(e) => setSelectedPaymentId(e.target.value)}
-                    >
-                        <Stack spacing={2} sx={{ mb: 3 }}>
-                            {paymentMethods.map((method, index) => (
-                                <Fade
-                                    in={true}
-                                    timeout={300}
-                                    style={{ transitionDelay: `${index * 100}ms` }}
-                                    key={method.id}
+                    <Box sx={{ flexGrow: 1 }}>
+                        <Grid container spacing={3}>
+                            {/* Cột trái: Payment Methods */}
+                            <Grid size={{ xs: 12, md: 8 }}>
+                                {/* Header */}
+                                <Paper
+                                    elevation={0}
+                                    sx={{
+                                        p: 3,
+                                        mb: 3,
+                                        textAlign: "center",
+                                        background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.1)} 100%)`,
+                                        borderRadius: 2,
+                                    }}
                                 >
-                                    <Card
+                                    <Payment
                                         sx={{
-                                            p: 0,
-                                            border: 2,
-                                            borderColor: selectedPaymentId === method.id
-                                                ? "primary.main"
-                                                : alpha(theme.palette.divider, 0.12),
-                                            borderRadius: 2,
-                                            boxShadow: selectedPaymentId === method.id
-                                                ? `0 8px 24px ${alpha(theme.palette.primary.main, 0.15)}`
-                                                : theme.shadows[1],
-                                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                                            cursor: "pointer",
-                                            position: "relative",
-                                            overflow: "visible",
-                                            "&:hover": {
-                                                boxShadow: selectedPaymentId === method.id
-                                                    ? `0 12px 32px ${alpha(theme.palette.primary.main, 0.2)}`
-                                                    : theme.shadows[4],
-                                                transform: "translateY(-2px)",
-                                            }
+                                            fontSize: 48,
+                                            color: "primary.main",
+                                            mb: 1
                                         }}
-                                        onClick={() => setSelectedPaymentId(method.id)}
+                                    />
+                                    <Typography
+                                        variant="h4"
+                                        gutterBottom
+                                        fontWeight={700}
+                                        color="primary.main"
                                     >
-                                        {/* Selection indicator */}
-                                        {selectedPaymentId === method.id && (
-                                            <Box
-                                                sx={{
-                                                    position: "absolute",
-                                                    top: -8,
-                                                    right: 16,
-                                                    bgcolor: "primary.main",
-                                                    borderRadius: "50%",
-                                                    p: 0.5,
-                                                    zIndex: 1,
-                                                }}
+                                        Chọn phương thức thanh toán
+                                    </Typography>
+                                    <Typography variant="body1" color="text.secondary">
+                                        Chọn cách thức thanh toán phù hợp với bạn
+                                    </Typography>
+                                </Paper>
+
+                                {/* Payment Methods */}
+                                <RadioGroup
+                                    value={selectedPaymentId}
+                                    onChange={(e) => setSelectedPaymentId(e.target.value)}
+                                >
+                                    <Stack spacing={2} sx={{ mb: 3 }}>
+                                        {paymentMethods.map((method, index) => (
+                                            <Fade
+                                                in={true}
+                                                timeout={300}
+                                                style={{ transitionDelay: `${index * 100}ms` }}
+                                                key={method.id}
                                             >
-                                                <CheckCircle sx={{ color: "white", fontSize: 20 }} />
-                                            </Box>
-                                        )}
+                                                <Card
+                                                    sx={{
+                                                        p: 0,
+                                                        border: 2,
+                                                        borderColor: selectedPaymentId === method.id
+                                                            ? "primary.main"
+                                                            : alpha(theme.palette.divider, 0.12),
+                                                        borderRadius: 2,
+                                                        boxShadow: selectedPaymentId === method.id
+                                                            ? `0 8px 24px ${alpha(theme.palette.primary.main, 0.15)}`
+                                                            : theme.shadows[1],
+                                                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                                        cursor: "pointer",
+                                                        position: "relative",
+                                                        overflow: "visible",
+                                                        "&:hover": {
+                                                            boxShadow: selectedPaymentId === method.id
+                                                                ? `0 12px 32px ${alpha(theme.palette.primary.main, 0.2)}`
+                                                                : theme.shadows[4],
+                                                            transform: "translateY(-2px)",
+                                                        }
+                                                    }}
+                                                    onClick={() => setSelectedPaymentId(method.id)}
+                                                >
+                                                    {/* Selection indicator */}
+                                                    {selectedPaymentId === method.id && (
+                                                        <Box
+                                                            sx={{
+                                                                position: "absolute",
+                                                                top: -8,
+                                                                right: 16,
+                                                                bgcolor: "primary.main",
+                                                                borderRadius: "50%",
+                                                                p: 0.5,
+                                                                zIndex: 1,
+                                                            }}
+                                                        >
+                                                            <CheckCircle sx={{ color: "white", fontSize: 20 }} />
+                                                        </Box>
+                                                    )}
 
-                                        {/* Recommended badge */}
-                                        {method.isRecommended && (
-                                            <Box
-                                                sx={{
-                                                    position: "absolute",
-                                                    top: -8,
-                                                    left: 16,
-                                                    bgcolor: "success.main",
-                                                    color: "white",
-                                                    px: 2,
-                                                    py: 0.5,
-                                                    borderRadius: 1,
-                                                    fontSize: "0.75rem",
-                                                    fontWeight: 700,
-                                                    zIndex: 1,
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: 0.5,
-                                                }}
-                                            >
-                                                <TrendingUp sx={{ fontSize: 14 }} />
-                                                Đề xuất
-                                            </Box>
-                                        )}
+                                                    {/* Recommended badge */}
+                                                    {method.isRecommended && (
+                                                        <Box
+                                                            sx={{
+                                                                position: "absolute",
+                                                                top: -8,
+                                                                left: 16,
+                                                                bgcolor: "success.main",
+                                                                color: "white",
+                                                                px: 2,
+                                                                py: 0.5,
+                                                                borderRadius: 1,
+                                                                fontSize: "0.75rem",
+                                                                fontWeight: 700,
+                                                                zIndex: 1,
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                gap: 0.5,
+                                                            }}
+                                                        >
+                                                            <TrendingUp sx={{ fontSize: 14 }} />
+                                                            Đề xuất
+                                                        </Box>
+                                                    )}
 
-                                        <Box sx={{ p: 3 }}>
-                                            <Box display="flex" alignItems="flex-start">
-                                                <FormControlLabel
-                                                    value={method.id}
-                                                    control={<Radio sx={{ mt: -0.5 }} />}
-                                                    label=""
-                                                    sx={{ mr: 2, mt: 0 }}
-                                                />
+                                                    <Box sx={{ p: 3 }}>
+                                                        <Box display="flex" alignItems="flex-start">
+                                                            <FormControlLabel
+                                                                value={method.id}
+                                                                control={<Radio sx={{ mt: -0.5 }} />}
+                                                                label=""
+                                                                sx={{ mr: 2, mt: 0 }}
+                                                            />
 
-                                                {/* Method icon */}
+                                                            {/* Method icon */}
+                                                            <Avatar
+                                                                sx={{
+                                                                    bgcolor: alpha(method.color, 0.1),
+                                                                    color: method.color,
+                                                                    width: 56,
+                                                                    height: 56,
+                                                                    mr: 2,
+                                                                }}
+                                                            >
+                                                                <method.icon sx={{ fontSize: 28 }} />
+                                                            </Avatar>
+
+                                                            <Stack flexGrow={1} spacing={1}>
+                                                                {/* Method name and badges */}
+                                                                <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
+                                                                    <Typography
+                                                                        variant="h6"
+                                                                        fontWeight={700}
+                                                                        color="text.primary"
+                                                                    >
+                                                                        {method.name}
+                                                                    </Typography>
+                                                                    {method.discount && (
+                                                                        <Chip
+                                                                            icon={<Discount sx={{ fontSize: 14 }} />}
+                                                                            label={method.discount}
+                                                                            color="error"
+                                                                            size="small"
+                                                                            sx={{
+                                                                                fontWeight: 600,
+                                                                                fontSize: "0.75rem",
+                                                                            }}
+                                                                        />
+                                                                    )}
+                                                                </Box>
+
+                                                                {/* Description */}
+                                                                <Typography
+                                                                    variant="body2"
+                                                                    color="text.secondary"
+                                                                    sx={{ mb: 1 }}
+                                                                >
+                                                                    {method.description}
+                                                                </Typography>
+
+                                                                {/* Processing time */}
+                                                                <Box display="flex" alignItems="center" gap={1}>
+                                                                    <Security sx={{ fontSize: 16, color: "success.main" }} />
+                                                                    <Typography
+                                                                        variant="caption"
+                                                                        color="success.main"
+                                                                        fontWeight={600}
+                                                                    >
+                                                                        Xử lý: {method.processingTime}
+                                                                    </Typography>
+                                                                </Box>
+
+                                                                {/* Features */}
+                                                                <Box display="flex" flexWrap="wrap" gap={0.5} sx={{ mt: 1 }}>
+                                                                    {method.features.map((feature, idx) => (
+                                                                        <Chip
+                                                                            key={idx}
+                                                                            label={feature}
+                                                                            variant="outlined"
+                                                                            size="small"
+                                                                            sx={{
+                                                                                fontSize: "0.7rem",
+                                                                                height: 24,
+                                                                                borderColor: alpha(method.color, 0.3),
+                                                                                color: method.color,
+                                                                            }}
+                                                                        />
+                                                                    ))}
+                                                                </Box>
+                                                            </Stack>
+                                                        </Box>
+                                                    </Box>
+                                                </Card>
+                                            </Fade>
+                                        ))}
+                                    </Stack>
+                                </RadioGroup>
+
+                                {/* Selected Payment Summary */}
+                                {selectedMethod && (
+                                    <Fade in={!!selectedMethod} timeout={300}>
+                                        <Paper
+                                            elevation={3}
+                                            sx={{
+                                                p: 3,
+                                                mb: 3,
+                                                borderRadius: 2,
+                                                border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                                                bgcolor: alpha(theme.palette.primary.main, 0.02),
+                                            }}
+                                        >
+                                            <Typography variant="h6" fontWeight={700} gutterBottom color="primary.main">
+                                                Phương thức thanh toán đã chọn
+                                            </Typography>
+                                            <Divider sx={{ my: 2 }} />
+                                            <Box display="flex" alignItems="center" gap={2}>
                                                 <Avatar
                                                     sx={{
-                                                        bgcolor: alpha(method.color, 0.1),
-                                                        color: method.color,
-                                                        width: 56,
-                                                        height: 56,
-                                                        mr: 2,
+                                                        bgcolor: alpha(selectedMethod.color, 0.1),
+                                                        color: selectedMethod.color,
+                                                        width: 48,
+                                                        height: 48,
                                                     }}
                                                 >
-                                                    <method.icon sx={{ fontSize: 28 }} />
+                                                    <selectedMethod.icon sx={{ fontSize: 24 }} />
                                                 </Avatar>
-
-                                                <Stack flexGrow={1} spacing={1}>
-                                                    {/* Method name and badges */}
-                                                    <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
-                                                        <Typography
-                                                            variant="h6"
-                                                            fontWeight={700}
-                                                            color="text.primary"
-                                                        >
-                                                            {method.name}
-                                                        </Typography>
-                                                        {method.discount && (
-                                                            <Chip
-                                                                icon={<Discount sx={{ fontSize: 14 }} />}
-                                                                label={method.discount}
-                                                                color="error"
-                                                                size="small"
-                                                                sx={{
-                                                                    fontWeight: 600,
-                                                                    fontSize: "0.75rem",
-                                                                }}
-                                                            />
-                                                        )}
-                                                    </Box>
-
-                                                    {/* Description */}
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="text.secondary"
-                                                        sx={{ mb: 1 }}
-                                                    >
-                                                        {method.description}
+                                                <Box>
+                                                    <Typography variant="h6" fontWeight={600}>
+                                                        {selectedMethod.name}
                                                     </Typography>
-
-                                                    {/* Processing time */}
-                                                    <Box display="flex" alignItems="center" gap={1}>
-                                                        <Security sx={{ fontSize: 16, color: "success.main" }} />
-                                                        <Typography
-                                                            variant="caption"
-                                                            color="success.main"
-                                                            fontWeight={600}
-                                                        >
-                                                            Xử lý: {method.processingTime}
-                                                        </Typography>
-                                                    </Box>
-
-                                                    {/* Features */}
-                                                    <Box display="flex" flexWrap="wrap" gap={0.5} sx={{ mt: 1 }}>
-                                                        {method.features.map((feature, idx) => (
-                                                            <Chip
-                                                                key={idx}
-                                                                label={feature}
-                                                                variant="outlined"
-                                                                size="small"
-                                                                sx={{
-                                                                    fontSize: "0.7rem",
-                                                                    height: 24,
-                                                                    borderColor: alpha(method.color, 0.3),
-                                                                    color: method.color,
-                                                                }}
-                                                            />
-                                                        ))}
-                                                    </Box>
-                                                </Stack>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        {selectedMethod.description}
+                                                    </Typography>
+                                                    <Typography variant="caption" color="success.main" fontWeight={600}>
+                                                        Thời gian xử lý: {selectedMethod.processingTime}
+                                                    </Typography>
+                                                </Box>
                                             </Box>
-                                        </Box>
-                                    </Card>
-                                </Fade>
-                            ))}
-                        </Stack>
-                    </RadioGroup>
+                                        </Paper>
+                                    </Fade>
+                                )}
 
-                    {/* Selected Payment Summary */}
-                    {selectedMethod && (
-                        <Fade in={!!selectedMethod} timeout={300}>
-                            <Paper
-                                elevation={3}
-                                sx={{
-                                    p: 3,
-                                    mb: 3,
-                                    borderRadius: 2,
-                                    border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                                    bgcolor: alpha(theme.palette.primary.main, 0.02),
-                                }}
-                            >
-                                <Typography variant="h6" fontWeight={700} gutterBottom color="primary.main">
-                                    Phương thức thanh toán đã chọn
-                                </Typography>
-                                <Divider sx={{ my: 2 }} />
-                                <Box display="flex" alignItems="center" gap={2}>
-                                    <Avatar
+                                {/* Note field */}
+                                <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+                                    <Typography variant="h6" fontWeight={600} gutterBottom>
+                                        Ghi chú đơn hàng
+                                    </Typography>
+                                    <RHFTextField
+                                        name="note"
+                                        label="Ghi chú"
+                                        placeholder="Ví dụ: Giao hàng ngoài giờ hành chính"
+                                        multiline
+                                        rows={3}
+                                    />
+                                </Paper>
+
+                                {/* Continue Button */}
+                                <Paper elevation={2} sx={{ p: 3, borderRadius: 2, textAlign: "center" }}>
+                                    <Button
+                                        variant="contained"
+                                        size="large"
+                                        disabled={!selectedPaymentId || loading}
+                                        onClick={handleContinue}
                                         sx={{
-                                            bgcolor: alpha(selectedMethod.color, 0.1),
-                                            color: selectedMethod.color,
-                                            width: 48,
-                                            height: 48,
+                                            py: 1.5,
+                                            px: 6,
+                                            borderRadius: 2,
+                                            textTransform: "none",
+                                            fontWeight: 700,
+                                            minWidth: 200,
+                                            boxShadow: selectedPaymentId
+                                                ? `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`
+                                                : "none",
                                         }}
                                     >
-                                        <selectedMethod.icon sx={{ fontSize: 24 }} />
-                                    </Avatar>
-                                    <Box>
-                                        <Typography variant="h6" fontWeight={600}>
-                                            {selectedMethod.name}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {selectedMethod.description}
-                                        </Typography>
-                                        <Typography variant="caption" color="success.main" fontWeight={600}>
-                                            Thời gian xử lý: {selectedMethod.processingTime}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            </Paper>
-                        </Fade>
-                    )}
-
-                    {/* Note field */}
-                    <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
-                        <Typography variant="h6" fontWeight={600} gutterBottom>
-                            Ghi chú đơn hàng
-                        </Typography>
-                        <RHFTextField
-                            name="note"
-                            label="Ghi chú"
-                            placeholder="Ví dụ: Giao hàng ngoài giờ hành chính"
-                            multiline
-                            rows={3}
-                        />
-                    </Paper>
-
-                    {/* Continue Button */}
-                    <Paper elevation={2} sx={{ p: 3, borderRadius: 2, textAlign: "center" }}>
-                        <Button
-                            variant="contained"
-                            size="large"
-                            disabled={!selectedPaymentId || loading}
-                            onClick={handleContinue}
-                            sx={{
-                                py: 1.5,
-                                px: 6,
-                                borderRadius: 2,
-                                textTransform: "none",
-                                fontWeight: 700,
-                                minWidth: 200,
-                                boxShadow: selectedPaymentId
-                                    ? `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`
-                                    : "none",
-                            }}
-                        >
-                            {loading ? "Đang xử lý..." : "Tiếp tục thanh toán"}
-                        </Button>
-                        <Typography
-                            variant="caption"
-                            color="text.secondary"
-                            display="block"
-                            sx={{ mt: 1 }}
-                        >
-                            Thông tin thanh toán của bạn được bảo mật tuyệt đối
-                        </Typography>
-                    </Paper>
+                                        {loading ? "Đang xử lý..." : "Tiếp tục thanh toán"}
+                                    </Button>
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        display="block"
+                                        sx={{ mt: 1 }}
+                                    >
+                                        Thông tin thanh toán của bạn được bảo mật tuyệt đối
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid size={{ xs: 12, md: 4 }}>
+                                <CartSummary
+                                    subtotal={subtotal}
+                                    itemCount={itemCount}
+                                    hideContinueButton
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
                 </Box>
             </Container>
         </FormProvider>
