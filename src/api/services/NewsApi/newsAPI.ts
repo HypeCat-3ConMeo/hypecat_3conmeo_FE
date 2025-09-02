@@ -5,7 +5,7 @@ import axiosClient from "../../axiosInstance";
 const newsAPI = {
     //GET news list
     getNewsList: (params?: any): Promise<News> => {
-        const url = "/New/GetNewsPagination";
+        const url = "/New/GetNewsPagination?IsDescending=true";
         return axiosClient.get(url, {
             params,
             paramsSerializer: {
@@ -17,6 +17,17 @@ const newsAPI = {
     //GET news by id
     getNewsById: (id: string, params?: any): Promise<News> => {
         const url = `/New/GetNewById/${id}`;
+        return axiosClient.get(url, {
+            params,
+            paramsSerializer: {
+                indexes: null, // by default: false
+            },
+        });
+    },
+
+    //GET news in user 
+    getNewsByUser: (params?: any): Promise<News[]> => {
+        const url = `/New/GetAllNews`;
         return axiosClient.get(url, {
             params,
             paramsSerializer: {

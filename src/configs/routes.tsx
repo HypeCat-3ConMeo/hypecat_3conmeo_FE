@@ -42,5 +42,7 @@ export const customerRoutes = {
   productDetail: "/product-detail/:id",
   test: "/test",
   address: "/address",
+  addressList: "/address-list",
+  paymentMethod: "/payment-method",
   order: "/order",
 };

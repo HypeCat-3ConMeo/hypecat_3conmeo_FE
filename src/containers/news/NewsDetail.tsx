@@ -144,7 +144,7 @@ export default function NewsDetail() {
             {/* Content */}
             <Box
                 sx={{
-                    typography: "body1",
+                    typography: "body2",
                     lineHeight: 1.8,
                     "& a": { color: "primary.main" },
                 }}

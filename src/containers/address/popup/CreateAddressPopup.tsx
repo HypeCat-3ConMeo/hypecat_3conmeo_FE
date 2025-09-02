@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import {
     Dialog, DialogTitle, DialogContent, DialogActions,
-    Stack, FormControlLabel, Checkbox,
-    IconButton, Typography, Button
+    Stack, IconButton, Typography, Button
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { useForm, FormProvider } from "react-hook-form";
@@ -13,12 +12,12 @@ interface Props {
     open: boolean;
     onClose: () => void;
     onSave: (address: AddressFormInput) => void;
-    editingAddress?: AddressFormInput | null;
 }
 
-const AddressDialog: React.FC<Props> = ({ open, onClose, onSave, editingAddress }) => {
+const CreateAddressDialog: React.FC<Props> = ({ open, onClose, onSave }) => {
     const methods = useForm<AddressFormInput>({
-        defaultValues: editingAddress || {
+        defaultValues:
+        {
             name: "",
             phone: "",
             province: "",
@@ -30,11 +29,10 @@ const AddressDialog: React.FC<Props> = ({ open, onClose, onSave, editingAddress 
 
     const { handleSubmit, reset } = methods;
 
-    // Reset lại form khi mở dialog
     useEffect(() => {
         if (open) {
             reset(
-                editingAddress || {
+                {
                     name: "",
                     phone: "",
                     province: "",
@@ -44,7 +42,7 @@ const AddressDialog: React.FC<Props> = ({ open, onClose, onSave, editingAddress 
                 }
             );
         }
-    }, [open, editingAddress, reset]);
+    }, [open, reset]);
 
     const onSubmit = (data: AddressFormInput) => {
         onSave(data);
@@ -57,7 +55,7 @@ const AddressDialog: React.FC<Props> = ({ open, onClose, onSave, editingAddress 
                     <DialogTitle>
                         <Stack direction="row" justifyContent="space-between">
                             <Typography variant="h6">
-                                {editingAddress ? "Chỉnh sửa" : "Thêm"} địa chỉ
+                                Thêm địa chỉ
                             </Typography>
                             <IconButton onClick={onClose}>
                                 <CloseIcon />
@@ -72,17 +70,6 @@ const AddressDialog: React.FC<Props> = ({ open, onClose, onSave, editingAddress 
                             <RHFTextField name="province" label="Tỉnh/Thành phố" />
                             <RHFTextField name="ward" label="Quận/Huyện" />
                             <RHFTextField name="street" label="Đường/Số nhà" />
-
-                            {!editingAddress?.isDefault && (
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            {...methods.register("isDefault")}
-                                        />
-                                    }
-                                    label="Đặt làm địa chỉ mặc định"
-                                />
-                            )}
                         </Stack>
                     </DialogContent>
 
@@ -96,4 +83,4 @@ const AddressDialog: React.FC<Props> = ({ open, onClose, onSave, editingAddress 
     );
 };
 
-export default AddressDialog;
+export default CreateAddressDialog;

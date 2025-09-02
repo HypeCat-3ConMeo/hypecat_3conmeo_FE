@@ -41,6 +41,16 @@ const orderApi = {
     return axiosClient.post(url, body);
   },
 
+  CreateOrderFromCart: (params?: any) => {
+    const url = "/Orders/CreateOrderFromCart";
+    return axiosClient.post(url, null, {
+      params,
+      paramsSerializer: {
+        indexes: null, // by default: false
+      },
+    });
+  },
+
   //PUT api
   updateOrder: (id: any, body: any) => {
     const url = `/Orders/UpdateOrder/${id}`;

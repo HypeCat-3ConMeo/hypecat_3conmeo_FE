@@ -87,10 +87,8 @@ export default function NewForm({ isEdit = false }: NewsFormProps) {
     };
 
     const fetchNewsById = async (id: string) => {
-        console.log("Fetching news with ID:", id); // kiểm tra log
         try {
             const res = await newsAPI.getNewsById(id);
-            console.log("Fetched data:", res); // kiểm tra dữ liệu nhận được
             reset({
                 title: res.title,
                 writer: res.writer,
@@ -160,12 +158,12 @@ export default function NewForm({ isEdit = false }: NewsFormProps) {
             if (isEdit && id) {
                 await newsAPI.updateNews(id, data);
                 toast.success("Cập nhật thành công");
-                //navigate(config.adminRoutes.);
+                navigate(config.adminRoutes.manageCategory);
             } else {
                 await newsAPI.createNews(data);
                 toast.success("Tạo tin tức thành công");
                 methods.reset();
-                navigate(config.adminRoutes.manageNews);
+                navigate(config.adminRoutes.manageCategory);
             }
         } catch {
             toast.error("Lỗi khi lưu tin tức");

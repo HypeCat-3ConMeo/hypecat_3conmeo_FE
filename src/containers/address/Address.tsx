@@ -139,9 +139,7 @@ const AddressManager: React.FC = () => {
   const [addresses, setAddresses] = useState<MappedAddress[]>([]);
   const [userId, setUserId] = useState<number | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [editingAddress, setEditingAddress] = useState<AddressFormInput | null>(
-    null
-  );
+  const [editingAddress, setEditingAddress] = useState<AddressFormInput | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -217,7 +215,6 @@ const AddressManager: React.FC = () => {
       if (editingAddress && editingAddress.id !== undefined) {
         await addressApi.updateAddress(Number(editingAddress.id), payload);
       } else {
-        console.log("Creating new address:", payload);
         await addressApi.createAddress(payload);
       }
       fetchAddresses();
@@ -239,7 +236,6 @@ const AddressManager: React.FC = () => {
     try {
       await addressApi.DeleteOrEnable(addressToDelete, 1);
       fetchAddresses();
-      console.log("Deleting address:", addressToDelete);
     } catch (error) {
       console.error("Lỗi khi xóa địa chỉ:", error);
     }

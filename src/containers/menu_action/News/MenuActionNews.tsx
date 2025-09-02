@@ -14,13 +14,11 @@ export default function MenuActionTableNews({
     newsData,
     isDeleted,
     introId,
-    role,
     fetchNews,
 }: {
     newsData: any;
     isDeleted?: boolean;
     introId?: string;
-    role: string;
     fetchNews: () => void;
 }) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -33,42 +31,32 @@ export default function MenuActionTableNews({
             label: "Chi Tiết",
             icon: <InfoIcon sx={{ mr: 1 }} color="info" />,
             action: () => {
-                const route = role === "admin"
-                    ? config.adminRoutes.detailNews
-                    : config.customerRoutes.newsDetail;
-
-                navigate(route.replace(":id", newsData.id));
+                navigate(config.adminRoutes.detailNews.replace(":id", newsData.id));
             },
         },
-        ...(role === "admin" && !isDeleted
-            ? [
-                {
-                    label: "Chỉnh sửa",
-                    icon: <EditIcon sx={{ mr: 1, color: "#9ADE7B" }} />,
-                    action: () => {
-                        navigate(
-                            config.adminRoutes.editNews.replace(":id", newsData.id)
-                        );
-                    },
-                },
-            ]
-            : []),
-        ...(role === "admin"
-            ? [
-                {
-                    label: isDeleted === true ? "Khôi phục" : "Ngừng",
-                    icon:
-                        isDeleted === true ? (
-                            <AddIcon sx={{ mr: 1 }} color="success" />
-                        ) : (
-                            <BlockIcon sx={{ mr: 1 }} color="error" />
-                        ),
-                    action: () => {
-                        setOpenDeleteDialog(true);
-                    },
-                },
-            ]
-            : []),
+        {
+            label: "Chỉnh sửa",
+            icon: <EditIcon sx={{ mr: 1, color: "#9ADE7B" }} />,
+            action: () => {
+                navigate(
+                    config.adminRoutes.editNews.replace(":id", newsData.id)
+                );
+            },
+        },
+        {
+            label: isDeleted === true ? "Khôi phục" : "Ngừng",
+            icon:
+                isDeleted === true ? (
+                    <AddIcon sx={{ mr: 1 }} color="success" />
+                ) : (
+                    <BlockIcon sx={{ mr: 1 }} color="error" />
+                ),
+            action: () => {
+                setOpenDeleteDialog(true);
+            },
+        },
+
+
     ];
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
