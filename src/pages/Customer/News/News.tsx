@@ -1,9 +1,9 @@
-import NewsTable from "../../../containers/news/NewsTable";
+import NewsList from "../../../containers/news/NewsList";
 
 const NewsPage = () => {
     return (
         <>
-            <NewsTable role="customer" />
+            <NewsList />
         </>
     );
 };

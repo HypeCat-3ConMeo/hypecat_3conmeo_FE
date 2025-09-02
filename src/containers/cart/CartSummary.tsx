@@ -21,34 +21,37 @@ import {
     AccountBalanceWallet,
 } from '@mui/icons-material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import config from '../../configs';
 
 interface CartSummaryProps {
     subtotal: number;
-    shipping: number;
+    //shipping: number;
     //onShippingChange: (cost: number) => void;
     itemCount?: number;
 }
 
 export const CartSummary = ({
     subtotal,
-    shipping,
+    //shipping,
     //onShippingChange,
     itemCount = 0
 }: CartSummaryProps) => {
     const theme = useTheme();
     const [isProcessing, setIsProcessing] = useState(false);
+    const navigate = useNavigate();
 
     //const freeShippingThreshold = 500000; // 500k VND
     //const progressToFreeShip = Math.min((subtotal / freeShippingThreshold) * 100, 100);
     //const remainingForFreeShip = Math.max(freeShippingThreshold - subtotal, 0);
 
-    const total = subtotal + shipping;
+    const total = subtotal;
 
     const handleCheckout = async () => {
         setIsProcessing(true);
         // Mock checkout process
         setTimeout(() => {
-            console.log('Checkout:', { total, items: itemCount });
+            navigate(config.customerRoutes.addressList)
             setIsProcessing(false);
         }, 2000);
     };
@@ -176,7 +179,7 @@ export const CartSummary = ({
                     }
                 }}
             >
-                {isProcessing ? 'Đang xử lý...' : 'Thanh toán an toàn'}
+                {isProcessing ? 'Đang xử lý...' : 'Tiếp tục'}
             </Button>
 
             {isProcessing && (

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import config from "../configs";
@@ -29,6 +28,9 @@ import ProductCustomerPage from "../pages/Customer/ProductCustomer/ProductPage";
 import ProductCustomerDetailPage from "../pages/Customer/ProductCustomer/ProductDetail";
 import ManageOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
 import CartPage from "../pages/Customer/Cart/CartPage";
+//import ManageNewsPage from "../pages/Admin/manage_news/ManageNewsPage";
+import AddressListPage from "../pages/Customer/Cart/AddressPage";
+import PaymentMethodPage from "../pages/Customer/Cart/PaymentMethodPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -86,6 +88,16 @@ const AppRoute: React.FC = () => {
           path={config.customerRoutes.cart}
           element={<CartPage />}
         />
+        <Route
+          key={"addressList"}
+          path={config.customerRoutes.addressList}
+          element={<AddressListPage />}
+        />
+        <Route
+          key={"paymentMethod"}
+          path={config.customerRoutes.paymentMethod}
+          element={<PaymentMethodPage />}
+        />
       </Route>
 
       <Route key={"dashboard"} element={<AdminLayout />}>
@@ -139,6 +151,11 @@ const AppRoute: React.FC = () => {
           path={config.adminRoutes.createNews}
           element={<NewsFormPage />}
         />
+        {/* <Route
+          key={"manageNews"}
+          path={config.adminRoutes.manageNews}
+          element={<ManageNewsPage />}
+        /> */}
         <Route
           key={"editNews"}
           path={config.adminRoutes.editNews}

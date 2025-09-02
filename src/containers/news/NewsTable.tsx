@@ -71,7 +71,7 @@ const SearchTool: React.FC<SearchToolProps> = ({ filter, setFilter }) => {
 //     position: "left",
 //   },
 // ];
-const NewsTable = ({ role }: { role: string }) => {
+const NewsTable = () => {
     //Define the state for categories
     const [news, setNews] = React.useState<News[]>([]);
     const [pageIndex, setPageIndex] = React.useState<number>(0);
@@ -102,7 +102,7 @@ const NewsTable = ({ role }: { role: string }) => {
             setTotalItemsCount(res.totalItemsCount);
         } catch (error) {
             toast.error("Lấy tin tức thất bại");
-            console.error("Lỗi khi lấy danh sách loại sản phẩm:", error);
+            console.error("Lỗi khi lấy danh sách tin tức:", error);
         } finally {
             setIsLoading(false);
         }
@@ -164,7 +164,6 @@ const NewsTable = ({ role }: { role: string }) => {
     ];
 
     const createNews = () => {
-        if (role !== "admin") return null;
         return (
             <Box
                 sx={{
@@ -192,7 +191,6 @@ const NewsTable = ({ role }: { role: string }) => {
             newsData={row}
             isDeleted={selectedRow?.isDeleted as boolean}
             fetchNews={getNews}
-            role={role}
             introId="menu-action"
         />
     );

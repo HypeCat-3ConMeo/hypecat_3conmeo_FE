@@ -77,7 +77,8 @@ const InformationLayout = () => {
                             borderRadius: 2,
                             px: 3,
                             minHeight: '100%',
-                            boxShadow: theme.shadows[1],
+                            boxShadow: theme.shadows[4],
+                            marginLeft: 8
                         }}
                     >
                         <Outlet />

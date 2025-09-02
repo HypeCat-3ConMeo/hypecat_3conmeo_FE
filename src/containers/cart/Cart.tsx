@@ -28,7 +28,7 @@ import useDebounce from '../../hooks/useDebounce';
 export const Cart: React.FC = () => {
     const theme = useTheme();
     const [carts, setCarts] = useState<CartType[]>([]);
-    const [shippingCost, setShippingCost] = useState<number>(0);
+    //const [shippingCost, setShippingCost] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [pendingUpdate, setPendingUpdate] = useState<{ id: number, quantity: number } | null>(null);
     const debouncedUpdate = useDebounce(pendingUpdate, 500);
@@ -53,7 +53,6 @@ export const Cart: React.FC = () => {
 
         const updateQuantity = async () => {
             try {
-                console.log("Gọi API cập nhật");
                 await cartApi.updateCartItemQuantity({
                     cartId: debouncedUpdate.id,
                     quantity: debouncedUpdate.quantity
@@ -235,7 +234,7 @@ export const Cart: React.FC = () => {
                                 <Box width="100%">
                                     <CartSummary
                                         subtotal={subtotal}
-                                        shipping={shippingCost}
+                                        //shipping={shippingCost}
                                         //onShippingChange={setShippingCost}
                                         itemCount={carts.reduce((sum, p) => sum + p.quantity, 0)}
                                     />

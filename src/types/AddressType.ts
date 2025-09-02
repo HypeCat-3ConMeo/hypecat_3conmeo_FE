@@ -1,8 +1,8 @@
 export interface Address {
-    id?: string;
+    id: string;
     userId?: number;
     recipientName?: string;
-    name: string;
+    name?: string;
     phone: string;
     province: string;
     ward: string;

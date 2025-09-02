@@ -15,7 +15,7 @@ export interface NewsFormInput {
 }
 
 export interface News {
-    id: number;
+    id: string;
     title: string;
     content: string;
     writer: string;
