@@ -9,23 +9,24 @@ import {
   DialogTitle,
   Fade,
   Stack,
-  TextField,
   Typography,
   Box,
   Divider,
   Chip,
-  InputAdornment,
   IconButton,
-  useTheme,
   alpha,
+  useTheme,
 } from "@mui/material";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import { toast } from "react-toastify";
+import { useForm, FormProvider } from "react-hook-form";
 
 import { colors, font_weight } from "../../../styles/config-file";
 import categoryApi from "../../../api/services/CategoryApi/categoryAPI";
+import { RHFSelect, RHFTextField } from "../../../components/hook-form";
+
 
 interface CreateCategoryProps {
   open: boolean;
@@ -33,14 +34,25 @@ interface CreateCategoryProps {
   fetchData: () => void;
 }
 
+type FormValues = {
+  name: string;
+  cateType: "Product" | "News";
+};
+
 const CreateCategory: React.FC<CreateCategoryProps> = ({
   open,
   handleClose,
   fetchData,
 }) => {
-  const [name, setName] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
   const theme = useTheme();
+  const methods = useForm<FormValues>({
+    defaultValues: {
+      name: "",
+      cateType: "Product",
+    },
+  });
+  const { handleSubmit, reset, register, formState, watch } = methods;
+  const { errors, isSubmitting } = formState;
 
   const getErrorMessage = (error: any): string => {
     const message = error?.response?.data?.message;
@@ -57,15 +69,14 @@ const CreateCategory: React.FC<CreateCategoryProps> = ({
     }
   };
 
-  const handleSaveQuickCreate = async () => {
-    setLoading(true);
+  const onSubmit = async (data: FormValues) => {
     try {
-      await categoryApi.createCategory({ name });
-      setName("");
+      await categoryApi.createCategory(data);
       toast.success("Tạo thành công", {
         position: "top-right",
         autoClose: 3000,
       });
+      reset();
       handleClose();
       fetchData();
     } catch (error) {
@@ -74,25 +85,17 @@ const CreateCategory: React.FC<CreateCategoryProps> = ({
         position: "top-right",
       });
       console.error("Lỗi khi tạo:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter" && !isInvalid && !loading) {
-      handleSaveQuickCreate();
     }
   };
 
   const handleCloseDialog = () => {
-    if (!loading) {
-      setName("");
+    if (!isSubmitting) {
+      reset();
       handleClose();
     }
   };
 
-  const isInvalid = !name.trim();
+  const name = watch("name");
 
   return (
     <Dialog
@@ -110,7 +113,7 @@ const CreateCategory: React.FC<CreateCategoryProps> = ({
         },
       }}
     >
-      {/* Header with gradient background */}
+      {/* Header */}
       <Box
         sx={{
           background: `linear-gradient(135deg, ${colors.originPrimary} 0%, ${colors.originPrimary}cc 100%)`,
@@ -155,10 +158,9 @@ const CreateCategory: React.FC<CreateCategoryProps> = ({
             </Box>
           </Stack>
 
-          {/* Close button */}
           <IconButton
             onClick={handleCloseDialog}
-            disabled={loading}
+            disabled={isSubmitting}
             sx={{
               position: "absolute",
               right: 16,
@@ -178,140 +180,115 @@ const CreateCategory: React.FC<CreateCategoryProps> = ({
         </DialogTitle>
       </Box>
 
-      <DialogContent sx={{ px: 4, py: 3 }}>
-        <Stack spacing={3}>
-          {/* Info chip */}
-          <Chip
-            icon={<CategoryOutlinedIcon />}
-            label="Tên loại sản phẩm phải là duy nhất"
-            variant="outlined"
-            size="small"
-            sx={{
-              alignSelf: "flex-start",
-              borderColor: theme.palette.info.main,
-              color: theme.palette.info.main,
-              backgroundColor: alpha(theme.palette.info.main, 0.05),
-            }}
-          />
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogContent sx={{ px: 4, py: 3 }}>
+            <Stack spacing={3}>
+              <Chip
+                icon={<CategoryOutlinedIcon />}
+                label="Tên loại sản phẩm phải là duy nhất"
+                variant="outlined"
+                size="small"
+                sx={{
+                  alignSelf: "flex-start",
+                  borderColor: theme.palette.info.main,
+                  color: theme.palette.info.main,
+                  backgroundColor: alpha(theme.palette.info.main, 0.05),
+                }}
+              />
 
-          {/* Input field */}
-          <TextField
-            fullWidth
-            label="Tên loại sản phẩm"
-            placeholder="Nhập tên loại sản phẩm..."
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onKeyPress={handleKeyPress}
-            disabled={loading}
-            autoFocus
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <CategoryOutlinedIcon
-                    sx={{
-                      color: name
-                        ? theme.palette.primary.main
-                        : "action.active",
-                      transition: "color 0.2s ease",
-                    }}
-                  />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
+              <RHFSelect name="cateType" label="Loại danh mục">
+                <option value="Product">Sản phẩm</option>
+                <option value="News">Tin tức</option>
+              </RHFSelect>
+
+              <Box>
+                <RHFTextField
+                  {...register("name", { required: "Vui lòng nhập tên loại sản phẩm" })}
+                  placeholder="Nhập tên loại sản phẩm..."
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleSubmit(onSubmit)();
+                    }
+                  }}
+                // style={{
+                //   width: "100%",
+                //   padding: "16.5px 14px",
+                //   borderRadius: 8,
+                //   border: `1px solid ${errors.name ? "red" : theme.palette.divider}`,
+                //   fontSize: 16,
+                // }}
+                />
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: name?.trim()
+                      ? theme.palette.success.main
+                      : theme.palette.text.secondary,
+                  }}
+                >
+                  {name?.trim()
+                    ? `Độ dài: ${name.trim().length} ký tự`
+                    : errors.name?.message || "Vui lòng nhập tên loại sản phẩm"}
+                </Typography>
+              </Box>
+            </Stack>
+          </DialogContent>
+
+          <Divider sx={{ mx: 3 }} />
+
+          <DialogActions sx={{ px: 4, py: 3, gap: 2 }}>
+            <Button
+              onClick={handleCloseDialog}
+              variant="outlined"
+              disabled={isSubmitting}
+              size="large"
+              sx={{
                 borderRadius: 2,
-                transition: "all 0.2s ease",
+                minWidth: 100,
+                textTransform: "none",
+                fontWeight: 500,
+              }}
+            >
+              Hủy
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting}
+              size="large"
+              startIcon={isSubmitting ? undefined : <AddIcon />}
+              sx={{
+                flex: 1,
+                borderRadius: 2,
+                px: 4,
+                py: 1.5,
+                textTransform: "none",
+                fontWeight: font_weight.bold || 600,
+                background: `linear-gradient(135deg, ${colors.originPrimary
+                  } 0%, ${alpha(colors.originPrimary, 0.8)} 100%)`,
+                boxShadow: `0 4px 12px ${alpha(colors.originPrimary, 0.3)}`,
                 "&:hover": {
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: theme.palette.primary.main,
-                  },
+                  background: `linear-gradient(135deg, ${alpha(
+                    colors.originPrimary,
+                    0.9
+                  )} 0%, ${alpha(colors.originPrimary, 0.7)} 100%)`,
+                  boxShadow: `0 6px 16px ${alpha(colors.originPrimary, 0.4)}`,
+                  transform: "translateY(-1px)",
                 },
-                "&.Mui-focused": {
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: 2,
-                  },
+                "&:disabled": {
+                  background: alpha(theme.palette.action.disabled, 0.12),
+                  color: theme.palette.action.disabled,
                 },
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: theme.palette.primary.main,
-              },
-            }}
-            helperText={
-              name.trim()
-                ? `Độ dài: ${name.trim().length} ký tự`
-                : "Vui lòng nhập tên loại sản phẩm"
-            }
-            FormHelperTextProps={{
-              sx: {
-                color: name.trim()
-                  ? theme.palette.success.main
-                  : theme.palette.text.secondary,
-                fontSize: "0.75rem",
-              },
-            }}
-          />
-        </Stack>
-      </DialogContent>
-
-      <Divider sx={{ mx: 3 }} />
-
-      <DialogActions sx={{ px: 4, py: 3, gap: 2 }}>
-        <Button
-          onClick={handleCloseDialog}
-          variant="outlined"
-          disabled={loading}
-          size="large"
-          sx={{
-            borderRadius: 2,
-            minWidth: 100,
-            textTransform: "none",
-            fontWeight: 500,
-            borderColor: theme.palette.grey[300],
-            color: theme.palette.text.secondary,
-            "&:hover": {
-              borderColor: theme.palette.grey[400],
-              backgroundColor: alpha(theme.palette.grey[500], 0.05),
-            },
-          }}
-        >
-          Hủy
-        </Button>
-        <Button
-          variant="contained"
-          onClick={handleSaveQuickCreate}
-          disabled={isInvalid || loading}
-          size="large"
-          startIcon={loading ? undefined : <AddIcon />}
-          sx={{
-            flex: 1,
-            borderRadius: 2,
-            px: 4,
-            py: 1.5,
-            textTransform: "none",
-            fontWeight: font_weight.bold || 600,
-            background: `linear-gradient(135deg, ${
-              colors.originPrimary
-            } 0%, ${alpha(colors.originPrimary, 0.8)} 100%)`,
-            boxShadow: `0 4px 12px ${alpha(colors.originPrimary, 0.3)}`,
-            "&:hover": {
-              background: `linear-gradient(135deg, ${alpha(
-                colors.originPrimary,
-                0.9
-              )} 0%, ${alpha(colors.originPrimary, 0.7)} 100%)`,
-              boxShadow: `0 6px 16px ${alpha(colors.originPrimary, 0.4)}`,
-              transform: "translateY(-1px)",
-            },
-            "&:disabled": {
-              background: alpha(theme.palette.action.disabled, 0.12),
-              color: theme.palette.action.disabled,
-            },
-            transition: "all 0.2s ease-in-out",
-          }}
-        >
-          {loading ? "Đang tạo..." : "Tạo mới"}
-        </Button>
-      </DialogActions>
+                transition: "all 0.2s ease-in-out",
+              }}
+            >
+              {isSubmitting ? "Đang tạo..." : "Tạo mới"}
+            </Button>
+          </DialogActions>
+        </form>
+      </FormProvider>
     </Dialog>
   );
 };

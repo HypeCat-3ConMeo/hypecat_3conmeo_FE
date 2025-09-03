@@ -1,6 +1,6 @@
 // form
 import {
-  // useFormContext,
+  useFormContext,
   Controller,
 } from "react-hook-form";
 // @mui
@@ -17,12 +17,12 @@ type IProps = {
 type Props = IProps & TextFieldProps;
 
 export default function RHFSelect({ name, children, ...other }: Props) {
-  // const { control } = useFormContext();
+  const { control } = useFormContext();
 
   return (
     <Controller
       name={name}
-      // control={control ?? "control"}
+      control={control}
       render={({ field, fieldState: { error } }) => (
         <TextField
           {...field}

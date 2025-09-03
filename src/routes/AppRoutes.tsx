@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import config from "../configs";
@@ -9,7 +10,6 @@ import CreateProductPage from "../pages/Admin/manage_product/CreateProduct/Creat
 import ManageCategoryPage from "../pages/Admin/manage_category/ManageCategory";
 import ProfilePage from "../pages/Customer/Profile/Profile";
 import AddressPage from "../pages/Customer/Address/Address";
-import ManagerOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
 import OrderPage from "../pages/Customer/Order/Order";
 import InformationLayout from "../layouts/InformationLayout/InformationLayout";
 import DetailProductPage from "../pages/Admin/manage_product/DetailProduct/DetailProductPage";
@@ -24,6 +24,9 @@ import DetailOrderPage from "../pages/Admin/manage_order/DetailOrder/DetailOrder
 import LandingPage from "../pages/Customer/Home/LandingPage";
 import ProductCustomerPage from "../pages/Customer/ProductCustomer/ProductPage";
 import ProductCustomerDetailPage from "../pages/Customer/ProductCustomer/ProductDetail";
+import NewsFormPage from "../pages/Admin/manage_news/NewsForm/NewsFormPage";
+import DetailNewsPage from "../pages/Admin/manage_news/DetailNews/DetailNewsPage";
+import ManageOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -33,7 +36,6 @@ const AppRoute: React.FC = () => {
         path={config.authRoutes.authenticate}
         element={<AuthenticatePage />}
       />
-
       <Route key={"home"} element={<CustomerLayout />}>
         <Route
           key={"news"}
@@ -49,6 +51,11 @@ const AppRoute: React.FC = () => {
           key={"productDetail"}
           path={config.customerRoutes.productDetail}
           element={<ProductCustomerDetailPage />}
+        />
+        <Route
+          key={"newsDetail"}
+          path={config.customerRoutes.newsDetail}
+          element={<DetailNewsPage />}
         />
       </Route>
       <Route key={"profile"} element={<InformationLayout />}>
@@ -118,7 +125,7 @@ const AppRoute: React.FC = () => {
         <Route
           key={"ordersAdmin"}
           path={config.adminRoutes.manageOrder}
-          element={<ManagerOrderPage />}
+          element={<ManageOrderPage />}
         />
         <Route
           key={"ordersDetailAdmin"}
@@ -134,6 +141,21 @@ const AppRoute: React.FC = () => {
           key={"detailUser"}
           path={config.adminRoutes.detailUser}
           element={<UserDetailPage />}
+        />
+        <Route
+          key={"createNews"}
+          path={config.adminRoutes.createNews}
+          element={<NewsFormPage />}
+        />
+        <Route
+          key={"editNews"}
+          path={config.adminRoutes.editNews}
+          element={<NewsFormPage isEdit />}
+        />
+        <Route
+          key={"detailNews"}
+          path={config.adminRoutes.detailNews}
+          element={<DetailNewsPage />}
         />
       </Route>
     </Routes>
