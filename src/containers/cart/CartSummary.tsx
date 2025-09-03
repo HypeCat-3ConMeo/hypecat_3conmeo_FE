@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     Box,
     Typography,
@@ -31,6 +32,7 @@ interface CartSummaryProps {
     itemCount?: number;
     navigateTo?: string;
     hideContinueButton?: boolean;
+    extraState?: Record<string, any>;
 }
 
 export const CartSummary = ({
@@ -40,6 +42,7 @@ export const CartSummary = ({
     itemCount = 0,
     navigateTo,
     hideContinueButton = false,
+    extraState = {},
 }: CartSummaryProps) => {
     const theme = useTheme();
     const [isProcessing, setIsProcessing] = useState(false);
@@ -55,7 +58,7 @@ export const CartSummary = ({
         setIsProcessing(true);
         // Mock checkout process
         setTimeout(() => {
-            navigate(navigateTo || config.customerRoutes.cart, { state: { subtotal: subtotal, itemCount: itemCount } });
+            navigate(navigateTo || config.customerRoutes.cart, { state: { subtotal, itemCount, ...extraState, } });
             setIsProcessing(false);
         }, 2000);
     };
@@ -136,27 +139,6 @@ export const CartSummary = ({
                 >
                     {total.toLocaleString()}₫
                 </Typography>
-            </Box>
-
-            {/* Payment Methods */}
-            <Box mb={3}>
-                <Typography variant="subtitle2" color="text.secondary" mb={1}>
-                    Phương thức thanh toán
-                </Typography>
-                <Box display="flex" gap={1}>
-                    <Chip
-                        icon={<CreditCard />}
-                        label="Thẻ"
-                        size="small"
-                        variant="outlined"
-                    />
-                    <Chip
-                        icon={<AccountBalanceWallet />}
-                        label="Ví điện tử"
-                        size="small"
-                        variant="outlined"
-                    />
-                </Box>
             </Box>
 
             {/* Checkout Button */}
