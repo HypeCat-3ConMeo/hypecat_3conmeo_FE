@@ -16,6 +16,7 @@ import {
 import { styled } from "@mui/material/styles";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
+import { useAuthContext } from "../../../../hooks/useAuth";
 
 // Styled components using MUI's styled API
 const StyledRightMenu = styled(Box)(({ theme }) => ({
@@ -75,8 +76,8 @@ const StyledLink = styled(Link)({
 });
 
 const RightMenu: React.FC = () => {
-  // const { authUser } = useAuthContext();
-  const authUser = true;
+  const { auth } = useAuthContext();
+
   const cartItemsCount = 3; // This would come from your cart context/state
 
   const theme = useTheme();
@@ -85,7 +86,7 @@ const RightMenu: React.FC = () => {
 
   return (
     <StyledRightMenu>
-      {authUser ? (
+      {auth ? (
         <Stack
           direction="row"
           spacing={2}
@@ -121,7 +122,6 @@ const RightMenu: React.FC = () => {
               <StyledCartButton
                 startIcon={
                   <Badge
-                    badgeContent={cartItemsCount}
                     color="primary"
                     sx={{
                       "& .MuiBadge-badge": {

@@ -4,11 +4,20 @@ import {
   type ProductListResponse,
 } from "../../../types/ProductType";
 import axiosClient from "../../axiosInstance";
+import { PRODUCT_CUSTOMER, PRODUCT_CUSTOMER_DETAIL } from "../../PathnameApi";
 
 const productApi = {
   //GET api
   getProductList: (params?: any): Promise<ProductListResponse> => {
     const url = "/Products/GetProductPagination?IsDescending=true";
+    return axiosClient.get(url, {
+      params,
+    });
+  },
+
+
+   getProductCustomerList: (params?: any): Promise<any> => {
+    const url = PRODUCT_CUSTOMER;
     return axiosClient.get(url, {
       params,
     });
@@ -21,6 +30,13 @@ const productApi = {
   },
   getProductById: (id: string, params?: any): Promise<Product> => {
     const url = `/Products/GetProductById/${id}`;
+    return axiosClient.get(url, {
+      params,
+    });
+  },
+
+  getProductCustomerById: (id: string, params?: any): Promise<Product> => {
+    const url = PRODUCT_CUSTOMER_DETAIL.replace(":id", id);
     return axiosClient.get(url, {
       params,
     });

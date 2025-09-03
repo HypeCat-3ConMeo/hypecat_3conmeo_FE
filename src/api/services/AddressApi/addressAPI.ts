@@ -15,7 +15,7 @@ const addressApi = {
     },
 
     //Create address
-    createAddress: (body: any): Promise<{ id: number }> => {
+    createAddress: (body: any): Promise<any> => {
         return axiosClient.post(ADDRESS_CREATE, body);
     },
 

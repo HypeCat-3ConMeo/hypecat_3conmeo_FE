@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import config from "../configs";
 import AuthenticatePage from "../pages/Auth/AuthenticatePage";
-import Home from "../pages/Customer/Home/home";
 import CustomerLayout from "../layouts/CustomerLayout/CustomerLayout";
 import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 import ProductPage from "../pages/Admin/manage_product/ManageProductPage";
@@ -10,7 +9,6 @@ import CreateProductPage from "../pages/Admin/manage_product/CreateProduct/Creat
 import ManageCategoryPage from "../pages/Admin/manage_category/ManageCategory";
 import ProfilePage from "../pages/Customer/Profile/Profile";
 import AddressPage from "../pages/Customer/Address/Address";
-import ManagerOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
 import OrderPage from "../pages/Customer/Order/Order";
 import InformationLayout from "../layouts/InformationLayout/InformationLayout";
 import DetailProductPage from "../pages/Admin/manage_product/DetailProduct/DetailProductPage";
@@ -18,10 +16,21 @@ import EditProductPage from "../pages/Admin/manage_product/EditProduct/EditProdu
 import BatchPage from "../pages/Admin/manage_batch/ManageBatchPage";
 import ManageImportBatchPage from "../pages/Admin/manage_import_product/ManageImportProduct";
 import DetailBatchPage from "../pages/Admin/manage_batch/DetailBatch/DetailBatchPage";
+import NewsFormPage from "../pages/Admin/manage_news/NewsForm/NewsFormPage";
+import DetailNewsPage from "../pages/Admin/manage_news/DetailNews/DetailNewsPage";
+import NewsPage from "../pages/Customer/News/News";
 import ManageUserPage from "../pages/Admin/manage_users/ManageUserPage";
 import UserDetailPage from "../pages/Admin/manage_users/DetailUser/UserDetailPage";
 import DashboardPage from "../pages/Admin/manage_dashboard/DashboardPage";
 import DetailOrderPage from "../pages/Admin/manage_order/DetailOrder/DetailOrderPage";
+import LandingPage from "../pages/Customer/Home/LandingPage";
+import ProductCustomerPage from "../pages/Customer/ProductCustomer/ProductPage";
+import ProductCustomerDetailPage from "../pages/Customer/ProductCustomer/ProductDetail";
+import ManageOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
+import CartPage from "../pages/Customer/Cart/CartPage";
+//import ManageNewsPage from "../pages/Admin/manage_news/ManageNewsPage";
+import AddressListPage from "../pages/Customer/Cart/AddressPage";
+import PaymentMethodPage from "../pages/Customer/Cart/PaymentMethodPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -31,12 +40,46 @@ const AppRoute: React.FC = () => {
         path={config.authRoutes.authenticate}
         element={<AuthenticatePage />}
       />
-
       <Route key={"home"} element={<CustomerLayout />}>
         <Route
           key={"news"}
+          path={config.customerRoutes.news}
+          element={<NewsPage />}
+        />
+        <Route
+          key={"newsDetail"}
+          path={config.customerRoutes.newsDetail}
+          element={<DetailNewsPage />}
+        />
+        <Route
+          key={"landingPage"}
           path={config.customerRoutes.home}
-          element={<Home />}
+          element={<LandingPage />}
+        />
+        <Route
+          key={"productList"}
+          path={config.customerRoutes.productList}
+          element={<ProductCustomerPage />}
+        />
+        <Route
+          key={"productDetail"}
+          path={config.customerRoutes.productDetail}
+          element={<ProductCustomerDetailPage />}
+        />
+        <Route
+          key={"cart"}
+          path={config.customerRoutes.cart}
+          element={<CartPage />}
+        />
+        <Route
+          key={"addressList"}
+          path={config.customerRoutes.addressList}
+          element={<AddressListPage />}
+        />
+        <Route
+          key={"paymentMethod"}
+          path={config.customerRoutes.paymentMethod}
+          element={<PaymentMethodPage />}
         />
       </Route>
       <Route key={"profile"} element={<InformationLayout />}>
@@ -104,9 +147,29 @@ const AppRoute: React.FC = () => {
           element={<ManageImportBatchPage />}
         />
         <Route
+          key={"createNews"}
+          path={config.adminRoutes.createNews}
+          element={<NewsFormPage />}
+        />
+        {/* <Route
+          key={"manageNews"}
+          path={config.adminRoutes.manageNews}
+          element={<ManageNewsPage />}
+        /> */}
+        <Route
+          key={"editNews"}
+          path={config.adminRoutes.editNews}
+          element={<NewsFormPage isEdit />}
+        />
+        <Route
+          key={"detailNews"}
+          path={config.adminRoutes.detailNews}
+          element={<DetailNewsPage />}
+        />
+        <Route
           key={"ordersAdmin"}
           path={config.adminRoutes.manageOrder}
-          element={<ManagerOrderPage />}
+          element={<ManageOrderPage />}
         />
         <Route
           key={"ordersDetailAdmin"}

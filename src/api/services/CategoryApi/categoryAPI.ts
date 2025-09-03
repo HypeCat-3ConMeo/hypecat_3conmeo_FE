@@ -28,9 +28,20 @@ const categoryApi = {
     });
   },
 
-  //GET category active
+  //GET category of product active
   getCategoryActive: (params?: any): Promise<CategoryListResponse> => {
-    const url = "Category/GetCategoryPagination?IsDeleted=false";
+    const url = "Category/GetCategoryPagination?CateType=Product&IsDeleted=false";
+    return axiosClient.get(url, {
+      params,
+      paramsSerializer: {
+        indexes: null, // by default: false
+      },
+    });
+  },
+
+  //GET category of  news active
+  getCategoryNewsActive: (params?: any) => {
+    const url = "Category/GetCategoryPagination?CateType=News&IsDeleted=false";
     return axiosClient.get(url, {
       params,
       paramsSerializer: {
