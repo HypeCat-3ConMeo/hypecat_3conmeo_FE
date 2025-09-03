@@ -179,8 +179,7 @@ const PaymentMethods: React.FC = () => {
                 <Box>
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={3}>
-                            {/* Cột trái: Payment Methods */}
-                            <Grid size={{ xs: 12, md: 8 }}>
+                            <Grid size={{ xs: 12, md: 7 }} sx={{ order: { xs: 2, md: 1 } }}>
                                 {/* Header */}
                                 <Paper
                                     elevation={0}
@@ -473,7 +472,7 @@ const PaymentMethods: React.FC = () => {
                                     </Typography>
                                 </Paper>
                             </Grid>
-                            <Grid size={{ xs: 12, md: 4 }}>
+                            <Grid size={{ xs: 12, md: 5 }} sx={{ order: { xs: 1, md: 2 } }}>
                                 <CartSummary
                                     subtotal={subtotal}
                                     itemCount={itemCount}

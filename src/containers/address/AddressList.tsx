@@ -113,11 +113,6 @@ const AddressList: React.FC = () => {
         setOpenDialog(false);
     };
 
-    const handleContinue = () => {
-        if (!selectedAddressId) return;
-        navigate(config.customerRoutes.paymentMethod, { state: { addressId: selectedAddressId } });
-    };
-
     if (loading) {
         return (
             <Container maxWidth="md" sx={{ py: 4 }}>
@@ -383,26 +378,6 @@ const AddressList: React.FC = () => {
                                         >
                                             Thêm địa chỉ mới
                                         </Button>
-
-                                        <Button
-                                            variant="contained"
-                                            size="large"
-                                            disabled={!selectedAddressId}
-                                            onClick={handleContinue}
-                                            sx={{
-                                                py: 1.5,
-                                                px: 6,
-                                                borderRadius: 2,
-                                                textTransform: "none",
-                                                fontWeight: 700,
-                                                minWidth: 160,
-                                                boxShadow: selectedAddressId
-                                                    ? `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`
-                                                    : "none",
-                                            }}
-                                        >
-                                            Tiếp tục đặt hàng
-                                        </Button>
                                     </Stack>
                                 </Paper>
                             </>
@@ -422,6 +397,7 @@ const AddressList: React.FC = () => {
                         // shipping={shippingCost}
                         // onShippingChange={setShippingCost}
                         navigateTo={config.customerRoutes.paymentMethod}
+                        extraState={{ addressId: selectedAddressId }}
                     />
                 </Grid>
             </Grid>

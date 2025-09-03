@@ -34,7 +34,7 @@ const NewsList = () => {
         try {
             setIsLoading(true);
             const res = await newsAPI.getNewsByUser();
-            setNews(res);
+            setNews(res.reverse());
         } catch (error) {
             toast.error("Lấy tin tức thất bại");
             console.error("Lỗi khi lấy danh sách tin tức:", error);
