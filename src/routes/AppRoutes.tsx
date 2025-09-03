@@ -27,6 +27,7 @@ import ProductCustomerDetailPage from "../pages/Customer/ProductCustomer/Product
 import NewsFormPage from "../pages/Admin/manage_news/NewsForm/NewsFormPage";
 import DetailNewsPage from "../pages/Admin/manage_news/DetailNews/DetailNewsPage";
 import ManageOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
+import CartPage from "../pages/Customer/Cart/CartPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -73,6 +74,11 @@ const AppRoute: React.FC = () => {
           key={"addresses"}
           path={config.customerRoutes.address}
           element={<AddressPage />}
+        />
+        <Route
+          key={"cart"}
+          path={config.customerRoutes.cart}
+          element={<CartPage />}
         />
       </Route>
 

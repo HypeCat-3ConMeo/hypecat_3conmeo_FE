@@ -7,7 +7,6 @@ import AddIcon from "@mui/icons-material/Add";
 import CircularProgress from '@mui/material/CircularProgress';
 import CTable from "../../components/table/CTable";
 import useDebounce from "../../hooks/useDebounce";
-import type { Category } from "../../types/CategoryType";
 import type { News } from "../../types/NewsType";
 import newsAPI from "../../api/services/NewsApi/newsAPI";
 import MenuActionTableNews from "../menu_action/News/MenuActionNews";
@@ -188,9 +187,9 @@ const NewsTable = ({ role }: { role: string }) => {
         );
     };
 
-    const menuAction = (
+    const menuAction = (row: News) => (
         <MenuActionTableNews
-            newsData={selectedRow}
+            newsData={row}
             isDeleted={selectedRow?.isDeleted as boolean}
             fetchNews={getNews}
             role={role}
@@ -208,9 +207,9 @@ const NewsTable = ({ role }: { role: string }) => {
                 size={pageSize}
                 page={pageIndex}
                 searchTool={<SearchTool filter={filter} setFilter={setFilter} />}
-                menuAction={menuAction}
+                menuAction={(row: News) => menuAction(row)}
                 eventAction={createNews()}
-                selectedData={(row: Category) => setSelectedRow(row)}
+                selectedData={(row: News) => setSelectedRow(row)}
                 data={news}
                 title="Danh sách thông báo"
             />

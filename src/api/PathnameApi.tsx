@@ -21,3 +21,8 @@ export const UPDATE_USER = "Users/UpdateUser/:id";
 
 //product customer
 export const PRODUCT_CUSTOMER = "Products/GetUserProductPagination"
+
+//cart
+export const CART = "Cart/GetUserCartDisplay";
+export const DELETE_CART_ITEM = "/Cart/DeleteCartItem/productId";
+export const UPDATE_CART_ITEM_QUANTITY = "/Cart/UpdateCartItemQuantity";
