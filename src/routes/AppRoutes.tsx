@@ -17,6 +17,9 @@ import EditProductPage from "../pages/Admin/manage_product/EditProduct/EditProdu
 import BatchPage from "../pages/Admin/manage_batch/ManageBatchPage";
 import ManageImportBatchPage from "../pages/Admin/manage_import_product/ManageImportProduct";
 import DetailBatchPage from "../pages/Admin/manage_batch/DetailBatch/DetailBatchPage";
+import NewsFormPage from "../pages/Admin/manage_news/NewsForm/NewsFormPage";
+import DetailNewsPage from "../pages/Admin/manage_news/DetailNews/DetailNewsPage";
+import NewsPage from "../pages/Customer/News/News";
 import ManageUserPage from "../pages/Admin/manage_users/ManageUserPage";
 import UserDetailPage from "../pages/Admin/manage_users/DetailUser/UserDetailPage";
 import DashboardPage from "../pages/Admin/manage_dashboard/DashboardPage";
@@ -24,8 +27,6 @@ import DetailOrderPage from "../pages/Admin/manage_order/DetailOrder/DetailOrder
 import LandingPage from "../pages/Customer/Home/LandingPage";
 import ProductCustomerPage from "../pages/Customer/ProductCustomer/ProductPage";
 import ProductCustomerDetailPage from "../pages/Customer/ProductCustomer/ProductDetail";
-import NewsFormPage from "../pages/Admin/manage_news/NewsForm/NewsFormPage";
-import DetailNewsPage from "../pages/Admin/manage_news/DetailNews/DetailNewsPage";
 import ManageOrderPage from "../pages/Admin/manage_order/ManageOrderPage";
 import CartPage from "../pages/Customer/Cart/CartPage";
 
@@ -40,6 +41,16 @@ const AppRoute: React.FC = () => {
       <Route key={"home"} element={<CustomerLayout />}>
         <Route
           key={"news"}
+          path={config.customerRoutes.news}
+          element={<NewsPage />}
+        />
+        <Route
+          key={"newsDetail"}
+          path={config.customerRoutes.newsDetail}
+          element={<DetailNewsPage />}
+        />
+        <Route
+          key={"landingPage"}
           path={config.customerRoutes.home}
           element={<LandingPage />}
         />
@@ -127,6 +138,21 @@ const AppRoute: React.FC = () => {
           key={"importBatches"}
           path={config.adminRoutes.importBatch}
           element={<ManageImportBatchPage />}
+        />
+        <Route
+          key={"createNews"}
+          path={config.adminRoutes.createNews}
+          element={<NewsFormPage />}
+        />
+        <Route
+          key={"editNews"}
+          path={config.adminRoutes.editNews}
+          element={<NewsFormPage isEdit />}
+        />
+        <Route
+          key={"detailNews"}
+          path={config.adminRoutes.detailNews}
+          element={<DetailNewsPage />}
         />
         <Route
           key={"ordersAdmin"}
