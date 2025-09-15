@@ -353,9 +353,6 @@ const TopBar: React.FC = () => {
   const [menuData, setMenuData] = useState<GetCategoryProps[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_selectedCategory, setSelectedCategory] = useState<string | null>(
-    null
-  );
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
 
@@ -409,7 +406,6 @@ const TopBar: React.FC = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
-    setSelectedCategory(null);
   };
 
   const toggleMobileDrawer = () => {
