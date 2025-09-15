@@ -31,6 +31,9 @@ import CartPage from "../pages/Customer/Cart/CartPage";
 //import ManageNewsPage from "../pages/Admin/manage_news/ManageNewsPage";
 import AddressListPage from "../pages/Customer/Cart/AddressPage";
 import PaymentMethodPage from "../pages/Customer/Cart/PaymentMethodPage";
+import CheckRoute from "./CheckRoute";
+import { Role } from "./Roles";
+import RequireAuth from "./RequireAuth";
 
 const AppRoute: React.FC = () => {
   return (
@@ -41,6 +44,13 @@ const AppRoute: React.FC = () => {
         element={<AuthenticatePage />}
       />
       <Route key={"home"} element={<CustomerLayout />}>
+        <Route element={<CheckRoute />}>
+          <Route
+            key="landingPage"
+            path={config.customerRoutes.home}
+            element={<LandingPage />}
+          />
+        </Route>
         <Route
           key={"news"}
           path={config.customerRoutes.news}
@@ -51,11 +61,7 @@ const AppRoute: React.FC = () => {
           path={config.customerRoutes.newsDetail}
           element={<DetailNewsPage />}
         />
-        <Route
-          key={"landingPage"}
-          path={config.customerRoutes.home}
-          element={<LandingPage />}
-        />
+
         <Route
           key={"productList"}
           path={config.customerRoutes.productList}
@@ -71,121 +77,128 @@ const AppRoute: React.FC = () => {
           path={config.customerRoutes.cart}
           element={<CartPage />}
         />
-        <Route
-          key={"addressList"}
-          path={config.customerRoutes.addressList}
-          element={<AddressListPage />}
-        />
-        <Route
-          key={"paymentMethod"}
-          path={config.customerRoutes.paymentMethod}
-          element={<PaymentMethodPage />}
-        />
-      </Route>
-      <Route key={"profile"} element={<InformationLayout />}>
-        <Route
-          key={"profile"}
-          path={config.customerRoutes.userProfile}
-          element={<ProfilePage />}
-        />
-        <Route
-          key={"orders"}
-          path={config.customerRoutes.order}
-          element={<OrderPage />}
-        />
-        <Route
-          key={"addresses"}
-          path={config.customerRoutes.address}
-          element={<AddressPage />}
-        />
+        <Route element={<RequireAuth allowedRoles={[Role.Customer]} />}>
+          <Route
+            key={"addressList"}
+            path={config.customerRoutes.addressList}
+            element={<AddressListPage />}
+          />
+          <Route
+            key={"paymentMethod"}
+            path={config.customerRoutes.paymentMethod}
+            element={<PaymentMethodPage />}
+          />
+
+          <Route key={"profile"} element={<InformationLayout />}>
+            <Route
+              key={"profile"}
+              path={config.customerRoutes.userProfile}
+              element={<ProfilePage />}
+            />
+            <Route
+              key={"orders"}
+              path={config.customerRoutes.order}
+              element={<OrderPage />}
+            />
+            <Route
+              key={"addresses"}
+              path={config.customerRoutes.address}
+              element={<AddressPage />}
+            />
+          </Route>
+        </Route>
       </Route>
 
       <Route key={"dashboard"} element={<AdminLayout />}>
-        <Route
-          key={"dashboardPage"}
-          path={config.adminRoutes.dashboard}
-          element={<DashboardPage />}
-        />
-        <Route
-          key={"products"}
-          path={config.adminRoutes.manageProduct}
-          element={<ProductPage />}
-        />
-        <Route
-          key={"createProduct"}
-          path={config.adminRoutes.CreateProduct}
-          element={<CreateProductPage />}
-        />
-        <Route
-          key={"ProductDetail"}
-          path={config.adminRoutes.ManageProductDetail}
-          element={<DetailProductPage />}
-        />
-        <Route
-          key={"ProductEdit"}
-          path={config.adminRoutes.EditProductDetail}
-          element={<EditProductPage />}
-        />
-        <Route
-          key={"categories"}
-          path={config.adminRoutes.manageCategory}
-          element={<ManageCategoryPage />}
-        />
-        <Route
-          key={"batches"}
-          path={config.adminRoutes.manageBatch}
-          element={<BatchPage />}
-        />
-        <Route
-          key={"batchDetail"}
-          path={config.adminRoutes.manageBatchDetail}
-          element={<DetailBatchPage />}
-        />
-        <Route
-          key={"importBatches"}
-          path={config.adminRoutes.importBatch}
-          element={<ManageImportBatchPage />}
-        />
-        <Route
-          key={"createNews"}
-          path={config.adminRoutes.createNews}
-          element={<NewsFormPage />}
-        />
-        {/* <Route
+        <Route element={<CheckRoute />}>
+          <Route
+            key={"dashboardPage"}
+            path={config.adminRoutes.dashboard}
+            element={<DashboardPage />}
+          />
+        </Route>
+        <Route element={<RequireAuth allowedRoles={[Role.Admin]} />}>
+          <Route
+            key={"products"}
+            path={config.adminRoutes.manageProduct}
+            element={<ProductPage />}
+          />
+          <Route
+            key={"createProduct"}
+            path={config.adminRoutes.CreateProduct}
+            element={<CreateProductPage />}
+          />
+          <Route
+            key={"ProductDetail"}
+            path={config.adminRoutes.ManageProductDetail}
+            element={<DetailProductPage />}
+          />
+          <Route
+            key={"ProductEdit"}
+            path={config.adminRoutes.EditProductDetail}
+            element={<EditProductPage />}
+          />
+          <Route
+            key={"categories"}
+            path={config.adminRoutes.manageCategory}
+            element={<ManageCategoryPage />}
+          />
+          <Route
+            key={"batches"}
+            path={config.adminRoutes.manageBatch}
+            element={<BatchPage />}
+          />
+          <Route
+            key={"batchDetail"}
+            path={config.adminRoutes.manageBatchDetail}
+            element={<DetailBatchPage />}
+          />
+          <Route
+            key={"importBatches"}
+            path={config.adminRoutes.importBatch}
+            element={<ManageImportBatchPage />}
+          />
+          <Route
+            key={"createNews"}
+            path={config.adminRoutes.createNews}
+            element={<NewsFormPage />}
+          />
+          {/* <Route
           key={"manageNews"}
           path={config.adminRoutes.manageNews}
           element={<ManageNewsPage />}
         /> */}
-        <Route
-          key={"editNews"}
-          path={config.adminRoutes.editNews}
-          element={<NewsFormPage isEdit />}
-        />
-        <Route
-          key={"detailNews"}
-          path={config.adminRoutes.detailNews}
-          element={<DetailNewsPage />}
-        />
-        <Route
-          key={"ordersAdmin"}
-          path={config.adminRoutes.manageOrder}
-          element={<ManageOrderPage />}
-        />
-        <Route
-          key={"ordersDetailAdmin"}
-          path={config.adminRoutes.detailOrder}
-          element={<DetailOrderPage />}
-        />
-        <Route
-          key={"usersAdmin"}
-          path={config.adminRoutes.manageUser}
-          element={<ManageUserPage />}
-        />
-        <Route
-          key={"detailUser"}
-          path={config.adminRoutes.detailUser}
-          element={<UserDetailPage />}
-        />
+          <Route
+            key={"editNews"}
+            path={config.adminRoutes.editNews}
+            element={<NewsFormPage isEdit />}
+          />
+          <Route
+            key={"detailNews"}
+            path={config.adminRoutes.detailNews}
+            element={<DetailNewsPage />}
+          />
+          <Route
+            key={"ordersAdmin"}
+            path={config.adminRoutes.manageOrder}
+            element={<ManageOrderPage />}
+          />
+          <Route
+            key={"ordersDetailAdmin"}
+            path={config.adminRoutes.detailOrder}
+            element={<DetailOrderPage />}
+          />
+          <Route
+            key={"usersAdmin"}
+            path={config.adminRoutes.manageUser}
+            element={<ManageUserPage />}
+          />
+          <Route
+            key={"detailUser"}
+            path={config.adminRoutes.detailUser}
+            element={<UserDetailPage />}
+          />
+        </Route>
       </Route>
     </Routes>
   );
