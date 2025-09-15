@@ -654,9 +654,9 @@ const UserDetail: React.FC = () => {
                           </List>
                           <CustomPagination
                             currentPage={currentPage}
-                            totalPosts={user.addresses.length}
+                            totalItems={user.addresses.length}
                             onPageChange={handleChangePage}
-                            postsPerPage={postsPerPage}
+                            itemsPerPage={postsPerPage}
                           />
                         </>
                       ) : (
