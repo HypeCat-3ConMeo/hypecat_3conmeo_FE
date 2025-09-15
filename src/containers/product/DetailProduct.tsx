@@ -110,11 +110,10 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
   const fetchProduct = async () => {
     try {
       setLoading(true);
-      // const data: Product = await productApi.getProductById(id);
-      // console.log(data);
-      // if (data) {
-      //   setProduct(data);
-      // }
+      const data: Product = await productApi.getProductById(id);
+      if (data) {
+        setProduct(data);
+      }
     } catch (error) {
       toast.error("Lấy thông tin sản phẩm thất bại");
       console.error("Lỗi khi lấy sản phẩm:", error);
@@ -256,8 +255,9 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           "&:hover": {
             transform: isMobile ? "none" : "translateY(-4px)",
-            boxShadow: `0 ${isMobile ? 8 : 20}px ${isMobile ? 16 : 40
-              }px ${alpha(theme.palette[color].main, 0.15)}`,
+            boxShadow: `0 ${isMobile ? 8 : 20}px ${
+              isMobile ? 16 : 40
+            }px ${alpha(theme.palette[color].main, 0.15)}`,
             border: `1px solid ${alpha(theme.palette[color].main, 0.25)}`,
           },
         }}
@@ -359,8 +359,9 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
                   fontWeight={700}
                   color="text.primary"
                   sx={{
-                    background: `linear-gradient(135deg, ${theme.palette.text.primary
-                      } 0%, ${alpha(theme.palette.primary.main, 0.8)} 100%)`,
+                    background: `linear-gradient(135deg, ${
+                      theme.palette.text.primary
+                    } 0%, ${alpha(theme.palette.primary.main, 0.8)} 100%)`,
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -427,12 +428,14 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
                       py: { xs: 1, sm: 1.5 },
                       fontSize: isSmallScreen ? "0.875rem" : "1rem",
                       background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                      boxShadow: `0 ${isSmallScreen ? 4 : 8}px ${isSmallScreen ? 12 : 24
-                        }px ${alpha(theme.palette.primary.main, 0.3)}`,
+                      boxShadow: `0 ${isSmallScreen ? 4 : 8}px ${
+                        isSmallScreen ? 12 : 24
+                      }px ${alpha(theme.palette.primary.main, 0.3)}`,
                       "&:hover": {
                         transform: isMobile ? "none" : "translateY(-2px)",
-                        boxShadow: `0 ${isSmallScreen ? 6 : 12}px ${isSmallScreen ? 16 : 32
-                          }px ${alpha(theme.palette.primary.main, 0.4)}`,
+                        boxShadow: `0 ${isSmallScreen ? 6 : 12}px ${
+                          isSmallScreen ? 16 : 32
+                        }px ${alpha(theme.palette.primary.main, 0.4)}`,
                       },
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                       minWidth: { xs: "auto", sm: "120px" },
@@ -626,22 +629,24 @@ const DetailProduct: React.FC<DetailProductProps> = ({ id }) => {
                       fontSize: { xs: "0.875rem", sm: "1rem" },
                       fontWeight: 600,
                       textTransform: "none",
-                      boxShadow: `0 ${isSmallScreen ? 4 : 8}px ${isSmallScreen ? 12 : 24
+                      boxShadow: `0 ${isSmallScreen ? 4 : 8}px ${
+                        isSmallScreen ? 12 : 24
+                      }px ${alpha(
+                        product.isDeleted
+                          ? theme.palette.success.main
+                          : theme.palette.error.main,
+                        0.3
+                      )}`,
+                      "&:hover": {
+                        transform: isMobile ? "none" : "translateY(-2px)",
+                        boxShadow: `0 ${isSmallScreen ? 6 : 12}px ${
+                          isSmallScreen ? 16 : 32
                         }px ${alpha(
                           product.isDeleted
                             ? theme.palette.success.main
                             : theme.palette.error.main,
-                          0.3
+                          0.4
                         )}`,
-                      "&:hover": {
-                        transform: isMobile ? "none" : "translateY(-2px)",
-                        boxShadow: `0 ${isSmallScreen ? 6 : 12}px ${isSmallScreen ? 16 : 32
-                          }px ${alpha(
-                            product.isDeleted
-                              ? theme.palette.success.main
-                              : theme.palette.error.main,
-                            0.4
-                          )}`,
                       },
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
