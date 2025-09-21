@@ -16,7 +16,6 @@ import {
   useScrollTrigger,
   Slide,
   Chip,
-  Divider,
   Stack,
   IconButton,
   Drawer,
@@ -27,18 +26,22 @@ import {
   Collapse,
   useMediaQuery,
   useTheme,
+  Avatar,
+  Divider,
 } from "@mui/material";
 import {
   KeyboardArrowDown,
-  // ArrowRight,
   Home,
   Article,
   Policy,
   Gavel,
   Menu as MenuIcon,
   Close as CloseIcon,
-  ExpandLess,
   ExpandMore,
+  Category,
+  ShoppingBag,
+  Star,
+  LocalOffer,
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
@@ -319,16 +322,80 @@ const navButtonStyles = (theme: any) => ({
 // Enhanced Mobile Drawer
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
   "& .MuiDrawer-paper": {
-    width: 320,
-    background: `linear-gradient(135deg, ${alpha(
-      theme.palette.background.paper,
-      0.98
-    )} 0%, ${alpha(theme.palette.grey[50], 0.98)} 100%)`,
+    width: 360,
+    background: `linear-gradient(135deg, ${
+      theme.palette.background.paper
+    } 0%, ${alpha(theme.palette.grey[50], 0.8)} 100%)`,
     backdropFilter: "blur(20px)",
+    borderRight: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
+    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)",
     [theme.breakpoints.down("sm")]: {
-      width: "85vw",
-      maxWidth: 300,
+      width: "90vw",
+      maxWidth: 320,
     },
+  },
+}));
+
+// Enhanced List Item for Navigation
+const StyledNavListItem = styled(ListItem)(({ theme }) => ({
+  borderRadius: theme.spacing(2),
+  padding: theme.spacing(1.5, 2),
+  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+  cursor: "pointer",
+  position: "relative",
+  overflow: "hidden",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `linear-gradient(135deg, ${alpha(
+      theme.palette.primary.main,
+      0.1
+    )}, ${alpha(theme.palette.secondary.main, 0.1)})`,
+    opacity: 0,
+    transition: "opacity 0.3s ease",
+    borderRadius: theme.spacing(2),
+  },
+  "&:hover": {
+    transform: "translateX(8px) scale(1.02)",
+    boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.15)}`,
+    "&::before": {
+      opacity: 1,
+    },
+  },
+}));
+
+// Category List Item
+const StyledCategoryItem = styled(ListItem)(({ theme }) => ({
+  borderRadius: theme.spacing(1.5),
+  padding: theme.spacing(1, 2),
+  transition: "all 0.3s ease",
+  cursor: "pointer",
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.primary.main, 0.08),
+    transform: "translateX(6px)",
+    boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.1)}`,
+  },
+}));
+
+// Header Section for Drawer
+const DrawerHeader = styled(Box)(({ theme }) => ({
+  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+  color: "white",
+  padding: theme.spacing(3, 2.5),
+  position: "relative",
+  overflow: "hidden",
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "4px",
+    background: `linear-gradient(90deg, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
   },
 }));
 
@@ -349,15 +416,46 @@ const TopBar: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
-
   const [menuData, setMenuData] = useState<GetCategoryProps[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
 
   const pageSize: string = "1000";
-  // Mock data for categories
+
+  // Mobile navigation items with better organization
+  const mobileNavItems = [
+    {
+      label: "Trang Chủ",
+      icon: <Home />,
+      to: config.customerRoutes.home,
+      badge: null,
+      color: "primary",
+    },
+    {
+      label: "Tin Tức",
+      icon: <Article />,
+      to: config.customerRoutes.news,
+      badge: "Mới",
+      color: "info",
+    },
+    {
+      label: "Điều Khoản",
+      icon: <Gavel />,
+      to: config.customerRoutes.termsOfService,
+      badge: null,
+      color: "warning",
+    },
+    {
+      label: "Chính Sách",
+      icon: <Policy />,
+      to: config.customerRoutes.privacyPolicy,
+      badge: null,
+      color: "success",
+    },
+  ];
+
+  // Fetch categories
   const fethCategory = async () => {
     const param = {
       CateType: "Product",
@@ -366,9 +464,9 @@ const TopBar: React.FC = () => {
     const response: any = await categoryApi.getCategoryList(param);
     setMenuData(response.items);
   };
+
   useEffect(() => {
     fethCategory();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCategoryClick = (categoryId?: string) => {
@@ -417,10 +515,6 @@ const TopBar: React.FC = () => {
   };
 
   const renderCategories = () => {
-    //   const parentCategories = menuData.filter(
-    //     (item) => item.status === "Active" && item.type === "Parent"
-    //   );
-
     return (
       <CategoryGrid>
         {menuData?.map((parent) => {
@@ -458,16 +552,6 @@ const TopBar: React.FC = () => {
                 onClick={() => handleCategoryClick(parent.id)}
               >
                 {parent.name}
-                {/* <ArrowRight
-                  sx={{
-                    ml: 1,
-                    fontSize: isSmallMobile ? 18 : 20,
-                    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                /> */}
               </Typography>
               <MenuList dense>
                 {children.map((child) => (
@@ -494,89 +578,67 @@ const TopBar: React.FC = () => {
     );
   };
 
-  // Mobile navigation items
-  const mobileNavItems = [
-    { label: "Trang Chủ", icon: <Home />, to: config.customerRoutes.home },
-    { label: "Tin Tức", icon: <Article />, to: config.customerRoutes.news },
-    {
-      label: "Điều Khoản",
-      icon: <Gavel />,
-      to: config.customerRoutes.termsOfService,
-    },
-    {
-      label: "Chính Sách",
-      icon: <Policy />,
-      to: config.customerRoutes.privacyPolicy,
-    },
-  ];
-
+  // Enhanced mobile categories rendering
   const renderMobileCategories = () => {
-    // const parentCategories = menuData.filter(
-    //   (item) => item.status === "Active" && item.type === "Parent"
-    // );
-
-    return menuData.map((parent) => {
-      // const children = menuData.filter(
-      //   (item) =>
-      //     item.masterCategoryId === parent.id && item.isDeleted === "false"
-      // );
-
-      return (
-        <Box
-          key={parent.id}
-          component="button"
-          onClick={() => handleCategoryClick(parent.id)}
-        >
-          <ListItem
-            onClick={() => handleCategoryClick(parent.id)}
-            sx={{
-              pl: 4,
-              borderRadius: 1,
-              mx: 1,
-              mb: 0.5,
-              transition: "all 0.3s ease",
-              "&:hover": {
-                backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                transform: "translateX(4px)",
-              },
-            }}
-          >
-            <ListItemText
-              primary={parent.name}
-              primaryTypographyProps={{
-                fontWeight: 600,
-                color: "primary.main",
-                fontSize: isSmallMobile ? "0.9rem" : "1rem",
+    return (
+      <Box
+        sx={{
+          maxHeight: "300px",
+          overflowY: "auto",
+          mt: 1,
+          overflowX: "hidden",
+        }}
+      >
+        {/* All Products Item */}
+        <StyledCategoryItem onClick={() => handleCategoryClick()}>
+          <ListItemIcon sx={{ minWidth: 40 }}>
+            <ShoppingBag
+              sx={{
+                color: theme.palette.secondary.main,
+                fontSize: 20,
               }}
             />
-          </ListItem>
-          {/* {children.map((child) => (
-            <ListItem
-              key={child.id}
-              onClick={() => handleCategoryClick(child.id)}
-              sx={{
-                pl: 6,
-                borderRadius: 1,
-                mx: 1,
-                mb: 0.5,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  backgroundColor: alpha(theme.palette.primary.main, 0.05),
-                  transform: "translateX(4px)",
-                },
-              }}
-            >
-              <ListItemText
-                primary={child.name}
-                primaryTypographyProps={{
-                  fontSize: isSmallMobile ? "0.8rem" : "0.875rem",
+          </ListItemIcon>
+          <ListItemText
+            primary="Tất cả sản phẩm"
+            sx={{
+              fontWeight: 600,
+              color: theme.palette.secondary.main,
+              "& .MuiListItemText-primary": {
+                fontSize: "0.95rem",
+              },
+            }}
+          />
+          <Star sx={{ color: theme.palette.warning.main, fontSize: 16 }} />
+        </StyledCategoryItem>
+
+        {menuData.map((parent) => (
+          <StyledCategoryItem
+            key={parent.id}
+            onClick={() => handleCategoryClick(parent.id)}
+          >
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <LocalOffer
+                sx={{
+                  color: theme.palette.primary.main,
+                  fontSize: 18,
                 }}
               />
-            </ListItem>
-          ))} */}
-        </Box>
-      );
-    });
+            </ListItemIcon>
+            <ListItemText
+              primary={parent.name}
+              sx={{
+                fontWeight: 500,
+                "& .MuiListItemText-primary": {
+                  fontSize: "0.9rem",
+                  color: theme.palette.text.primary,
+                },
+              }}
+            />
+          </StyledCategoryItem>
+        ))}
+      </Box>
+    );
   };
 
   return (
@@ -595,7 +657,7 @@ const TopBar: React.FC = () => {
                 alignItems: "center",
                 gap: 1,
                 flex: 1,
-                justifyContent: isMobile ? "space-between" : "flex-end", // keep this
+                justifyContent: isMobile ? "space-between" : "flex-end",
                 flexDirection: isMobile ? "row-reverse" : "row",
               }}
             >
@@ -622,7 +684,11 @@ const TopBar: React.FC = () => {
             <NavBar>
               <Container
                 maxWidth="xl"
-                sx={{ display: "flex", justifyContent: "center" }}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mt: isMobile ? "56px" : "0",
+                }}
               >
                 <Stack
                   direction="row"
@@ -771,121 +837,245 @@ const TopBar: React.FC = () => {
             anchor="left"
             open={mobileDrawerOpen}
             onClose={toggleMobileDrawer}
+            sx={{
+              "& .MuiBackdrop-root": {
+                backgroundColor: "rgba(0, 0, 0, 0.3)",
+                backdropFilter: "blur(4px)",
+              },
+            }}
           >
-            <Box sx={{ p: 3, pt: 2, position: "relative" }}>
-              {isMobile && (
-                <>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      mb: 2,
-                    }}
-                  >
-                    <LogoContainer to="/" style={{ marginBottom: 35 }}>
-                      <Logo />
-                    </LogoContainer>
+            <Box
+              sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+            >
+              {/* Enhanced Header */}
+              <DrawerHeader>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Avatar
+                      sx={{
+                        background: "rgba(255, 255, 255, 0.2)",
+                        color: "white",
+                        width: 48,
+                        height: 48,
+                      }}
+                    >
+                      <MenuIcon />
+                    </Avatar>
+                    <Box>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 700, mb: 0.5 }}
+                      >
+                        Menu
+                      </Typography>
+                    </Box>
                   </Box>
+
                   <IconButton
                     onClick={toggleMobileDrawer}
                     sx={{
-                      position: "absolute",
-                      top: 8,
-                      right: 8,
-                      zIndex: 2,
+                      color: "white",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
                       "&:hover": {
-                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                        backgroundColor: "rgba(255, 255, 255, 0.2)",
+                        transform: "rotate(90deg)",
                       },
+                      transition: "all 0.3s ease",
                     }}
                   >
                     <CloseIcon />
                   </IconButton>
-                  <Divider sx={{ mb: 2, mt: 2 }} />
-                </>
-              )}
-              {!isMobile && <Box sx={{ mb: 3 }} />}
+                </Box>
+              </DrawerHeader>
 
-              <List>
-                {/* Navigation Items */}
-                {mobileNavItems.map((item) => (
-                  <ListItem
-                    key={item.label}
-                    component={Link}
-                    to={item.to}
-                    onClick={() => setMobileDrawerOpen(false)}
-                    sx={{
-                      mb: 1,
-                      borderRadius: 2,
-                      mx: 1,
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                        transform: "translateX(4px)",
-                      },
-                    }}
-                  >
-                    <ListItemIcon sx={{ color: theme.palette.primary.main }}>
-                      {item.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={item.label}
-                      sx={{ fontWeight: 500 }}
-                    />
-                  </ListItem>
-                ))}
-
-                {/* Categories */}
-                <ListItem
-                  onClick={toggleMobileCategory}
-                  sx={{
-                    mb: 1,
-                    borderRadius: 2,
-                    mx: 1,
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                      transform: "translateX(4px)",
-                    },
-                  }}
+              {/* Logo Section */}
+              <Box
+                sx={{
+                  p: 2.5,
+                  textAlign: "center",
+                }}
+              >
+                <LogoContainer
+                  to="/"
+                  onClick={() => setMobileDrawerOpen(false)}
                 >
-                  <ListItemIcon sx={{ color: theme.palette.primary.main }}>
-                    <Article />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Loại Sản Phẩm"
-                    sx={{ fontWeight: 500 }}
-                  />
-                  {mobileCategoryOpen ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-
-                <Collapse in={mobileCategoryOpen} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding>
+                  <Logo />
+                </LogoContainer>
+              </Box>
+              <Divider sx={{ mt: 5 }} />
+              {/* Scrollable Content */}
+              <Box sx={{ flex: 1, overflowY: "auto" }}>
+                <List sx={{ pt: 2 }}>
+                  {/* Navigation Items */}
+                  {mobileNavItems.map((item) => (
                     <ListItem
-                      onClick={() => handleCategoryClick()}
+                      key={item.label}
+                      component={Link}
+                      to={item.to}
                       sx={{
-                        pl: 4,
-                        mb: 1,
-                        borderRadius: 2,
-                        mx: 1,
-                        "&:hover": {
-                          backgroundColor: alpha(
+                        borderRadius: theme.spacing(2),
+                        padding: theme.spacing(1.5, 2),
+                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                        cursor: "pointer",
+                        position: "relative",
+                        overflow: "hidden",
+                        "&::before": {
+                          content: '""',
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: `linear-gradient(135deg, ${alpha(
                             theme.palette.primary.main,
                             0.1
-                          ),
-                          transform: "translateX(4px)",
+                          )}, ${alpha(theme.palette.secondary.main, 0.1)})`,
+                          opacity: 0,
+                          transition: "opacity 0.3s ease",
+                          borderRadius: theme.spacing(2),
+                        },
+                        "&:hover": {
+                          transform: "translateX(8px) scale(1.02)",
+                          boxShadow: `0 8px 25px ${alpha(
+                            theme.palette.primary.main,
+                            0.15
+                          )}`,
+                          "&::before": {
+                            opacity: 1,
+                          },
                         },
                       }}
+                      onClick={() => setMobileDrawerOpen(false)}
                     >
+                      <ListItemIcon sx={{ minWidth: 48 }}>
+                        <Box
+                          sx={{
+                            borderRadius: "50%",
+                            width: 40,
+                            height: 40,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {item.icon}
+                        </Box>
+                      </ListItemIcon>
                       <ListItemText
-                        primary="Tất cả sản phẩm"
-                        sx={{ fontWeight: 500, color: "primary.main" }}
+                        primary={item.label}
+                        sx={{
+                          maxWidth: "100%",
+                          fontWeight: 600,
+                          transition: "all 0.3s ease",
+                          color: theme.palette.text.primary,
+                          "&:hover": {
+                            backgroundColor: alpha(
+                              theme.palette.primary.main,
+                              0.08
+                            ),
+                            transform: "translateX(6px)",
+                            boxShadow: `0 4px 12px ${alpha(
+                              theme.palette.primary.main,
+                              0.1
+                            )}`,
+                          },
+                          "& .MuiListItemText-primary": {
+                            fontSize: "1rem",
+                          },
+                        }}
                       />
+                      {item.badge && (
+                        <Chip
+                          label={item.badge}
+                          size="small"
+                          sx={{
+                            height: 20,
+                            fontSize: "0.7rem",
+                            fontWeight: 600,
+                            backgroundColor: theme.palette.error.main,
+                            color: "white",
+                          }}
+                        />
+                      )}
                     </ListItem>
-                    {renderMobileCategories()}
-                  </List>
-                </Collapse>
-              </List>
+                  ))}
+                  {/* Categories Section */}
+                  <Box sx={{ mt: 1 }}>
+                    <StyledNavListItem onClick={toggleMobileCategory}>
+                      <ListItemIcon sx={{ minWidth: 48 }}>
+                        <Box
+                          sx={{
+                            backgroundColor: alpha(
+                              theme.palette.primary.main,
+                              0.1
+                            ),
+                            borderRadius: "50%",
+                            width: 40,
+                            height: 40,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Category
+                            sx={{ color: theme.palette.primary.main }}
+                          />
+                        </Box>
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Loại Sản Phẩm"
+                        sx={{
+                          fontWeight: 600,
+                          "& .MuiListItemText-primary": {
+                            fontSize: "1rem",
+                          },
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          transform: mobileCategoryOpen
+                            ? "rotate(180deg)"
+                            : "rotate(0deg)",
+                        }}
+                      >
+                        <ExpandMore
+                          sx={{ color: theme.palette.primary.main }}
+                        />
+                      </Box>
+                    </StyledNavListItem>
+
+                    <Collapse
+                      in={mobileCategoryOpen}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <Box sx={{ mt: 1 }}>
+                        <Typography
+                          variant="overline"
+                          sx={{
+                            px: 3,
+                            py: 1,
+                            display: "block",
+                            fontWeight: 700,
+                            fontSize: "0.7rem",
+                            color: theme.palette.text.secondary,
+                            letterSpacing: "1px",
+                          }}
+                        >
+                          DANH MỤC SẢN PHẨM
+                        </Typography>
+                        {renderMobileCategories()}
+                      </Box>
+                    </Collapse>
+                  </Box>
+                </List>
+              </Box>
             </Box>
           </StyledDrawer>
         </StyledAppBar>
@@ -893,5 +1083,4 @@ const TopBar: React.FC = () => {
     </>
   );
 };
-
 export default TopBar;
